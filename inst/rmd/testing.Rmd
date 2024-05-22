@@ -1,0 +1,18 @@
+---
+title: "testing"
+output: word_document
+date: '2024-05-22'
+params: 
+  para_1: ""
+  para_2: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+change_type <- ifelse(params$para_2 >= params$para_1, "an increase", "a decrease")
+
+```
+
+## R Markdown
+In March the number for E was `r params$para_1`, in April it was `r params$para_2`. This is `r change_type` of `r round(abs(((params$para_2 - params$para_1) / params$para_1) * 100), digits = 0)`%. 
