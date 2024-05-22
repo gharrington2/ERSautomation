@@ -4,12 +4,10 @@
 \alias{create_markdown}
 \title{Generate Rmarkdown file}
 \usage{
-create_markdown(input_path, output_path)
+create_markdown(input_path)
 }
 \arguments{
 \item{input_path}{A filepath of an excel table to import.}
-
-\item{output_path}{A filepath of an excel table to export}
 }
 \value{
 Rmarkdown file.
