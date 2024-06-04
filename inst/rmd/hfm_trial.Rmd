@@ -1,0 +1,20 @@
+---
+title: "hfm_trial"
+output: word_document
+date: '2024-05-23'
+params: 
+  para_1: ""
+  para_2: ""
+  para_3: ""
+  para_4: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+change_type <- ifelse(params$para_2 >= params$para_1, "an increase", "a decrease")
+```
+
+## R Markdown
+There were `r params$para_1` new people sleeping rough over the month in March (`r round(abs(((params$para_1) / params$para_3) * 100), digits = 0)`% of total people sleeping rough over the month) - up `r round(abs(((params$para_1 - params$para_2)/ params$para_2)*100), digits = 0)`% on the same period last year. 
