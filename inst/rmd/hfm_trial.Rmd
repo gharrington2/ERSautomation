@@ -17,4 +17,4 @@ change_type <- ifelse(params$para_2 >= params$para_1, "an increase", "a decrease
 ```
 
 ## R Markdown
-There were `r params$para_1` new people sleeping rough over the month in December (`r round(abs(((params$para_1) / params$para_3) * 100), digits = 0)`% of total people sleeping rough over the month) - up `r round(abs(((params$para_1 - params$para_2)/ params$para_2)*100), digits = 0)`% on the same period last year. 
+There were `r params$para_1` new people sleeping rough over the month in March (`r round(abs(((params$para_1) / params$para_3) * 100), digits = 0)`% of total people sleeping rough over the month) - up `r round(abs(((params$para_1 - params$para_2)/ params$para_2)*100), digits = 0)`% on the same period last year. 
