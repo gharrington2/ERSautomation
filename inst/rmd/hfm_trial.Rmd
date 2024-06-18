@@ -2,19 +2,52 @@
 title: "hfm_trial"
 output: word_document
 date: '2024-05-23'
-params: 
+params:
   para_1: ""
-  para_2: ""
-  para_3: ""
-  para_4: ""
+
 ---
 
 ```{r setup, include=FALSE}
+#source("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/R/tables_source.R")
+# change_type <- ifelse(params$para_2 >= params$para_1, "an increase", "a decrease")
+# df_month_new <- read_excel(path = "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240517.xlsx", sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
+# df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
+
+df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
+df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
+df_snapshot_new <- read_excel(input_path, sheet = "Table_P1(a)_-_RS_snapshot_new", skip = 3)
+df_snapshot <- read_excel(input_path, sheet = "Table_R1(a)_-_RS_snapshot", skip = 3)
+df_institutions <- read_excel(input_path, sheet = "Table_P2(a)_-_Left_institutions", skip = 3)
+
 knitr::opts_chunk$set(echo = TRUE)
 
+march24_month_eng <- as.numeric(df_month[1, "March 2024"])
+march23_month_eng <- as.numeric(df_month[1, "March 2023"])
 
-change_type <- ifelse(params$para_2 >= params$para_1, "an increase", "a decrease")
+march24_month_new_eng <- as.numeric(df_month_new[1, "2024_03_01"])
+march23_month_new_eng <- as.numeric(df_month_new[1, "2023_03_01"])
+
+march24_snapshot_new_eng <- as.numeric(df_snapshot_new[1, "March 2024"])
+march23_snapshot_new_eng <- as.numeric(df_snapshot_new[1, "March 2023"])
+
+march24_snapshot_eng <- as.numeric(df_snapshot[1, "March 2024"])
+march23_snapshot_eng <- as.numeric(df_snapshot[1, "March 2023"])
+
+march24_institutions_eng <- as.numeric(df_institutions[1, "March 2024"])
+dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
+
 ```
 
-## R Markdown
-There were `r params$para_1` new people sleeping rough over the month in March (`r round(abs(((params$para_1) / params$para_3) * 100), digits = 0)`% of total people sleeping rough over the month) - up `r round(abs(((params$para_1 - params$para_2)/ params$para_2)*100), digits = 0)`% on the same period last year. 
+## Ending Rough Sleeping Data Framework, March 2024
+
+## 1. Key statistics
+
+### Prevented (P1 & P2)
+
+**`r march24_month_new_eng`** new people sleeping rough over the month in March 2024 (`r round(abs((march24_month_new_eng / march24_month_eng)*100),digits = 0)`% of total) - up `r round(abs(((march24_month_new_eng - march23_month_new_eng) / march23_month_new_eng)*100), digits = 0)`% on same period last year.
+
+**`r march24_snapshot_new_eng`** new people sleeping rough on a single night in March 2024 (`r round(abs((march24_snapshot_new_eng / march24_snapshot_eng)*100), digits = 0)`% of the total) - up `r round(abs(((march24_snapshot_new_eng - march23_snapshot_new_eng) / march23_snapshot_new_eng)*100), digits = 0)`% on same period last year. 
+
+**`r march24_institutions_eng`** people sleeping rough over the month in March 2024 who have left an institution (`r round(abs((march24_institutions_eng / march24_month_eng)*100), digits = 0)`% of the total) - down `r round(abs(((march24_institutions_eng - dec23_institutions_eng) / dec23_institutions_eng)*100), digits = 0)`% since same period last quarter. 
+
+### Rare (R1)
