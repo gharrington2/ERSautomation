@@ -6,12 +6,6 @@
 
 create_markdown_hfm <- function(input_path){
 
-  df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
-  df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
-  df_snapshot_new <- read_excel(input_path, sheet = "Table_P1(a)_-_RS_snapshot_new", skip = 3)
-  df_snapshot <- read_excel(input_path, sheet = "Table_R1(a)_-_RS_snapshot", skip = 3)
-  df_institutions <- read_excel(input_path, sheet = "Table_P2(a)_-_Left_institutions", skip = 3)
-
    params <- list(
      para_1 = input_path
 )
