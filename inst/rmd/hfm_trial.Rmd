@@ -18,11 +18,18 @@ df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
 df_snapshot_new <- read_excel(input_path, sheet = "Table_P1(a)_-_RS_snapshot_new", skip = 3)
 df_snapshot <- read_excel(input_path, sheet = "Table_R1(a)_-_RS_snapshot", skip = 3)
 df_institutions <- read_excel(input_path, sheet = "Table_P2(a)_-_Left_institutions", skip = 3)
+df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3)
 
 knitr::opts_chunk$set(echo = TRUE)
 
 march24_month_eng <- as.numeric(df_month[1, "March 2024"])
 march23_month_eng <- as.numeric(df_month[1, "March 2023"])
+dec23_month_eng <- as.numeric(df_month[1, "December 2023"])
+
+march24_month_eng_rate <- as.numeric(df_month_rate[1, "March 2024"])
+march23_month_eng_rate <- as.numeric(df_month_rate[1, "March 2023"])
+dec23_month_eng_rate <- as.numeric(df_month_rate[1, "December 2023"])
+
 
 march24_month_new_eng <- as.numeric(df_month_new[1, "2024_03_01"])
 march23_month_new_eng <- as.numeric(df_month_new[1, "2023_03_01"])
@@ -51,3 +58,4 @@ dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
 **`r march24_institutions_eng`** people sleeping rough over the month in March 2024 who have left an institution (`r round(abs((march24_institutions_eng / march24_month_eng)*100), digits = 0)`% of the total) - down `r round(abs(((march24_institutions_eng - dec23_institutions_eng) / dec23_institutions_eng)*100), digits = 0)`% since same period last quarter. 
 
 ### Rare (R1)
+**`r march24_month_eng`** people sleeping rough over the month in March 2024 - up (`r round(abs(((march24_month_eng - march23_month_eng)/march23_month_eng)*100), digits = 0)`)% on March last year, and up(`r round(abs(((march24_month_eng - dec23_month_eng)/dec23_month_eng)*100), digits = 0)`)% since December 2023. `r march24_month_eng_rate` people per 100,000 sleeping rough over the month in March 2024 - up from `r march23_month_eng_rate` last year and `r dec23_month_eng_rate` in December 2023.
