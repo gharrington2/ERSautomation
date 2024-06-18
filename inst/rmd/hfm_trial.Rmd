@@ -51,3 +51,4 @@ dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
 **`r march24_institutions_eng`** people sleeping rough over the month in March 2024 who have left an institution (`r round(abs((march24_institutions_eng / march24_month_eng)*100), digits = 0)`% of the total) - down `r round(abs(((march24_institutions_eng - dec23_institutions_eng) / dec23_institutions_eng)*100), digits = 0)`% since same period last quarter. 
 
 ### Rare (R1)
+**`r march24_month_eng`** people sleeping rough over the month in March 2024 - up (`r round(abs((march24_month_eng - march23_month_eng)/march23_month_eng)*100), digits = 0)`)% on March last year, and up
