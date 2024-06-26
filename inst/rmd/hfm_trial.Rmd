@@ -12,6 +12,9 @@ params:
 # change_type <- ifelse(params$para_2 >= params$para_1, "an increase", "a decrease")
 # df_month_new <- read_excel(path = "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240517.xlsx", sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 # df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
+#Take this out when running script properly
+input_path = "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240517.xlsx"
+
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -59,3 +62,45 @@ dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
 
 ### Rare (R1)
 **`r march24_month_eng`** people sleeping rough over the month in March 2024 - up (`r round(abs(((march24_month_eng - march23_month_eng)/march23_month_eng)*100), digits = 0)`)% on March last year, and up(`r round(abs(((march24_month_eng - dec23_month_eng)/dec23_month_eng)*100), digits = 0)`)% since December 2023. `r march24_month_eng_rate` people per 100,000 sleeping rough over the month in March 2024 - up from `r march23_month_eng_rate` last year and `r dec23_month_eng_rate` in December 2023.
+
+---
+
+```{r setup, include=FALSE}
+#Take this out when running script properly
+input_path = "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240517.xlsx"
+
+new_month_tot <- as.vector(df_month_new[1, c(5:length(df_month_new))])
+new_snapshot_tot <- as.vector(df_snapshot_new[1, c(5:length(df_month_new))])
+
+#Match column names then bind into one dataframe
+colnames(new_snapshot_tot) <- colnames(new_month_tot) 
+new_comb <- bind_rows(new_month_tot, new_snapshot_tot)
+
+#Wrangling to get into desired format
+transposed_new <- data.frame(t(new_comb))
+transposed_new <-  mutate(transposed_new, "Date" = rownames(transposed_new)) 
+rownames(transposed_new) <- NULL
+colnames(transposed_new) <- c("New month", "New snapshot", "Date")
+new_df <- transposed_new %>%
+mutate(Date = as.Date(Date, format = "%Y_%m_%d"), 
+       `New month` = as.numeric(`New month`),
+       `New snapshot` = as.numeric(`New snapshot`)) %>% 
+  select(3, 2, 1)
+
+#Figure 1
+figure_1 <- ggplot(new_df, aes(x = Date)) +
+  geom_line(aes(y = `New snapshot`, color = "Snapshot_new"), size = 1.1, group = 1) +
+  geom_point(aes(y = `New snapshot`), color = "#012169", size = 2) +  # Add points for Snapshot_new
+  geom_line(aes(y = `New month`, color = "Month_new"), size = 1.1, group = 1) +
+  geom_point(aes(y = `New month`), color = "#95B3D7", size = 2) +
+  labs(title = "New people sleeping rough, October 2020 to March 2024", x = "Date", y = "Number of people") +
+  scale_color_manual(values = c("Snapshot_new" = "#012169", "Month_new" = "#95B3D7")) +
+  dluhc_style(size = 1.5) +
+  scale_y_continuous(breaks = seq(0,4000, by = 500),labels = comma)+
+  scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+
+```
+print(example)
+
