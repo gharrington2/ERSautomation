@@ -9,13 +9,13 @@ params:
 
 ```{r setup, include=FALSE}
 
-
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
 df_snapshot_new <- read_excel(input_path, sheet = "Table_P1(a)_-_RS_snapshot_new", skip = 3)
 df_snapshot <- read_excel(input_path, sheet = "Table_R1(a)_-_RS_snapshot", skip = 3)
 df_institutions <- read_excel(input_path, sheet = "Table_P2(a)_-_Left_institutions", skip = 3)
 df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3)
+df_long_term <- read_excel(input_path, sheet = "Table_B1_-_RS_monthly_long_term", skip = 3)
 
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -40,6 +40,57 @@ march23_snapshot_eng <- as.numeric(df_snapshot[1, "March 2023"])
 march24_institutions_eng <- as.numeric(df_institutions[1, "March 2024"])
 dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
 
+
+#Alternate method 
+
+this_month <- names(df_month)[ncol(df_month)]
+last_month <- names(df_month)[ncol(df_month) - 1]
+last_quarter <- names(df_month)[ncol(df_month) - 3]
+last_year <- names(df_month)[ncol(df_month) - 12]
+
+#Function to work out values for each driver this year and last year
+changes <- function(df, env = parent.frame()){
+  name <- deparse(substitute(df))
+
+  #Create this month
+  this_month <- as.numeric(df[1, this_month])
+  assign(paste0("this_month_",name), this_month, envir = env)
+
+  #Create last year
+  last_year <- as.numeric(df[1, last_year])
+  assign(paste0("last_year_",name), last_year, envir = env)
+
+  #Create annual change
+  annual_change <- this_month - last_year
+  assign(paste0("annual_change_",name), annual_change, envir = env)
+  
+ return(env)
+
+}
+#Function to work out values for each driver this year and last quarter
+changes_q <- function(df, env = parent.frame()){
+  name <- deparse(substitute(df))
+
+  #Create this month
+  this_month <- as.numeric(df[1, this_month])
+  assign(paste0("this_month_",name), this_month, envir = env)
+
+  #Create last quarter
+  last_quarter <- as.numeric(df[1, last_quarter])
+  assign(paste0("last_quarter_",name), last_quarter, envir = env)
+
+  #Create annual change
+  quarterly_change <- this_month - last_quarter
+  assign(paste0("quarterly_change_",name), quarterly_change, envir = env)
+  
+ return(env)
+
+}
+env1 <- new.env()
+
+changes(df_month, env = env1)
+changes_q(df_long_term, env = env1)
+
 ```
 
 ## Ending Rough Sleeping Data Framework, March 2024
@@ -47,6 +98,8 @@ dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
 ## 1. Key statistics
 
 ### Prevented (P1 & P2)
+
+**`r get("this_month_df_month", envir = env1)`** example
 
 **`r march24_month_new_eng`** new people sleeping rough over the month in March 2024 (`r round(abs((march24_month_new_eng / march24_month_eng)*100),digits = 0)`% of total) - up `r round(abs(((march24_month_new_eng - march23_month_new_eng) / march23_month_new_eng)*100), digits = 0)`% on same period last year.
 
@@ -57,9 +110,12 @@ dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
 ### Rare (R1)
 **`r march24_month_eng`** people sleeping rough over the month in March 2024 - up (`r round(abs(((march24_month_eng - march23_month_eng)/march23_month_eng)*100), digits = 0)`)% on March last year, and up(`r round(abs(((march24_month_eng - dec23_month_eng)/dec23_month_eng)*100), digits = 0)`)% since December 2023. `r march24_month_eng_rate` people per 100,000 sleeping rough over the month in March 2024 - up from `r march23_month_eng_rate` last year and `r dec23_month_eng_rate` in December 2023.
 
+### Brief (B1)
+**`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - up `r round(((get("quarterly_change_df_long_term", envir = env1))/get("last_quarter_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_quarter`.
+
 ---
 
-```{r 1-Total}
+```{r 1-Total, include=FALSE}
 
  new_month_tot <- as.vector(df_month_new[1, c(5:length(df_month_new))])
  new_snapshot_tot <- as.vector(df_snapshot_new[1, c(5:length(df_month_new))])
