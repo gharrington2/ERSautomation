@@ -41,55 +41,76 @@ march24_institutions_eng <- as.numeric(df_institutions[1, "March 2024"])
 dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
 
 
-#Alternate method 
+############### ALTERNATE METHOD TO REDUCE UPDATES ##############
 
 this_month <- names(df_month)[ncol(df_month)]
 last_month <- names(df_month)[ncol(df_month) - 1]
 last_quarter <- names(df_month)[ncol(df_month) - 3]
 last_year <- names(df_month)[ncol(df_month) - 12]
 
-#Function to work out values for each driver this year and last year
+#Function to work out values for each driver this year, last quarter and last year (if used as not all variables have a years worth of data)
 changes <- function(df, env = parent.frame()){
   name <- deparse(substitute(df))
-
-  #Create this month
-  this_month <- as.numeric(df[1, this_month])
-  assign(paste0("this_month_",name), this_month, envir = env)
-
-  #Create last year
-  last_year <- as.numeric(df[1, last_year])
-  assign(paste0("last_year_",name), last_year, envir = env)
-
-  #Create annual change
-  annual_change <- this_month - last_year
-  assign(paste0("annual_change_",name), annual_change, envir = env)
   
- return(env)
-
-}
-#Function to work out values for each driver this year and last quarter
-changes_q <- function(df, env = parent.frame()){
-  name <- deparse(substitute(df))
-
-  #Create this month
+  if(last_year %in% colnames(df)){
+    
+  #Create this month and monthly change
   this_month <- as.numeric(df[1, this_month])
   assign(paste0("this_month_",name), this_month, envir = env)
-
+  
+  last_month <- as.numeric(df[1, last_month])
+  assign(paste0("last_month_",name), last_month, envir = env)
+  
+  monthly_change <- this_month - last_month
+  assign(paste0("monthly_change_", name), monthly_change, envir = env)
+  
   #Create last quarter
   last_quarter <- as.numeric(df[1, last_quarter])
   assign(paste0("last_quarter_",name), last_quarter, envir = env)
 
-  #Create annual change
+  #Create quarterly change
   quarterly_change <- this_month - last_quarter
   assign(paste0("quarterly_change_",name), quarterly_change, envir = env)
   
- return(env)
+  #Create last year and annual change
+  last_year <- as.numeric(df[1, last_year])
+  assign(paste0("last_year_",name), last_year, envir = env)
+  
+  #Create annual change
+  annual_change <- this_month - last_year
+  assign(paste0("annual_change_",name), annual_change, envir = env)
+  
+  } else {
+    
+  #Create this month and monthly change
+  this_month <- as.numeric(df[1, this_month])
+  assign(paste0("this_month_",name), this_month, envir = env)
+  
+  last_month <- as.numeric(df[1, last_month])
+  assign(paste0("last_month_",name), last_month, envir = env)
+
+  monthly_change <- this_month - last_month
+  assign(paste0("monthly_change_", name), monthly_change, envir = env)
+  
+  #Create last quarter
+  last_quarter <- as.numeric(df[1, last_quarter])
+  assign(paste0("last_quarter_",name), last_quarter, envir = env)
+
+  #Create quarterly change
+  quarterly_change <- this_month - last_quarter
+  assign(paste0("quarterly_change_",name), quarterly_change, envir = env)
+  
+  }
+  
+  return(env)
 
 }
+
 env1 <- new.env()
 
+#Load all dataframes here then they can be accessed in the markdown below
 changes(df_month, env = env1)
-changes_q(df_long_term, env = env1)
+changes(df_long_term, env = env1)
 
 ```
 
