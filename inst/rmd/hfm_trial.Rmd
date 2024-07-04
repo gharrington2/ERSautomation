@@ -30,28 +30,6 @@ df_returners <- read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip 
 
 knitr::opts_chunk$set(echo = TRUE)
 
-march24_month_eng <- as.numeric(df_month[1, "March 2024"])
-march23_month_eng <- as.numeric(df_month[1, "March 2023"])
-dec23_month_eng <- as.numeric(df_month[1, "December 2023"])
-
-march24_month_eng_rate <- as.numeric(df_month_rate[1, "March 2024"])
-march23_month_eng_rate <- as.numeric(df_month_rate[1, "March 2023"])
-dec23_month_eng_rate <- as.numeric(df_month_rate[1, "December 2023"])
-
-
-march24_month_new_eng <- as.numeric(df_month_new[1, "March 2024"])
-march23_month_new_eng <- as.numeric(df_month_new[1, "March 2023"])
-
-march24_snapshot_new_eng <- as.numeric(df_snapshot_new[1, "March 2024"])
-march23_snapshot_new_eng <- as.numeric(df_snapshot_new[1, "March 2023"])
-
-march24_snapshot_eng <- as.numeric(df_snapshot[1, "March 2024"])
-march23_snapshot_eng <- as.numeric(df_snapshot[1, "March 2023"])
-
-march24_institutions_eng <- as.numeric(df_institutions[1, "March 2024"])
-dec23_institutions_eng <- as.numeric(df_institutions[1, "December 2023"])
-
-
 ############### ALTERNATE METHOD TO REDUCE UPDATES ##############
 
 this_month <- names(df_month)[ncol(df_month)]
@@ -167,27 +145,41 @@ sign <- function(num){
 
 
 
-**`r march24_month_new_eng`** new people sleeping rough over the month in March 2024 (`r round(abs((march24_month_new_eng / march24_month_eng)*100),digits = 0)`% of total) - `r up_down(march24_month_new_eng, march23_month_new_eng)` `r round(abs(((march24_month_new_eng - march23_month_new_eng) / march23_month_new_eng)*100), digits = 0)`% on same period last year.
+**`r  get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% on the same period last year. 
 
-**`r march24_snapshot_new_eng`** new people sleeping rough on a single night in March 2024 (`r round(abs((march24_snapshot_new_eng / march24_snapshot_eng)*100), digits = 0)`% of the total) - up `r round(abs(((march24_snapshot_new_eng - march23_snapshot_new_eng) / march23_snapshot_new_eng)*100), digits = 0)`% on same period last year. 
 
-**`r march24_institutions_eng`** people sleeping rough over the month in March 2024 who have left an institution (`r round(abs((march24_institutions_eng / march24_month_eng)*100), digits = 0)`% of the total) - down `r round(abs(((march24_institutions_eng - dec23_institutions_eng) / dec23_institutions_eng)*100), digits = 0)`% since same period last quarter. 
+**`r  get("this_month_df_snapshot_new", envir = env1)`** new people sleeping rough on a single night in `r this_month` (`r round(abs(( get("this_month_df_snapshot_new", envir = env1) / get("this_month_df_snapshot", envir = env1))*100),digits = 0)`% of total) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% on the same period last year. 
+
+
+**`r get("this_month_df_institutions", envir = env1)`** people sleeping rough over the month in `r this_month` who have left an institution (`r round(abs((get("this_month_df_institutions", envir = env1) / get("this_month_df_month", envir = env1))*100), digits = 0)`% of the total) - `r sign(get("quarterly_change_df_institutions", envir = env1))` `r round(abs((get("quarterly_change_df_institutions", envir = env1))/get("last_quarter_df_institutions", envir = env1))*100, digits = 0)`% on since `r last_quarter`. 
+
 
 :::
+
+<br>
 
 ::: {custom-style="GreyBox"}
 
 #### Rare (R1)
-**`r march24_month_eng`** people sleeping rough over the month in March 2024 - up `r round(abs(((march24_month_eng - march23_month_eng)/march23_month_eng)*100), digits = 0)`% on March last year, and up `r round(abs(((march24_month_eng - dec23_month_eng)/dec23_month_eng)*100), digits = 0)`% since `r last_quarter`. `r march24_month_eng_rate` people per 100,000 sleeping rough over the month in March 2024 - up from `r march23_month_eng_rate` last year and `r dec23_month_eng_rate` in December 2023.
 
+**`r get("this_month_df_month", envir = env1)`** people sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month", envir = env1))` `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round(((get("quarterly_change_df_month", envir = env1))/get("last_quarter_df_month", envir = env1))*100, digits = 0)`% since `r last_quarter`.`r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month_rate", envir = env1))` from `r round((get("last_year_df_month_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_month_rate", envir = env1))` from `r round((get("last_quarter_df_month_rate", envir = env1)), digits = 1)` `r last_quarter`.
+
+
+
+**`r get("this_month_df_snapshot", envir = env1)`** people sleeping rough on a single night in `r this_month` - `r sign(get("annual_change_df_snapshot", envir = env1))` `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_snapshot", envir = env1))` `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter`. `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough on a single night in `r this_month` - `r sign(get("annual_change_df_snapshot_rate", envir = env1))` from `r round((get("last_year_df_snapshot_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_snapshot_rate", envir = env1))` from `r round((get("last_quarter_df_snapshot_rate", envir = env1)), digits = 1)` `r last_quarter`.
 
 ::: 
+
+<br>
+
 ::: {custom-style="GreyBox"}
 
 #### Brief (B1)
 **`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_long_term", envir = env1))` `r round(((get("quarterly_change_df_long_term", envir = env1))/get("last_quarter_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_quarter`.
 
 ::: 
+
+<br>
 
 ::: {custom-style="GreyBox"}
 
@@ -210,7 +202,11 @@ The number of people sleeping rough tends to be higher in the summer months when
 **Date of next publication**: It is expected that the next quarterly publication of monthly data up to June, will be published in September/October 2024.
 ::: 
 
+<br>
+
 ## 2. Introduction
+
+<br>
 
 Since March 2022, the Department for Levelling Up, Housing and Communities has been working with the Centre for Homelessness Impact and 5 pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole) to develop a vision and definition of ending rough sleeping, as set out in the cross-government strategy ‘Ending Rough Sleeping for Good’ published last year.  
 
@@ -241,6 +237,16 @@ These are:
 This publication provides information about these five core indicators for all local authorities in England up to March 2024. This new data framework will be relevant to people working locally to end rough sleeping, and is an important step towards driving better outcomes and realising the cross-government goal to end rough sleeping. 
 These indicators have been designed to measure progress towards the vision to end rough sleeping.
 
+<br>
+
+
+```{r image 1, echo=FALSE,}
+
+knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/Indicator_breakdown_pub_graphic.png")
+
+```
+
+<br>
 
 ## 3. Preventing people sleeping rough
 
@@ -361,28 +367,28 @@ colnames(inst_all) <- formatted_dates
 transposed <- data.frame(t(inst_all))
 transposed <-  mutate(transposed, "Date" = rownames(transposed))
 rownames(transposed) <- NULL
-colnames(transposed) <- c("Prison", "Other justice accommodation", "Hospital", "UKAF", "Asylum", "Under 25 care leavers", "Date")
+colnames(transposed) <- c("Prison (adult or youth)", "Other justice accommodation", "General or Psychiatric Hospital", "UK Armed Forces", "Asylum Support", "Under 25 care leavers", "Date")
 institutions_data <- transposed %>%
   mutate(Date = as.Date(Date, format = "%Y_%m_%d"),
-         Prison = as.numeric(Prison),
+         `Prison (adult or youth)` = as.numeric(`Prison (adult or youth)`),
          `Other justice accommodation` = as.numeric(`Other justice accommodation`),
-         Hospital = as.numeric(Hospital),
-         UKAF = as.numeric(UKAF),
-         Asylum = as.numeric(Asylum),
+         `General or Psychiatric Hospital` = as.numeric(`General or Psychiatric Hospital`),
+         `UK Armed Forces` = as.numeric(`UK Armed Forces`),
+         `Asylum Support` = as.numeric(`Asylum Support`),
          `Under 25 care leavers` = as.numeric(`Under 25 care leavers`))
 
 #Figure 3
 figure_3 <- ggplot(institutions_data, aes(x = Date)) +
-  geom_line(aes(y = Prison, color = "Prison"), size = 1.1, group = 1) +
-  geom_point(aes(y = Prison), color = "#000000", size = 2) +
+  geom_line(aes(y = `Prison (adult or youth)`, color = "Prison (adult or youth)"), size = 1.1, group = 1) +
+  geom_point(aes(y = `Prison (adult or youth)`), color = "#000000", size = 2) +
   geom_line(aes(y = `Other justice accommodation`, color = "Other justice accommodation"), size = 1.1, group = 1) +
   geom_point(aes(y = `Other justice accommodation`), color = "#12239E", size = 2) +
-  geom_line(aes(y = Hospital, color = "Hospital"), size = 1.1, group = 1) +
-  geom_point(aes(y = Hospital), color = "#118DFF", size = 2) +
-  geom_line(aes(y = UKAF, color = "UKAF"), size = 1.1, group = 1) +
-  geom_point(aes(y = UKAF), color = "#A0D1FF", size = 2) +
-  geom_line(aes(y = Asylum, color = "Asylum"), size = 1.1, group = 1) +
-  geom_point(aes(y = Asylum), color = "#7F7F7F", size = 2) +
+  geom_line(aes(y = `General or Psychiatric Hospital`, color = "General or Psychiatric Hospital"), size = 1.1, group = 1) +
+  geom_point(aes(y = `General or Psychiatric Hospital`), color = "#118DFF", size = 2) +
+  geom_line(aes(y = `UK Armed Forces`, color = "UK Armed Forces"), size = 1.1, group = 1) +
+  geom_point(aes(y = `UK Armed Forces`), color = "#A0D1FF", size = 2) +
+  geom_line(aes(y =  `Asylum Support`, color = "Asylum Support"), size = 1.1, group = 1) +
+  geom_point(aes(y =  `Asylum Support`), color = "#7F7F7F", size = 2) +
   geom_line(aes(y = `Under 25 care leavers`, color = "Under 25 care leavers"), size = 1.1, group = 1) +
   geom_point(aes(y = `Under 25 care leavers`), color = "#EFB5B9", size = 2) +
   dluhc_style(size = 1.5)+
@@ -394,7 +400,7 @@ figure_3 <- ggplot(institutions_data, aes(x = Date)) +
     legend.title = element_blank(),
     legend.text = element_text(family = "Arial", color = "#7F7F7F")) +
   guides(fill = guide_legend(override.aes = list(shape = 21, size = 5))) +
-  scale_color_manual(values = c("Prison" = "#000000", "Other justice accommodation" = "#12239E", "Hospital" = "#118DFF", "UKAF" = "#A0D1FF", "Asylum" = "#7F7F7F", "Under 25 care leavers" = "#EFB5B9")) +
+  scale_color_manual(values = c("Prison (adult or youth)" = "#000000", "Other justice accommodation" = "#12239E", "General or Psychiatric Hospital" = "#118DFF", "UK Armed Forces" = "#A0D1FF", "Asylum Support" = "#7F7F7F", "Under 25 care leavers" = "#EFB5B9")) +
   scale_x_date(labels = scales::date_format("%b %Y"), date_breaks = "1 month")
 
  output_file <- file.path(output_folder, "figure_3.svg")
@@ -661,7 +667,6 @@ tmap_save(England_map, "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/r
 tmap_save(England_map, "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
 
 
-
 #Adjust for London 
 
 #Create London dataframe
@@ -683,11 +688,8 @@ London_map <- London_join %>%
           title = "People",
           legend.show = FALSE) +
   tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
-  #tm_text("name_rtot", size = 0.8,col = "black")+
   tm_style("col_blind")+
-  #tm_facets(by = "manchester")+
   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-
 
 tmap_save(England_map, "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/London_map.png", width=2000, height=2000, asp=0)
 tmap_save(England_map, "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/London_map.svg", width=2000, height=2000, asp=0)
@@ -712,7 +714,73 @@ knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/
 
 <br>
 
-**Figure 6: Map of rate of people sleeping rough over the month per 100,000 people (R1), `r this_month`**
+```{r figure 7,  include=FALSE}
+
+df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>% 
+  select(c(1,2,3,46))
+colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
+
+England <- st_read("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+
+England <- England %>% 
+  left_join(df_month_rate,  by = join_by(LAD23CD)) 
+
+England <- England %>% 
+  filter(!is.na(England$month))
+
+England_map_rate <- England %>%  
+  tm_shape() +
+  tm_fill("month", style = "cont", breaks = c(0,3,6,12,20,50,450),
+          labels = c("0","5","10","20","50","100+",""),
+          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+          title = "People") +
+  tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
+  tm_style("col_blind") +
+  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+
+tmap_save(England_map_rate, "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png", width=2000, height=2000, asp=0)
+tmap_save(England_map_rate, "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/England_map_rate.svg", width=2000, height=2000, asp=0)
+
+#Adjust for London 
+
+#Create London dataframe
+London <- df_month_rate[ c(12:307), ] %>% 
+  filter(Region == "London") 
+  
+#Join with shape file and remove any values not in London
+London_join <- England %>% 
+  left_join(London,  by = join_by(LAD23CD))
+
+London_join <- London_join %>% 
+  filter(!is.na(London_join$month.y))
+
+London_map_rate <- London_join %>% 
+  tm_shape() +
+  tm_fill("month.y", style = "cont", breaks = c(0,10,15,30,75,100,150),
+          labels = c("0","5","10","20","50","100+",""),
+          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+          title = "People",
+          legend.show = FALSE) +
+  tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
+  tm_style("col_blind")+
+  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+
+tmap_save(London_map_rate, "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png", width=2000, height=2000, asp=0)
+tmap_save(London_map_rate, "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/London_map_rate.svg", width=2000, height=2000, asp=0)
+
+
+```
+
+
+**Figure 7: Map of rate of people sleeping rough over the month per 100,000 people (R1), `r this_month`**
+
+
+```{r figure 7 - map, echo=FALSE,}
+
+knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png")
+knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png")
+
+```
 
 <br>
 
