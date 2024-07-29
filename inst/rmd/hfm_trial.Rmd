@@ -31,6 +31,7 @@ params:
 # library("scales")
 
 #Load the dataframes in from the latest tables
+# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240517.xlsx"
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -373,8 +374,62 @@ knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/
 
 ```{r 4-Figure 2 P2, include=FALSE}
 
+# Load Arial font
+font_add("Arial", "Arial.ttf")
+showtext_auto()
 
+#Access env1
+this_month_df_prison <- get("this_month_df_prison", envir = env1)
+this_month_df_asylum <- get("this_month_df_asylum", envir = env1)
+this_month_df_hospital <- get("this_month_df_hospital", envir = env1)
+this_month_df_u25care <- get("this_month_df_u25care", envir = env1)
+this_month_df_oja <- get("this_month_df_oja", envir = env1)
+this_month_df_ukaf <- get("this_month_df_ukaf", envir = env1)
 
+#Create dataframe
+donut_data <- data.frame(
+  Institutions = c("Prison", "Asylum support", "General or psychiatric hospitals", "Under 25 care leavers", "Other justice accommodation", "UK armed forces"),
+  this_month_inst =  c(this_month_df_prison, this_month_df_asylum, this_month_df_hospital, this_month_df_u25care, this_month_df_oja, this_month_df_ukaf)
+)
+
+#Compute percentages
+donut_data$fraction = donut_data$this_month_inst / sum(donut_data$this_month_inst)
+donut_data$label = round((donut_data$this_month_inst / sum(donut_data$this_month_inst))*100, digits = 0 )
+
+#Compute cumulative %s
+donut_data$ymax = cumsum(donut_data$fraction)
+
+# Compute the bottom of each rectangle
+donut_data$ymin = c(0, head(donut_data$ymax, n=-1))
+
+# Compute label position
+donut_data$labelPosition <- (donut_data$ymax + donut_data$ymin) / 2
+
+# Compute a good label
+donut_data$label <- paste0(donut_data$label, "%")
+
+#colour lables
+colors <- c("Prison" = "#000000", "Asylum support" = "#012169", "General or psychiatric hospitals" = "#4A6F9E", "Under 25 care leavers" = "#95B3D7", "Other justice accommodation" = "#AFABAB", "UK armed forces" = "#D0CECE")
+
+#total value for centre label
+total_value <- sum(donut_data$this_month_inst)
+
+# Make the plot
+figure_2 <- ggplot(donut_data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Institutions)) +
+  geom_rect() +
+  geom_text(aes(x=3.5, y=labelPosition, label=label), size=4, color = "white") +
+  coord_polar(theta="y") +
+  xlim(c(1, 4)) +
+  scale_fill_manual(values = colors) + 
+  theme_void() +
+  theme(
+    text = element_text(family = "Arial", color = "#7F7F7F"),
+    legend.position = "bottom",
+    legend.title = element_blank())+
+  annotate("text", x = 1.5, y = 0, label = total_value, size = 18, color = "#012169", fontface = "bold")+
+  annotate("text", x = 1, y = 0 , label = "\n \n \n People sleeping rough \n over the month who left\n an institution", size = 4, color = "#767171", fontface = "bold", family = "Arial")
+
+print(figure_2)
 
  output_file <- file.path(output_folder, "figure_2.svg")
  output_file2 <- file.path(output_folder, "figure_2.png")
@@ -387,6 +442,12 @@ knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/
 
 
 **Figure 2: People sleeping rough over the course of the month who have left an institution, `r this_month` (P2)**
+
+```{r figure 1, echo=FALSE,}
+
+knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/figure_2.png")
+
+```
 
 ```{r 4-Figure 3 P2, include=FALSE}
 
