@@ -29,9 +29,10 @@ params:
 # library("sf")
 # library("tmap")
 # library("scales")
+# library("showtext")
 
 #Load the dataframes in from the latest tables
-# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240517.xlsx"
+# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -50,6 +51,7 @@ df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", s
 df_snapshot_rate <- read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3)
 df_returners <- read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip = 3)
 
+colnames(df_month_new) <- colnames(df_month)
 knitr::opts_chunk$set(echo = TRUE)
 
 ############### ALTERNATE METHOD TO REDUCE UPDATES ##############
@@ -278,23 +280,23 @@ There were `r get("this_month_df_month_new", envir = env1)` people sleeping roug
 
 There were `r get("this_month_df_snapshot_new", envir = env1)` people sleeping rough on a single night in `r this_month` (`r round(((get("this_month_df_snapshot_new", envir = env1))/get("this_month_df_snapshot", envir = env1))*100, digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% on the same period last year. 
 
-There were `r get("this_month_df_institutions", envir = env1)` people sleeping rough over the month in `r this_month` who have left an institution (`r round(((get("this_month_df_institutions", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of total). Of these people
+There were `r get("this_month_df_institutions", envir = env1)` people sleeping rough over the month in `r this_month` who have left an institution (`r round(((get("this_month_df_institutions", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total). Of these people
 
 *  `r get("this_month_df_prison", envir = env1)` people (`r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left prison in the last 85 days - `r sign(get("quarterly_change_df_prison", envir = env1))` `r round(((get("quarterly_change_df_prison", envir = env1))/get("last_quarter_df_prison", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
 
 *  `r get("this_month_df_asylum", envir = env1)` people (`r round(((get("this_month_df_asylum", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left asylum support (previously 'National Asylum Support Services') in the last 85 days - `r sign(get("quarterly_change_df_asylum", envir = env1))` `r round(abs(((get("quarterly_change_df_asylum", envir = env1))/get("last_quarter_df_asylum", envir = env1)))*100, digits = 0)`% since `r last_quarter`. 
 
-*  `r get("this_month_df_hospital", envir = env1)` people (`r round(((get("this_month_df_hospital", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left General & Psychiatric hospitals in the last 85 days - `r sign(get("quarterly_change_df_hospital", envir = env1))``r round(((get("quarterly_change_df_hospital", envir = env1))/get("last_quarter_df_hospital", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
+*  `r get("this_month_df_hospital", envir = env1)` people (`r round(((get("this_month_df_hospital", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left General & Psychiatric hospitals in the last 85 days - `r sign(get("quarterly_change_df_hospital", envir = env1))` `r round(abs(((get("quarterly_change_df_hospital", envir = env1))/get("last_quarter_df_hospital", envir = env1)))*100, digits = 0)`% since `r last_quarter`. 
 
 *  `r get("this_month_df_u25care", envir = env1)` people (`r round(((get("this_month_df_u25care", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) were under 25 care leavers - `r sign(get("quarterly_change_df_u25care", envir = env1))` `r round(((get("quarterly_change_df_u25care", envir = env1))/get("last_quarter_df_u25care", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
 
 *  `r get("this_month_df_oja", envir = env1)` people (`r round(((get("this_month_df_oja", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left other justice accommodation within the last 85 days - `r sign(get("quarterly_change_df_oja", envir = env1))` `r round(((get("quarterly_change_df_oja", envir = env1))/get("last_quarter_df_oja", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
 
-*  `r get("this_month_df_ukaf", envir = env1)` people (`r round(((get("this_month_df_ukaf", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left the UK armed forces within the last 85 days. 
+*  `r get("this_month_df_ukaf", envir = env1)` people (`r round(((get("this_month_df_ukaf", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 1)`% of people who had left an institution) had left the UK armed forces within the last 85 days. 
 
 
 
-```{r Figure 1 - P1, include=FALSE}
+```{r fig 1 code - P1, include=FALSE}
 
  #Trim desired dataframes to the size wanted for figures
  new_month_tot <- as.vector(df_month_new[1, c(5:length(df_month_new))])
@@ -327,6 +329,11 @@ There were `r get("this_month_df_institutions", envir = env1)` people sleeping r
         `New month` = as.numeric(`New month`),
         `New snapshot` = as.numeric(`New snapshot`)) %>%
    select(3, 2, 1)
+new_df$Date <- as.Date(new_df$Date)
+min_date <- min(new_df$Date)
+max_date <- max(new_df$Date)
+
+
 
  figure_1 <- ggplot(new_df, aes(x = Date)) +
    geom_line(aes(y = `New snapshot`, color = "Snapshot_new"), size = 1.1, group = 1) +
@@ -338,7 +345,7 @@ There were `r get("this_month_df_institutions", envir = env1)` people sleeping r
    scale_color_manual(values = c("Snapshot_new" = "#012169", "Month_new" = "#95B3D7")) +
    dluhc_style(size = 1.5) +
    scale_y_continuous(breaks = seq(0,4000, by = 500),labels = comma)+
-   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month") +
+   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", limits = c(min_date, max_date)) +
    theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
     axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10)
@@ -348,7 +355,7 @@ There were `r get("this_month_df_institutions", envir = env1)` people sleeping r
             color = "#012169",vjust = -2, hjust = -2.5, size = 3.5) +
   geom_text(data = new_df[1, ], aes(x = Date, y = `New month`, label = "        New people sleeping\n rough over the month (P1)"),
             color = "#95B3D7", vjust = -6.3, hjust = -2.4, size = 3.5)
-
+print(figure_1)
 
  output_folder <- "D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
  output_file <- file.path(output_folder, "figure_1.svg")
@@ -361,7 +368,7 @@ There were `r get("this_month_df_institutions", envir = env1)` people sleeping r
 
 **Figure 1: New people sleeping rough, October 2020 to `r this_month` (P1)**
 
-```{r figure 1, echo=FALSE,}
+```{r line new, echo=FALSE,}
 
 knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/rmd/images/figure_1.png")
 
@@ -453,7 +460,7 @@ knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/
 
 #Bind into one df
 inst_all <- bind_rows(as.vector(df_prison[1, ]), as.vector(df_oja[1, ]), as.vector(df_hospital[1, ]), as.vector(df_ukaf[1, ]), as.vector(df_asylum[1, ]), as.vector(df_u25care[1,c(14:length(df_u25care)) ])) %>% 
-  select(-c(1:4), -c(16:19)) # update when you need new data included
+  select(-c(1:4), -c(19:22)) # update when you need new data included
 
 #convert date formats
 start_date <- as.Date("2023-05-01")
@@ -502,6 +509,7 @@ figure_3 <- ggplot(institutions_data, aes(x = Date)) +
   guides(fill = guide_legend(override.aes = list(shape = 21, size = 5))) +
   scale_color_manual(values = c("Prison (adult or youth)" = "#000000", "Other justice accommodation" = "#12239E", "General or Psychiatric Hospital" = "#118DFF", "UK Armed Forces" = "#A0D1FF", "Asylum Support" = "#7F7F7F", "Under 25 care leavers" = "#EFB5B9")) +
   scale_x_date(labels = scales::date_format("%b %Y"), date_breaks = "1 month")
+
 
  output_file <- file.path(output_folder, "figure_3.svg")
  output_file2 <- file.path(output_folder, "figure_3.png")
@@ -623,7 +631,7 @@ knitr::include_graphics("D:/Users/hudson.fm/Documents/GitHub/ERSautomation/inst/
 
 ## 5. Making rough sleeping brief
 
-There were `r get("this_month_df_long_term", envir = env1)` people sleeping rough over the month in `r this_month` who ahd been sleeping rough long term `r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)` `r (get("quarterly_change_df_long_term", envir = env1))  ` `r round((get("quarterly_change_df_long_term", envir = env1) /  get("last_quarter_df_long_term", envir = env1))*100, digits = 0)` since `r last_quarter`.
+There were `r get("this_month_df_long_term", envir = env1)` people sleeping rough over the month in `r this_month` who had been sleeping rough long term (`r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_long_term", envir = env1))` `r round((get("quarterly_change_df_long_term", envir = env1) /  get("last_quarter_df_long_term", envir = env1))*100, digits = 0)`% since `r last_quarter`.
 
 ## 6. Making rough sleeping a non-recurring experience
 
@@ -640,6 +648,7 @@ There were `r get("this_month_df_returners", envir = env1)` people sleeping roug
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_long_term <- read_excel(input_path, sheet = "Table_B1_-_RS_monthly_long_term", skip = 3)
 df_returners <- read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip = 3)
+colnames(df_month_new) <- colnames(df_month)
 
 
 #Generate combined df for variables - update for next publication number of cols included
