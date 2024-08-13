@@ -2,7 +2,7 @@
 title: "Ending Rough Sleeping Data Framework, March 2024"
 output: 
   word_document:
-    reference_docx: "styles.dotx"
+    reference_docx: "styles1.dotx"
 date: '2024-05-23'
 params:
   para_1: ""
@@ -10,29 +10,29 @@ params:
 ---
 
 ```{r setup, include=FALSE}
-# library("odbc")
-# library("dbplyr")
-# library("dtplyr")
-# library("dplyr")
-# library("tidyr")
-# library ("xlsx")
-# library("writexl")
-# library("openxlsx")
-# library("ggplot2")
-# library("devtools")
-# library("profvis")
-# library("shiny")
-# library("dluhctheme")
-# library("readxl")
-# library("scales")
-# library("tidyverse")
-# library("sf")
-# library("tmap")
-# library("scales")
-# library("showtext")
+library("odbc")
+library("dbplyr")
+library("dtplyr")
+library("dplyr")
+library("tidyr")
+library ("xlsx")
+library("writexl")
+library("openxlsx")
+library("ggplot2")
+library("devtools")
+library("profvis")
+library("shiny")
+library("dluhctheme")
+library("readxl")
+library("scales")
+library("tidyverse")
+library("sf")
+library("tmap")
+library("scales")
+library("showtext")
 
 #Load the dataframes in from the latest tables
-# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -53,6 +53,19 @@ df_returners <- read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip 
 
 colnames(df_month_new) <- colnames(df_month)
 knitr::opts_chunk$set(echo = TRUE)
+options(scipen = 999)  # Prevents scientific notation
+options(digits = 10)   # Controls the number of digits
+
+# Custom format function to include comma separator for numbers over 999
+custom_format <- function(x) {
+  if (is.numeric(x)) {
+    return(scales::comma(x))
+  }
+  return(x)
+}
+
+# Automatically apply custom_format to all inline R code
+knitr::knit_hooks$set(inline = function(x) custom_format(x))
 
 ############### ALTERNATE METHOD TO REDUCE UPDATES ##############
 
@@ -399,20 +412,43 @@ donut_data <- data.frame(
   this_month_inst =  c(this_month_df_prison, this_month_df_asylum, this_month_df_hospital, this_month_df_u25care, this_month_df_oja, this_month_df_ukaf)
 )
 
-#Compute percentages
-donut_data$fraction = donut_data$this_month_inst / sum(donut_data$this_month_inst)
-donut_data$label = round((donut_data$this_month_inst / sum(donut_data$this_month_inst))*100, digits = 0 )
 
-#Compute cumulative %s
+##FIX BELOW FOR ROUNDING OF VALUES THAT ARE SMALL
+conditional_round <- function(x) {
+  if (x < 0.01) {
+    # Round to 1 digit if value equals zero
+    return(round(x, digits = 3))
+  } else {
+    # Round to 0 digits if value is greater than zero
+    return(round(x, digits = 2))
+  }
+}
+
+# percentages
+donut_data$fraction = donut_data$this_month_inst / sum(donut_data$this_month_inst)
+donut_data$label = sapply((donut_data$this_month_inst / sum(donut_data$this_month_inst)), conditional_round)*100
+
+#Function to format to 1 dp if less than 1
+format_label <- function(value) {
+  if (value < 1) {
+    return(sprintf("%.1f", value))  # Format to 1 decimal place
+  } else {
+    return(sprintf("%.0f", value))  # Format to 0 decimal places
+  }
+}
+
+donut_data$label <- sapply(donut_data$label, format_label)
+
+#cumulative %s
 donut_data$ymax = cumsum(donut_data$fraction)
 
-# Compute the bottom of each rectangle
+# Get bottom of each rectangle
 donut_data$ymin = c(0, head(donut_data$ymax, n=-1))
 
-# Compute label position
+#label position
 donut_data$labelPosition <- (donut_data$ymax + donut_data$ymin) / 2
-
-# Compute a good label
+donut_data$labelPosition
+#a good label
 donut_data$label <- paste0(donut_data$label, "%")
 
 #colour lables
@@ -421,23 +457,73 @@ colors <- c("Prison" = "#000000", "Asylum support" = "#012169", "General or psyc
 #total value for centre label
 total_value <- sum(donut_data$this_month_inst)
 
-# Make the plot
-figure_2 <- ggplot(donut_data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Institutions)) +
+#Change label position of UKAF
+donut_data[6,7] <- 1
+
+#Trial
+
+donut_data$custom_labelPosition <- ifelse(donut_data$Institutions == "UK armed forces", 1, (donut_data$ymax + donut_data$ymin) / 2)
+original_label_position <- donut_data$labelPosition[donut_data$Institutions == "UK armed forces"]
+
+
+figure_2 <- ggplot(donut_data, aes(ymax=ymax, ymin=ymin, xmax=5, xmin=3.25, fill=Institutions)) +
   geom_rect() +
-  geom_text(aes(x=3.5, y=labelPosition, label=label), size=4, color = "white") +
+  geom_text(data=subset(donut_data, Institutions != "UK armed forces"), aes(x=4, y=labelPosition, label=label), size=4, color = "white") +
+  geom_text(data=subset(donut_data, Institutions == "UK armed forces"), aes(x=5.75, y=custom_labelPosition, label=label), size=4, color = "#767171") +
+  geom_segment(data=subset(donut_data, Institutions == "UK armed forces"), aes(x=4, y=original_label_position, xend=5.45, yend=custom_labelPosition), color="#767171", size=01) +
   coord_polar(theta="y") +
-  xlim(c(1, 4)) +
+  xlim(c(0, 6)) +
   scale_fill_manual(values = colors) + 
   theme_void() +
   theme(
     text = element_text(family = "Arial", color = "#7F7F7F"),
     legend.position = "bottom",
     legend.title = element_blank())+
-  annotate("text", x = 1.5, y = 0, label = total_value, size = 18, color = "#012169", fontface = "bold")+
-  annotate("text", x = 1, y = 0 , label = "\n \n \n People sleeping rough \n over the month who left\n an institution", size = 4, color = "#767171", fontface = "bold", family = "Arial")
+  annotate("text", x = 1, y = 0, label = total_value, size = 18, color = "#012169", fontface = "bold")+
+  annotate("text", x = 0, y = 0 , label = "\n \n \n People sleeping rough \n over the month who left\n an institution", size = 4, color = "#767171", fontface = "bold", family = "Arial")
 
 print(figure_2)
 
+#Old version - before label for small numbers was added
+# #Compute percentages
+# donut_data$fraction = donut_data$this_month_inst / sum(donut_data$this_month_inst)
+# donut_data$label = round((donut_data$this_month_inst / sum(donut_data$this_month_inst))*100, digits = 0 )
+# 
+# #Compute cumulative %s
+# donut_data$ymax = cumsum(donut_data$fraction)
+# 
+# # Compute the bottom of each rectangle
+# donut_data$ymin = c(0, head(donut_data$ymax, n=-1))
+# 
+# # Compute label position
+# donut_data$labelPosition <- (donut_data$ymax + donut_data$ymin) / 2
+# 
+# # Compute a good label
+# donut_data$label <- paste0(donut_data$label, "%")
+# 
+# #colour lables
+# colors <- c("Prison" = "#000000", "Asylum support" = "#012169", "General or psychiatric hospitals" = "#4A6F9E", "Under 25 care leavers" = "#95B3D7", "Other justice accommodation" = "#AFABAB", "UK armed forces" = "#D0CECE")
+# 
+# #total value for centre label
+# total_value <- sum(donut_data$this_month_inst)
+# 
+# # Make the plot
+# figure_2 <- ggplot(donut_data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Institutions)) +
+#   geom_rect() +
+#   geom_text(aes(x=3.5, y=labelPosition, label=label), size=4, color = "white") +
+#   coord_polar(theta="y") +
+#   xlim(c(1, 4)) +
+#   scale_fill_manual(values = colors) + 
+#   theme_void() +
+#   theme(
+#     text = element_text(family = "Arial", color = "#7F7F7F"),
+#     legend.position = "bottom",
+#     legend.title = element_blank())+
+#   annotate("text", x = 1.5, y = 0, label = total_value, size = 18, color = "#012169", fontface = "bold")+
+#   annotate("text", x = 1, y = 0 , label = "\n \n \n People sleeping rough \n over the month who left\n an institution", size = 4, color = "#767171", fontface = "bold", family = "Arial")
+# 
+# print(figure_2)
+# 
  output_file <- file.path(output_folder, "figure_2.svg")
  output_file2 <- file.path(output_folder, "figure_2.png")
 
@@ -547,7 +633,8 @@ There were `r get("this_month_df_month", envir = env1)` people estimated to be s
 
 This is `r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times higher than the number of people seen sleeping rough on a single night, illustrating that the flow of people onto and off the street over the course of a month is significantly higher than those seen on any given night due to the dynamic nature of rough sleeping.
 
-The rate of people sleeping rough over the month of `r this_month` in England was  `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_month_rate", envir = env1), digits = 1)` people per 100,000 in the `r last_quarter` and `r round(get("last_year_df_month_rate", envir = env1), digits = 1)` people per 100,00 in the same period last year.
+The rate of people sleeping rough over the month of `r this_month` in England was  `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_month_rate", envir = env1), digits = 1)` people per 100,000 in the `r last_quarter` and `r round(get("last_year_df_month_rate", envir = env1), digits = 1)` people per 100,00 in the same period last year[^1].
+
 
 There were, `r get("this_month_df_snapshot", envir = env1)`  people sleeping rough on a single night in `r this_month` - `r sign( get("quarterly_change_df_snapshot", envir = env1))` `r get("quarterly_change_df_snapshot", envir = env1)` people or  `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot", envir = env1))` `r get("annual_change_df_snapshot", envir = env1)` people or `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% since last year. 
 
@@ -639,7 +726,7 @@ There were `r get("this_month_df_returners", envir = env1)` people sleeping roug
 
 
 
-**Figure 5: Number of people sleeping rough over the month who are new (P1), long term (B1) or returners (NR1), May 2023 to `r this_month`**
+**Figure 5: Number of people sleeping rough over the month who are new (P1), long term (B1) or returners (NR1), May 2023 to `r this_month`[^2]**
 
 
 
@@ -652,9 +739,9 @@ colnames(df_month_new) <- colnames(df_month)
 
 
 #Generate combined df for variables - update for next publication number of cols included
-new_month <- df_month_new[, c((length(df_month_new)-10 ): length(df_month_new))]
-long_term <- df_long_term[, c((length(df_long_term)-10 ): length(df_long_term))]
-returners <- df_returners[, c((length(df_returners)-10 ): length(df_returners))]
+new_month <- df_month_new[, c((length(df_month_new)-13 ): length(df_month_new))]
+long_term <- df_long_term[, c((length(df_long_term)-13 ): length(df_long_term))]
+returners <- df_returners[, c((length(df_returners)-13 ): length(df_returners))]
 
 #Function to get just all england values for each variable
 england_values <- function(df1, df2, df3){
@@ -736,65 +823,65 @@ OFFICIAL
 
 # Script to create maps for the info graphic
 
-library(tidyverse)
-library(sf)
-library(tmap)
-library(scales)
-
-#This is for rate despite saying just snapshot
-df_snapshot <- read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3) %>% 
-  select(c(1,2,3,50))
-colnames(df_snapshot) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
-
-England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
-
-England <- England %>% 
-  left_join(df_snapshot,  by = join_by(LAD23CD)) 
-
-England <- England %>% 
-  filter(!is.na(England$snapshot))
-
-England_map <- England %>%  
-  tm_shape() +
-  tm_fill("snapshot", style = "cont", breaks = c(0,3,6,12,20,50,450),
-          labels = c("0","5","10","20","50","100+",""),
-          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-          title = "People") +
-  tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
-  tm_style("col_blind") +
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-
-#Use England shape files, this will need updating if there's boundary changes
-tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=2000, height=2000, asp=0)
-tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
-
-
-#Adjust for London 
-
-#Create London dataframe
-London <- df_snapshot[ c(12:307), ] %>% 
-  filter(Region == "London") 
-  
-#Join with shape file and remove any values not in London
-London_join <- England %>% 
-  left_join(London,  by = join_by(LAD23CD))
-
-London_join <- London_join %>% 
-  filter(!is.na(London_join$snapshot.y))
-
-London_map <- London_join %>% 
-  tm_shape() +
-  tm_fill("snapshot.y", style = "cont", breaks = c(0,10,15,30,75,150,285),
-          labels = c("0","5","10","20","50","100+",""),
-          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-          title = "People",
-          legend.show = FALSE) +
-  tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
-  tm_style("col_blind")+
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-
-tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.png", width=2000, height=2000, asp=0)
-tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.svg", width=2000, height=2000, asp=0)
+# library(tidyverse)
+# library(sf)
+# library(tmap)
+# library(scales)
+# 
+# #This is for rate despite saying just snapshot
+# df_snapshot <- read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3) %>% 
+#   select(c(1,2,3,50))
+# colnames(df_snapshot) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
+# 
+# England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+# 
+# England <- England %>% 
+#   left_join(df_snapshot,  by = join_by(LAD23CD)) 
+# 
+# England <- England %>% 
+#   filter(!is.na(England$snapshot))
+# 
+# England_map <- England %>%  
+#   tm_shape() +
+#   tm_fill("snapshot", style = "cont", breaks = c(0,3,6,12,20,50,450),
+#           labels = c("0","5","10","20","50","100+",""),
+#           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+#           title = "People") +
+#   tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
+#   tm_style("col_blind") +
+#   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+# 
+# #Use England shape files, this will need updating if there's boundary changes
+# tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=2000, height=2000, asp=0)
+# tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
+# 
+# 
+# #Adjust for London 
+# 
+# #Create London dataframe
+# London <- df_snapshot[ c(12:307), ] %>% 
+#   filter(Region == "London") 
+#   
+# #Join with shape file and remove any values not in London
+# London_join <- England %>% 
+#   left_join(London,  by = join_by(LAD23CD))
+# 
+# London_join <- London_join %>% 
+#   filter(!is.na(London_join$snapshot.y))
+# 
+# London_map <- London_join %>% 
+#   tm_shape() +
+#   tm_fill("snapshot.y", style = "cont", breaks = c(0,10,15,30,75,150,285),
+#           labels = c("0","5","10","20","50","100+",""),
+#           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+#           title = "People",
+#           legend.show = FALSE) +
+#   tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
+#   tm_style("col_blind")+
+#   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+# 
+# tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.png", width=2000, height=2000, asp=0)
+# tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.svg", width=2000, height=2000, asp=0)
 
 ```
 <br>
@@ -809,66 +896,66 @@ tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.svg", 
 
 ```{r figure 6 - map, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map.png")
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map.png")
+# knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map.png")
+# knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map.png")
 
 ```
 
 <br>
 
 ```{r figure 7,  include=FALSE}
-
-df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>% 
-  select(c(1,2,3,46))
-colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
-
-England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
-
-England <- England %>% 
-  left_join(df_month_rate,  by = join_by(LAD23CD)) 
-
-England <- England %>% 
-  filter(!is.na(England$month))
-
-England_map_rate <- England %>%  
-  tm_shape() +
-  tm_fill("month", style = "cont", breaks = c(0,3,6,12,20,50,450),
-          labels = c("0","5","10","20","50","100+",""),
-          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-          title = "People") +
-  tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
-  tm_style("col_blind") +
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-
-tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png", width=2000, height=2000, asp=0)
-tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.svg", width=2000, height=2000, asp=0)
-
-#Adjust for London 
-
-#Create London dataframe
-London <- df_month_rate[ c(12:307), ] %>% 
-  filter(Region == "London") 
-  
-#Join with shape file and remove any values not in London
-London_join <- England %>% 
-  left_join(London,  by = join_by(LAD23CD))
-
-London_join <- London_join %>% 
-  filter(!is.na(London_join$month.y))
-
-London_map_rate <- London_join %>% 
-  tm_shape() +
-  tm_fill("month.y", style = "cont", breaks = c(0,10,15,30,75,100,150),
-          labels = c("0","5","10","20","50","100+",""),
-          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-          title = "People",
-          legend.show = FALSE) +
-  tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
-  tm_style("col_blind")+
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-
-tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png", width=2000, height=2000, asp=0)
-tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.svg", width=2000, height=2000, asp=0)
+# 
+# df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>% 
+#   select(c(1,2,3,46))
+# colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
+# 
+# England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+# 
+# England <- England %>% 
+#   left_join(df_month_rate,  by = join_by(LAD23CD)) 
+# 
+# England <- England %>% 
+#   filter(!is.na(England$month))
+# 
+# England_map_rate <- England %>%  
+#   tm_shape() +
+#   tm_fill("month", style = "cont", breaks = c(0,3,6,12,20,50,450),
+#           labels = c("0","5","10","20","50","100+",""),
+#           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+#           title = "People") +
+#   tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
+#   tm_style("col_blind") +
+#   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+# 
+# tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png", width=2000, height=2000, asp=0)
+# tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.svg", width=2000, height=2000, asp=0)
+# 
+# #Adjust for London 
+# 
+# #Create London dataframe
+# London <- df_month_rate[ c(12:307), ] %>% 
+#   filter(Region == "London") 
+#   
+# #Join with shape file and remove any values not in London
+# London_join <- England %>% 
+#   left_join(London,  by = join_by(LAD23CD))
+# 
+# London_join <- London_join %>% 
+#   filter(!is.na(London_join$month.y))
+# 
+# London_map_rate <- London_join %>% 
+#   tm_shape() +
+#   tm_fill("month.y", style = "cont", breaks = c(0,10,15,30,75,100,150),
+#           labels = c("0","5","10","20","50","100+",""),
+#           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+#           title = "People",
+#           legend.show = FALSE) +
+#   tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
+#   tm_style("col_blind")+
+#   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+# 
+# tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png", width=2000, height=2000, asp=0)
+# tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.svg", width=2000, height=2000, asp=0)
 
 
 ```
@@ -878,9 +965,9 @@ tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_ra
 
 
 ```{r figure 7 - map, echo=FALSE,}
-
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png")
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png")
+# 
+# knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png")
+# knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png")
 
 ```
 
@@ -888,6 +975,7 @@ knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.
 
 # 7. Definitions
 ::: {custom-style="GreyBox"}
+
 **New people sleeping rough (P1)** 
 
 A person is considered ‘new’ if they have not been seen sleeping rough in the Local Authority in the 5 calendar years (60 months) preceding the date they were seen sleeping rough during the current reporting period. If a person was seen more than 5 years previously, they are to be counted as ‘New’. If there is no historical data available for the last 5 years, people seen sleeping rough for the first time should be counted as ‘New’ whilst a historical database is compiled. 
@@ -899,21 +987,23 @@ Prior to May 2023, the definition was less specific in terms of time period, and
 **People sleeping rough who have been discharged from an institution (P2)** 
 
 A person is counted as having left an institution recently if they report having been discharged from any of the below within the last 85 days (12 weeks + 1 day): 
-::: 
+
+* Prisons (adult and youth)
+
+* Other justice accommodation e.g. accommodation provided by the National Probation Service (i.e. Approved Premises)
+
+* General and psychiatric hospitals
+
+* Discharged from the UK Armed Forces
+
+* Asylum support (previously ‘National Asylum Support Services Accommodation’)
+
 
 <br>
 
-::: {custom-style="GreyBox"}
-* Prisons (adult and youth) 
-* Other justice accommodation e.g. accommodation provided by the National Probation Service (i.e. Approved Premises) 
-* General and psychiatric hospitals 
-* Discharged from the UK Armed Forces 
-* Asylum support (previously ‘National Asylum Support Services Accommodation’) 
-::: 
+**People sleeping rough (R1)**
 
-<br>
 
-**People sleeping rough (R1)** 
 
 People sleeping rough are defined as:   
 
@@ -924,8 +1014,11 @@ People sleeping rough are defined as:
 The definition does not include: 
 
 * People in hostels or shelters 
+
 * People in campsites or other sites used for recreational purposes or organised protest 
+
 * Squatters 
+
 * Travellers 
 
 **Bedded down** is taken to mean either lying down or sleeping. 
@@ -945,7 +1038,9 @@ Long term rough sleeping is defined as the number of people seen recently (withi
 **People returning to sleeping rough (NR1)** 
 
 A person is considered a ‘returner’ if they are seen sleeping rough again after no contact for 2 or more quarters (180 days), whichever is shorter, measured from the last date the person was seen. 
+<br>
 
+:::
 <br>
 <br>
 
@@ -979,7 +1074,7 @@ An [interactive dashboard](https://app.powerbi.com/view?r=eyJrIjoiMDFiNWYyYjItMG
 
 This management information provides more timely and more detailed data on rough sleeping and the support for rough sleepers compared to the annual rough sleeping snapshot.
 
-The management information is collected via a regular survey to local authorities, which began in May 2020. Local authorities were required to provide data underpinning the new framework indicators from May 2023, although some indicators have been collected for longer as they were already part of the rough sleeping management information collection. All local authorities are required to complete the survey, which includes questions about rough sleeping, off the street accommodation, long term or repeat rough sleepers and medium or longterm accommodation. This management information provides more timely and more detailed data on rough sleeping and the support for rough sleepers compared to the annual rough sleeping snapshot.
+The management information is collected via a regular survey to local authorities, which began in May 2020. Local authorities were required to provide data underpinning the new framework indicators from May 2023, although some indicators have been collected for longer as they were already part of the rough sleeping management information collection. All local authorities are required to complete the survey, which includes questions about rough sleeping, off the street accommodation, long term or repeat rough sleepers and medium or long term accommodation. This management information provides more timely and more detailed data on rough sleeping and the support for rough sleepers compared to the annual rough sleeping snapshot.
 
 Local authorities submit their management information via MHCLG's [DELTA](https://delta.communities.gov.uk/login) online data collection system. The DELTA online data collection system includes inbuilt rules and validation checks to ensure the data provided is complete and accurate.
 
@@ -1198,6 +1293,6 @@ Information on Official Statistics is available via the [UK Statistics Authority
 
 Information about statistics at MHCLG is available via the [department’s website.](https://www.gov.uk/government/organisations/department-for-levelling-up-housing-and-communities/about/statistics)
 
-
-
+[^1]:ONS mid-2022 population estimates.
+[^2]:There is the potential for some overlap between new people sleeping rough over the month (P1) and people returning to sleeping rough (NR1) if a person found sleeping rough returns to sleeping rough after not being seen for more than five years. Not all people seen sleeping rough over the month, are included in new people sleeping rough over the month (P1), people sleeping rough long term (B1) or people returning to sleeping rough (NR1).
 
