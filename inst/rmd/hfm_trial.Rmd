@@ -1,5 +1,5 @@
 ---
-title: "Ending Rough Sleeping Data Framework, March 2024"
+title: "Ending Rough Sleeping Data Framework, June 2024"
 output: 
   word_document:
     reference_docx: "styles1.dotx"
@@ -10,29 +10,29 @@ params:
 ---
 
 ```{r setup, include=FALSE}
-library("odbc")
-library("dbplyr")
-library("dtplyr")
-library("dplyr")
-library("tidyr")
-library ("xlsx")
-library("writexl")
-library("openxlsx")
-library("ggplot2")
-library("devtools")
-library("profvis")
-library("shiny")
-library("dluhctheme")
-library("readxl")
-library("scales")
-library("tidyverse")
-library("sf")
-library("tmap")
-library("scales")
-library("showtext")
-
-#Load the dataframes in from the latest tables
-input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
+# library("odbc")
+# library("dbplyr")
+# library("dtplyr")
+# library("dplyr")
+# library("tidyr")
+# library ("xlsx")
+# library("writexl")
+# library("openxlsx")
+# library("ggplot2")
+# library("devtools")
+# library("profvis")
+# library("shiny")
+# library("dluhctheme")
+# library("readxl")
+# library("scales")
+# library("tidyverse")
+# library("sf")
+# library("tmap")
+# library("scales")
+# library("showtext")
+# 
+# #Load the dataframes in from the latest tables
+# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -184,13 +184,13 @@ sign <- function(num){
 
 
 
-**`r  get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% on the same period last year. 
+**`r  get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
 
 
-**`r  get("this_month_df_snapshot_new", envir = env1)`** new people sleeping rough on a single night in `r this_month` (`r round(abs(( get("this_month_df_snapshot_new", envir = env1) / get("this_month_df_snapshot", envir = env1))*100),digits = 0)`% of total) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% on the same period last year. 
+**`r  get("this_month_df_snapshot_new", envir = env1)`** new people sleeping rough on a single night in `r this_month` (`r round(abs(( get("this_month_df_snapshot_new", envir = env1) / get("this_month_df_snapshot", envir = env1))*100),digits = 0)`% of total) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% since `r last_year`.
 
 
-**`r get("this_month_df_institutions", envir = env1)`** people sleeping rough over the month in `r this_month` who have left an institution (`r round(abs((get("this_month_df_institutions", envir = env1) / get("this_month_df_month", envir = env1))*100), digits = 0)`% of the total) - `r sign(get("quarterly_change_df_institutions", envir = env1))` `r round(abs((get("quarterly_change_df_institutions", envir = env1))/get("last_quarter_df_institutions", envir = env1))*100, digits = 0)`% on since `r last_quarter`. 
+**`r get("this_month_df_institutions", envir = env1)`** people sleeping rough over the month in `r this_month` who have left an institution (`r round(abs((get("this_month_df_institutions", envir = env1) / get("this_month_df_month", envir = env1))*100), digits = 0)`% of the total) - `r sign(get("annual_change_df_institutions", envir = env1))` `r round(abs((get("annual_change_df_institutions", envir = env1))/get("last_year_df_institutions", envir = env1))*100, digits = 0)`% since `r last_year`. 
 
 
 :::
@@ -201,7 +201,7 @@ sign <- function(num){
 
 #### Rare (R1)
 
-**`r get("this_month_df_month", envir = env1)`** people sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month", envir = env1))` `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round(((get("quarterly_change_df_month", envir = env1))/get("last_quarter_df_month", envir = env1))*100, digits = 0)`% since `r last_quarter`.`r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month_rate", envir = env1))` from `r round((get("last_year_df_month_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_month_rate", envir = env1))` from `r round((get("last_quarter_df_month_rate", envir = env1)), digits = 1)` `r last_quarter`.
+**`r get("this_month_df_month", envir = env1)`** people sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month", envir = env1))` `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round(((get("quarterly_change_df_month", envir = env1))/get("last_quarter_df_month", envir = env1))*100, digits = 0)`% since `r last_quarter`. `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month_rate", envir = env1))` from `r round((get("last_year_df_month_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_month_rate", envir = env1))` from `r round((get("last_quarter_df_month_rate", envir = env1)), digits = 1)` `r last_quarter`.
 
 
 
@@ -214,7 +214,7 @@ sign <- function(num){
 ::: {custom-style="GreyBox"}
 
 #### Brief (B1)
-**`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_long_term", envir = env1))` `r round(((get("quarterly_change_df_long_term", envir = env1))/get("last_quarter_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_quarter`.
+**`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
 ::: 
 
@@ -223,7 +223,7 @@ sign <- function(num){
 ::: {custom-style="GreyBox"}
 
 #### Non-recurring (NR1)
-**`r get("this_month_df_returners", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough (`r round(((get("this_month_df_returners", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_returners", envir = env1))` `r round(((get("quarterly_change_df_returners", envir = env1))/get("last_quarter_df_returners", envir = env1))*100, digits = 0)`%  since `r last_quarter`.
+**`r get("this_month_df_returners", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough (`r round(((get("this_month_df_returners", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
 ::: 
 
@@ -823,139 +823,140 @@ OFFICIAL
 
 # Script to create maps for the info graphic
 
-# library(tidyverse)
-# library(sf)
-# library(tmap)
-# library(scales)
-# 
-# #This is for rate despite saying just snapshot
-# df_snapshot <- read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3) %>% 
-#   select(c(1,2,3,50))
-# colnames(df_snapshot) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
-# 
-# England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
-# 
-# England <- England %>% 
-#   left_join(df_snapshot,  by = join_by(LAD23CD)) 
-# 
-# England <- England %>% 
-#   filter(!is.na(England$snapshot))
-# 
-# England_map <- England %>%  
-#   tm_shape() +
-#   tm_fill("snapshot", style = "cont", breaks = c(0,3,6,12,20,50,450),
-#           labels = c("0","5","10","20","50","100+",""),
-#           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-#           title = "People") +
-#   tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
-#   tm_style("col_blind") +
-#   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-# 
-# #Use England shape files, this will need updating if there's boundary changes
-# tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=2000, height=2000, asp=0)
-# tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
-# 
-# 
-# #Adjust for London 
-# 
-# #Create London dataframe
-# London <- df_snapshot[ c(12:307), ] %>% 
-#   filter(Region == "London") 
-#   
-# #Join with shape file and remove any values not in London
-# London_join <- England %>% 
-#   left_join(London,  by = join_by(LAD23CD))
-# 
-# London_join <- London_join %>% 
-#   filter(!is.na(London_join$snapshot.y))
-# 
-# London_map <- London_join %>% 
-#   tm_shape() +
-#   tm_fill("snapshot.y", style = "cont", breaks = c(0,10,15,30,75,150,285),
-#           labels = c("0","5","10","20","50","100+",""),
-#           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-#           title = "People",
-#           legend.show = FALSE) +
-#   tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
-#   tm_style("col_blind")+
-#   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-# 
-# tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.png", width=2000, height=2000, asp=0)
-# tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.svg", width=2000, height=2000, asp=0)
+library(tidyverse)
+library(sf)
+library(tmap)
+library(scales)
+
+#This is for rate despite saying just snapshot
+df_snapshot <- read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3) %>%
+  select(c(1,2,3,50))
+colnames(df_snapshot) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
+
+England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+
+England <- England %>%
+  left_join(df_snapshot,  by = join_by(LAD23CD))
+
+England <- England %>%
+  filter(!is.na(England$snapshot))
+
+England_map <- England %>%
+  tm_shape() +
+  tm_fill("snapshot", style = "cont", breaks = c(0,3,6,12,20,50,450),
+          labels = c("0","5","10","20","50","100+",""),
+          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+          title = "People") +
+  tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
+  tm_style("col_blind") +
+  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+
+#Use England shape files, this will need updating if there's boundary changes
+tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=2000, height=2000, asp=0)
+tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
+
+
+#Adjust for London
+
+#Create London dataframe
+London <- df_snapshot[ c(12:307), ] %>%
+  filter(Region == "London")
+
+#Join with shape file and remove any values not in London
+London_join <- England %>%
+  left_join(London,  by = join_by(LAD23CD))
+
+London_join <- London_join %>%
+  filter(!is.na(London_join$snapshot.y))
+
+London_map <- London_join %>%
+  tm_shape() +
+  tm_fill("snapshot.y", style = "cont", breaks = c(0,10,15,30,75,150,285),
+          labels = c("0","5","10","20","50","100+",""),
+          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+          title = "People",
+          legend.show = FALSE) +
+  tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
+  tm_style("col_blind")+
+  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+
+tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.png", width=2000, height=2000, asp=0)
+tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.svg", width=2000, height=2000, asp=0)
 
 ```
 <br>
 
 **Figure 6: Map of rate of people sleeping rough on a single night per 100,000 people (R1), `r this_month`** 
 
-<br>
 
-**Source: MHCLG**
 
 <br>
 
 ```{r figure 6 - map, echo=FALSE,}
 
-# knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map.png")
-# knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map.png")
+knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map.png")
+knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map.png")
 
 ```
 
+
+
+**Source: MHCLG**
 <br>
 
 ```{r figure 7,  include=FALSE}
-# 
-# df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>% 
-#   select(c(1,2,3,46))
-# colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
-# 
-# England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
-# 
-# England <- England %>% 
-#   left_join(df_month_rate,  by = join_by(LAD23CD)) 
-# 
-# England <- England %>% 
-#   filter(!is.na(England$month))
-# 
-# England_map_rate <- England %>%  
-#   tm_shape() +
-#   tm_fill("month", style = "cont", breaks = c(0,3,6,12,20,50,450),
-#           labels = c("0","5","10","20","50","100+",""),
-#           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-#           title = "People") +
-#   tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
-#   tm_style("col_blind") +
-#   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-# 
-# tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png", width=2000, height=2000, asp=0)
-# tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.svg", width=2000, height=2000, asp=0)
-# 
-# #Adjust for London 
-# 
-# #Create London dataframe
-# London <- df_month_rate[ c(12:307), ] %>% 
-#   filter(Region == "London") 
-#   
-# #Join with shape file and remove any values not in London
-# London_join <- England %>% 
-#   left_join(London,  by = join_by(LAD23CD))
-# 
-# London_join <- London_join %>% 
-#   filter(!is.na(London_join$month.y))
-# 
-# London_map_rate <- London_join %>% 
-#   tm_shape() +
-#   tm_fill("month.y", style = "cont", breaks = c(0,10,15,30,75,100,150),
-#           labels = c("0","5","10","20","50","100+",""),
-#           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-#           title = "People",
-#           legend.show = FALSE) +
-#   tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
-#   tm_style("col_blind")+
-#   tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-# 
-# tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png", width=2000, height=2000, asp=0)
-# tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.svg", width=2000, height=2000, asp=0)
+
+df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>%
+  select(c(1,2,3,46))
+colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
+
+England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+
+England <- England %>%
+  left_join(df_month_rate,  by = join_by(LAD23CD))
+
+England <- England %>%
+  filter(!is.na(England$month))
+
+England_map_rate <- England %>%
+  tm_shape() +
+  tm_fill("month", style = "cont", breaks = c(0,3,6,12,20,50,450),
+          labels = c("0","5","10","20","50","100+",""),
+          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+          title = "People") +
+  tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
+  tm_style("col_blind") +
+  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+
+tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png", width=2000, height=2000, asp=0)
+tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.svg", width=2000, height=2000, asp=0)
+
+#Adjust for London
+
+#Create London dataframe
+London <- df_month_rate[ c(12:307), ] %>%
+  filter(Region == "London")
+
+#Join with shape file and remove any values not in London
+London_join <- England %>%
+  left_join(London,  by = join_by(LAD23CD))
+
+London_join <- London_join %>%
+  filter(!is.na(London_join$month.y))
+
+London_map_rate <- London_join %>%
+  tm_shape() +
+  tm_fill("month.y", style = "cont", breaks = c(0,10,15,30,75,100,150),
+          labels = c("0","5","10","20","50","100+",""),
+          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+          title = "People",
+          legend.show = FALSE) +
+  tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
+  tm_style("col_blind")+
+  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+
+tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png", width=2000, height=2000, asp=0)
+tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.svg", width=2000, height=2000, asp=0)
 
 
 ```
@@ -966,8 +967,8 @@ OFFICIAL
 
 ```{r figure 7 - map, echo=FALSE,}
 # 
-# knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png")
-# knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png")
+knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png")
+knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png")
 
 ```
 
