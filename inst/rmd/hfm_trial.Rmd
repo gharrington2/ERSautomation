@@ -32,7 +32,7 @@ params:
 # library("showtext")
 # 
 # #Load the dataframes in from the latest tables
-# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -367,7 +367,7 @@ max_date <- max(new_df$Date)
    geom_text(data = new_df[1, ], aes(x = Date, y = `New snapshot`, label = "          New people sleeping\n rough on a single night (P1)"), 
             color = "#012169",vjust = -2, hjust = -2.5, size = 3.5) +
   geom_text(data = new_df[1, ], aes(x = Date, y = `New month`, label = "        New people sleeping\n rough over the month (P1)"),
-            color = "#95B3D7", vjust = -6.3, hjust = -2.4, size = 3.5)
+            color = "#95B3D7", vjust = -6.3, hjust = -2.1, size = 3.5)
 print(figure_1)
 
  output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
@@ -684,16 +684,16 @@ The rate of people sleeping rough on a single night in `r this_month` in England
    scale_color_manual(values = c("Snapshot" = "#012169", "Month" = "#95B3D7")) +
    dluhc_style(size = 1.5) +
    scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma)+
-   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month") +
+   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month")+ #expand = c(0, 1)) +THIS IS IF YOU WANT TO REMOVE EXTRA DATA POINTS
    theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
     axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10)
   ) +
    theme(legend.position = "none") +
-   geom_text(data = df[1, ], aes(x = Date, y = `Snapshot`, label = "          Number of people \n sleeping rough on \n a single night (R1)"), 
-            color = "#012169",vjust = -1.1, hjust = -3.5, size = 3.5) +
-  geom_text(data = df[1, ], aes(x = Date, y = `Month`, label = "Number of people \n sleeping rough over \n the month (R1)"),
-            color = "#95B3D7", vjust = -10.3, hjust = -2, size = 3.5)
+   geom_text(data = df[1, ], aes(x = Date, y = `Snapshot`, label = " Number of people \n sleeping rough on \n a single night (R1)"), 
+            color = "#012169",vjust = -0.8, hjust = -3.6, size = 3.5) +
+  geom_text(data = df[1, ], aes(x = Date, y = `Month`, label = "   Number of people \n sleeping rough over \n       the month (R1)"),
+            color = "#95B3D7", vjust = -3.3, hjust = -2.25, size = 3.5)
 
 
  output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
@@ -783,7 +783,7 @@ figure_5 <- ggplot(comb_last_year_long, aes(x = Date, y = Value, fill = Category
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   dluhc_style(size = 1.5) +
   scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma)+
-  scale_x_date(labels = scales::date_format("%b %Y"), date_breaks = "1 month") +
+  scale_x_date(labels = scales::date_format("%b %Y"), date_breaks = "1 month", expand = c(0,0)) +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
     axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10)
