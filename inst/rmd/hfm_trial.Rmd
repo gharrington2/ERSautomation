@@ -230,7 +230,7 @@ sign <- function(num){
 <br>
 <br>
 
-In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework which sets out a clear and defined vision for ending rough sleeping, which is that it is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication and covers monthly information up to March 2024, measures which were introduced in May 2023 cannot yet be compared to the previous year.   
+In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework which sets out a clear and defined vision for ending rough sleeping, which is that it is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication and covers monthly information up to June 2024, measures which were introduced in May 2023 cannot yet be compared to the previous year.   
 
 The number of people sleeping rough tends to be higher in the summer months when it is warmer and lower in the winter months, reflecting the seasonality of rough sleeping.
 
@@ -238,7 +238,7 @@ The number of people sleeping rough tends to be higher in the summer months when
 <br>
 
 ::: {custom-style="GreyBox"}
-**Date of next publication**: It is expected that the next quarterly publication of monthly data up to June, will be published in September/October 2024.
+**Date of next publication**: It is expected that the next quarterly publication of monthly data up to September, will be published in November 2024.
 ::: 
 
 <br>
@@ -247,7 +247,7 @@ The number of people sleeping rough tends to be higher in the summer months when
 
 <br>
 
-Since March 2022, the Ministry of Housing, Communities and Local Government has been working with the Centre for Homelessness Impact and 5 pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole) to develop a vision and definition of ending rough sleeping, as set out in the cross-government strategy ‘Ending Rough Sleeping for Good’ published last year.  
+Since March 2022, the Ministry of Housing, Communities and Local Government has been working with the Centre for Homelessness Impact and 5 pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole) to develop a vision and definition of ending rough sleeping, as set out in the cross-government strategy ‘Ending Rough Sleeping for Good’ published in 2022.  
 
 For the first time, there is a clear and defined vision for ending rough sleeping: that is to prevent it wherever possible, and where it does occur it is rare, brief, and non-recurring
 
@@ -613,7 +613,7 @@ figure_3 <- ggplot(institutions_data, aes(x = Date)) +
 
 <br>
 
-**Figure 3:People sleeping rough over the course of the month who have left an institution, May 2023 to `r this_month` (P2)**
+**Figure 3: People sleeping rough over the course of the month who have left an institution, May 2023 to `r this_month` (P2)**
 
 ```{r figure 3, echo=FALSE,}
 
@@ -1098,10 +1098,10 @@ Trusted people, processes and analysis
 
 | **Pillar**                                        | **How this framework aligns with this pillar**|
 |------ |-------|
-| **T1 Honesty and integrity**                      | Data is analysed by professionally qualified and experienced data analysts  professional members of the GSS, GORS or GSR professions. Data is provided by local authorities and scrutinised by government rough sleeping advisers to monitor local approaches to ending rough sleeping.|                                                                                                     
+| **T1 Honesty and integrity**                      | Data is analysed by professionally qualified and experienced data analysts  - professional members of the GSS, GORS or GSR professions. Data is provided by local authorities and scrutinised by government rough sleeping advisers to monitor local approaches to ending rough sleeping.|                                                                                                     
 | **T2 Independent decision making and leadership** | The work is governed by the Analysis and Data Directorate in MHCLG, accountable to MHCLG's Chief Analyst and the Head of Profession for Statistics.|
-| **T3 Orderly release**                            | MHCLG preannounces the publication date for this data. This is usually done on the release page of previous publications, which is updated once precise release dates are known.|
-| **T4 Transparent processes and management**       | MHCLG has robust, transparent datamanagement processes which are applied for data analysis. Data is provided by local authorities. MHCLG works closely to ensure data collection processes are well understood. [External research](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkqualityassurancereview) was commissioned to understand data collection and quality assurance processes across different local authorities, demonstrating MHCLG's willingness to maintain transparency. An outline of the production process and quality assurance carried out prior to the publication of the Ending Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#qualityassurance).|
+| **T3 Orderly release**                            | MHCLG pre-announces the publication date for this data. This is usually done on the release page of previous publications, which is updated once precise release dates are known.|
+| **T4 Transparent processes and management**       | MHCLG has robust, transparent data-management processes which are applied for data analysis. Data is provided by local authorities. MHCLG works closely to ensure data collection processes are well understood. [External research](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkqualityassurancereview) was commissioned to understand data collection and quality assurance processes across different local authorities, demonstrating MHCLG's willingness to maintain transparency. An outline of the production process and quality assurance carried out prior to the publication of the Ending Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#qualityassurance).|
 | **T5 Professional capability**                    | All responsible MHCLG analysts are members of government analytical professions, where all staff have met a minimum standard of analytical capability and all of whom have Personal Development Plans focused on their longterm professional development.|
 | **T6 Data governance**                            | Data is collected at an aggregate level and is not personally identifiable. Responsibility for data lies with the data controllers (i.e. local authorities). MHCLG has assessed the risk of identification from data as very low and therefore does not apply suppression to small numbers. MHCLG is consulting local authorities about the use of their data to ensure agreement and transparency.|
 
@@ -1259,7 +1259,7 @@ Users are encouraged to provide feedback on how these statistics are used and ho
 
 Comments on any issues relating to this release are welcomed and encouraged. Please contact [roughsleepingstatistics@communities.gov.uk](mailto:roughsleepingstatistics@communities.gov.uk) if you have any feedback or comments. 
 
-See the Ministy’s [engagement strategy to meet the needs of statistics users](https://www.gov.uk/government/publications/engagement-strategy-to-meet-the-needs-of-statistics-users). 
+See the Ministry’s [engagement strategy to meet the needs of statistics users](https://www.gov.uk/government/publications/engagement-strategy-to-meet-the-needs-of-statistics-users). 
 
 <br>
 <br>
