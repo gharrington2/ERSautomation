@@ -3,36 +3,36 @@ title: "Ending Rough Sleeping Data Framework, June 2024"
 output: 
   word_document:
     reference_docx: "styles1.dotx"
-date: '2024-05-23'
+date: '2024-09-26'
 params:
   para_1: ""
 
 ---
 
 ```{r setup, include=FALSE}
-# library("odbc")
-# library("dbplyr")
-# library("dtplyr")
-# library("dplyr")
-# library("tidyr")
-# library ("xlsx")
-# library("writexl")
-# library("openxlsx")
-# library("ggplot2")
-# library("devtools")
-# library("profvis")
-# library("shiny")
-# library("dluhctheme")
-# library("readxl")
-# library("scales")
-# library("tidyverse")
-# library("sf")
-# library("tmap")
-# library("scales")
-# library("showtext")
-# 
+library("odbc")
+library("dbplyr")
+library("dtplyr")
+library("dplyr")
+library("tidyr")
+library ("xlsx")
+library("writexl")
+library("openxlsx")
+library("ggplot2")
+library("devtools")
+library("profvis")
+library("shiny")
+library("dluhctheme")
+library("readxl")
+library("scales")
+library("tidyverse")
+library("sf")
+library("tmap")
+library("scales")
+library("showtext")
+ 
 # #Load the dataframes in from the latest tables
-input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
+ input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -53,8 +53,8 @@ df_returners <- read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip 
 
 colnames(df_month_new) <- colnames(df_month)
 knitr::opts_chunk$set(echo = TRUE)
-options(scipen = 999)  # Prevents scientific notation
-options(digits = 10)   # Controls the number of digits
+#options(scipen = 999)  # Stops scientific notation
+options(digits = 10)   # Limits the number of digits
 
 # Custom format function to include comma separator for numbers over 999
 custom_format <- function(x) {
@@ -357,8 +357,8 @@ max_date <- max(new_df$Date)
    theme(legend.position = "none") +
    scale_color_manual(values = c("Snapshot_new" = "#012169", "Month_new" = "#95B3D7")) +
    dluhc_style(size = 1.5) +
-   scale_y_continuous(breaks = seq(0,4000, by = 500),labels = comma)+
-   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", limits = c(min_date, max_date)) +
+   scale_y_continuous(breaks = seq(0,3500, by = 500),labels = comma, limits = c(0,3500))+
+   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", limits = c(min_date, max_date), expand = c(0, 8)) +
    theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
     axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10)
@@ -367,7 +367,7 @@ max_date <- max(new_df$Date)
    geom_text(data = new_df[1, ], aes(x = Date, y = `New snapshot`, label = "          New people sleeping\n rough on a single night (P1)"), 
             color = "#012169",vjust = -2, hjust = -2.5, size = 3.5) +
   geom_text(data = new_df[1, ], aes(x = Date, y = `New month`, label = "        New people sleeping\n rough over the month (P1)"),
-            color = "#95B3D7", vjust = -6.3, hjust = -2.1, size = 3.5)
+            color = "#95B3D7", vjust = -6.4, hjust = -2.1, size = 3.5)
 print(figure_1)
 
  output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
@@ -585,6 +585,7 @@ figure_3 <- ggplot(institutions_data, aes(x = Date)) +
   geom_line(aes(y = `Under 25 care leavers`, color = "Under 25 care leavers"), size = 1.1, group = 1) +
   geom_point(aes(y = `Under 25 care leavers`), color = "#EFB5B9", size = 2) +
   dluhc_style(size = 1.5)+
+  scale_y_continuous(breaks = seq(0,500, by = 100),labels = comma, limits = c(0,500))+
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
     axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10),
@@ -684,7 +685,7 @@ The rate of people sleeping rough on a single night in `r this_month` in England
    scale_color_manual(values = c("Snapshot" = "#012169", "Month" = "#95B3D7")) +
    dluhc_style(size = 1.5) +
    scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma)+
-   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month")+ #expand = c(0, 1)) +THIS IS IF YOU WANT TO REMOVE EXTRA DATA POINTS
+   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 8)) +
    theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
     axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10)
@@ -782,7 +783,7 @@ figure_5 <- ggplot(comb_last_year_long, aes(x = Date, y = Value, fill = Category
   labs(title = NULL, x = "Date", y = "Value") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   dluhc_style(size = 1.5) +
-  scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma)+
+  scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma, limits = c(0, 8000))+
   scale_x_date(labels = scales::date_format("%b %Y"), date_breaks = "1 month", expand = c(0,0)) +
   theme(
     axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
@@ -1113,7 +1114,7 @@ Robust data, methods and processes
 
 | **Pillar**                   | **How this framework aligns with this pillar**                                 |
 |------ |-------|
-| **Q1 Suitable data sources** | Data is collected by local authorities, primarily through outreach activities. Data relies on selfdisclosure or referrals from relevant agencies (e.g. the other government departments, Adult Social Care, or local refugee charities). In London, data is provided directly from CHAIN, which is a multiagency database recording information about people seen rough sleeping by outreach teams. One aim of the framework is to encourage local authorities to link up with key partners to share data to better understand their rough sleeping populations. The commissioned research mentioned in "T4 Transparent processes and management" highlights how best to improve consistency in data and will feed into further guidance on improving data. |
+| **Q1 Suitable data sources** | Data is collected by local authorities, primarily through outreach activities. Data relies on self disclosure or referrals from relevant agencies (e.g. the other government departments, Adult Social Care, or local refugee charities). In London, data is provided directly from CHAIN, which is a multi-agency database recording information about people seen rough sleeping by outreach teams. One aim of the framework is to encourage local authorities to link up with key partners to share data to better understand their rough sleeping populations. The commissioned research mentioned in "T4 Transparent processes and management" highlights how best to improve consistency in data and will feed into further guidance on improving data. |
 | **Q2 Sound methods**         | Data collection tools and processes are robustly designed and tested prior to use, learning lessons from previous Rough Sleeping Management Information data collections and best practice from across the government analytical community. An outline of the data process is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#dataprocess).|                                                     
 | **Q3 Assured quality**       | An outline of the production process and quality assurance carried out prior to the publication of the Ending Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#qualityassurance). MHCLG is developing further data verification processes with local authorities to raise data standards and ensure consistency. Reproducible Analytical Pipelines are used to minimise human error and all outputs are quality assured prior to publication. A revisions policy is in place to ensure that any revisions are addressed quickly and systematically.|                      
 
@@ -1135,11 +1136,11 @@ Supporting society's need for information and accessible to all
 
 <br>
 
-To assess the quality of new management information, we compared the monthly rough sleeping management information estimates with the 2023 Rough sleeping snapshot data. These two different sources were correlated which provides confidence that local authorities are consistent when estimating the number of people sleeping rough on a single night. For the monthly rough sleeping snapshot estimate, local authorities are advised to use a snapshot approach which will provide the most robust figure. This should be 1 of the 3 approaches that are used for the official rough sleeping snapshot, which may include a countbased estimate, an evidencebased estimate meeting or an evidencebased estimate meeting including a spotlight count. If no snapshot has been conducted within the month, local authorities should gather their intelligence, data sources and records to establish what a single night figure would be and submit this as their estimate. MHCLG recently commissioned Homeless Link to undertake research to investigate how local areas in England have implemented the new rough sleeping data framework and to appraise data collection methods and validation processes being used to provide this information. [Research by Homeless Link](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkqualityassurancereview) show there is some disparity in data management and technical capacity between different local authorities and there is some variation in the interpretations of the definitions for the new indicators which is as expected given the infancy of this new framework. The information that underpins the new indicators is largely gathered by outreach workers as part of their regular outreach activity. Information may also be gathered from referrals from partner agencies to help identify people that may not engage with services. This means the quality of the information is linked to the coverage and frequency of outreach activity as well the local data systems in place to accurately track and record this information.
+To assess the quality of new management information, we compared the monthly rough sleeping management information estimates with the 2023 Rough sleeping snapshot data. These two different sources were correlated which provides confidence that local authorities are consistent when estimating the number of people sleeping rough on a single night. For the monthly rough sleeping snapshot estimate, local authorities are advised to use a snapshot approach which will provide the most robust figure. This should be 1 of the 3 approaches that are used for the official rough sleeping snapshot, which may include a count based estimate, an evidence based estimate meeting or an evidence based estimate meeting including a spotlight count. If no snapshot has been conducted within the month, local authorities should gather their intelligence, data sources and records to establish what a single night figure would be and submit this as their estimate. MHCLG recently commissioned Homeless Link to undertake research to investigate how local areas in England have implemented the new rough sleeping data framework and to appraise data collection methods and validation processes being used to provide this information. [Research by Homeless Link](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkqualityassurancereview) show there is some disparity in data management and technical capacity between different local authorities and there is some variation in the interpretations of the definitions for the new indicators which is as expected given the infancy of this new framework. The information that underpins the new indicators is largely gathered by outreach workers as part of their regular outreach activity. Information may also be gathered from referrals from partner agencies to help identify people that may not engage with services. This means the quality of the information is linked to the coverage and frequency of outreach activity as well the local data systems in place to accurately track and record this information.
 
-The information about institution discharge is gathered via selfdisclosure by people sleeping rough and/or information sharing from institutions, so the quality is also linked to the reliability of selfdisclosure and data sharing from partners. Identification of people sleeping rough who are new, returning or longterm relies on the local systems in place to identify unique individuals, avoid double counting and accurately track individuals over time using historical records, which will take time to develop.
+The information about institution discharge is gathered via self disclosure by people sleeping rough and/or information sharing from institutions, so the quality is also linked to the reliability of self disclosure and data sharing from partners. Identification of people sleeping rough who are new, returning or long term relies on the local systems in place to identify unique individuals, avoid double counting and accurately track individuals over time using historical records, which will take time to develop.
 
-There are some comparability issues between local authorities in London and the rest of England, as the definition of new, returner and longterm rough sleeping applies to the whole of London, compared to each local authority across the rest of England. There is also some overlap between the new and returner indicators if a person returns to sleeping rough after not being seen for more than five years.
+There are some comparability issues between local authorities in London and the rest of England, as the definition of new, returner and long term rough sleeping applies to the whole of London, compared to each local authority across the rest of England. There is also some overlap between the new and returner indicators if a person returns to sleeping rough after not being seen for more than five years.
 
 There are also some challenges around the consistency and comparability of the approach being used for the single night snapshot month on month and between areas, as there is more local discretion for the monthly snapshot compared to annual snapshot around the approach used, the date for the single night snapshot, the coverage etc. The single night snapshot can also be impacted by the weather, where people choose to sleep, the date and time chosen, and the availability of alternatives such as available night shelters.
 
