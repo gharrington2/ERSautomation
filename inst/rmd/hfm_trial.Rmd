@@ -58,7 +58,7 @@ options(digits = 10)   # Controls the number of digits
 
 # Custom format function to include comma separator for numbers over 999
 custom_format <- function(x) {
-  if (is.numeric(x)) {
+  if (is.numeric(x) & x > 999) {
     return(scales::comma(x))
   }
   return(x)
@@ -619,7 +619,7 @@ figure_3 <- ggplot(institutions_data, aes(x = Date)) +
 
 ```{r figure 3, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_3.png")
+knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_3.svg")
 
 ```
 
