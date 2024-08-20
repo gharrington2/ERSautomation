@@ -1,9 +1,9 @@
 ---
-title: "Ending Rough Sleeping Data Framework, June 2024"
+title: "Rough Sleeping Data Framework, June 2024"
 output: 
   word_document:
     reference_docx: "styles1.dotx"
-date: '2024-09-26'
+date: 'Published 26 September 2024'
 params:
   para_1: ""
 
@@ -32,7 +32,7 @@ params:
 # library("showtext")
 # 
 # #Load the dataframes in from the latest tables
-#input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
+# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -54,7 +54,7 @@ df_returners <- read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip 
 colnames(df_month_new) <- colnames(df_month)
 knitr::opts_chunk$set(echo = TRUE)
 #options(scipen = 999)  # Prevents scientific notation
-options(digits = 10)   # Controls the number of digits
+#options(digits = 10)   # Controls the number of digits
 
 # Custom format function to include comma separator for numbers over 999
 custom_format <- function(x) {
@@ -64,7 +64,7 @@ custom_format <- function(x) {
   return(x)
 }
 
-# Automatically apply custom_format to all inline R code
+# Automatically apply commas to all numbers necessary
  knitr::knit_hooks$set(inline = function(x) custom_format(x))
 
 ############### ALTERNATE METHOD TO REDUCE UPDATES ##############
@@ -230,7 +230,7 @@ sign <- function(num){
 <br>
 <br>
 
-In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework which sets out a clear and defined vision for ending rough sleeping, which is that it is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication and covers monthly information up to June 2024.   
+In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to ensure rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication of the framework and covers monthly information up to June 2024. 
 
 The number of people sleeping rough tends to be higher in the summer months when it is warmer and lower in the winter months, reflecting the seasonality of rough sleeping.
 
@@ -238,7 +238,7 @@ The number of people sleeping rough tends to be higher in the summer months when
 <br>
 
 ::: {custom-style="GreyBox"}
-**Date of next publication**: It is expected that the next quarterly publication of monthly data up to September, will be published in November 2024.
+**Date of next publication**: It is expected that the next quarterly publication of monthly data up to September, will be published in November/December 2024.
 ::: 
 
 <br>
@@ -247,14 +247,11 @@ The number of people sleeping rough tends to be higher in the summer months when
 
 <br>
 
-Since March 2022, the Ministry of Housing, Communities and Local Government has been working with the Centre for Homelessness Impact and 5 pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole) to develop a vision and definition of ending rough sleeping, as set out in the cross-government strategy ‘Ending Rough Sleeping for Good’ published in 2022.  
-
-For the first time, there is a clear and defined vision for ending rough sleeping: that is to prevent it wherever possible, and where it does occur it is rare, brief, and non-recurring
+Since March 2022, the Ministry of Housing, Communities and Local Government has been working with the Centre for Homelessness Impact and 5 pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole) to develop rough sleeping metrics. 
 
 Developing the framework has demonstrated the success of close collaboration between local authorities, MHCLG and the Centre for Homelessness Impact. 
 
-There are five core indicators of the framework, that sit under the four aims of vision. 
-These are:
+There are eight core indicators of the framework. This publication covers the first five core indicators which we rolled out nationally in May 2023. These are: 
 
 ### Prevented
 
@@ -289,9 +286,9 @@ knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/Indicator_breakd
 
 ## 3. Preventing people sleeping rough
 
-There were `r get("this_month_df_month_new", envir = env1)` people sleeping rough over the month in `r this_month` (`r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% on the same period last year. 
+There were `r get("this_month_df_month_new", envir = env1)` new people sleeping rough over the month in `r this_month` (`r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% on the same period last year. 
 
-There were `r get("this_month_df_snapshot_new", envir = env1)` people sleeping rough on a single night in `r this_month` (`r round(((get("this_month_df_snapshot_new", envir = env1))/get("this_month_df_snapshot", envir = env1))*100, digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% on the same period last year. 
+There were `r get("this_month_df_snapshot_new", envir = env1)` new people sleeping rough on a single night in `r this_month` (`r round(((get("this_month_df_snapshot_new", envir = env1))/get("this_month_df_snapshot", envir = env1))*100, digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% on the same period last year. 
 
 There were `r get("this_month_df_institutions", envir = env1)` people sleeping rough over the month in `r this_month` who have left an institution (`r round(((get("this_month_df_institutions", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total). Of these people
 
@@ -301,7 +298,7 @@ There were `r get("this_month_df_institutions", envir = env1)` people sleeping r
 
 *  `r get("this_month_df_hospital", envir = env1)` people (`r round(((get("this_month_df_hospital", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left General & Psychiatric hospitals in the last 85 days - `r sign(get("quarterly_change_df_hospital", envir = env1))` `r round(abs(((get("quarterly_change_df_hospital", envir = env1))/get("last_quarter_df_hospital", envir = env1)))*100, digits = 0)`% since `r last_quarter`. 
 
-*  `r get("this_month_df_u25care", envir = env1)` people (`r round(((get("this_month_df_u25care", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) were under 25 care leavers - `r sign(get("quarterly_change_df_u25care", envir = env1))` `r round(((get("quarterly_change_df_u25care", envir = env1))/get("last_quarter_df_u25care", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
+*  `r get("this_month_df_u25care", envir = env1)` people (`r round(((get("this_month_df_u25care", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) were care leavers aged under 25 - `r sign(get("quarterly_change_df_u25care", envir = env1))` `r round(((get("quarterly_change_df_u25care", envir = env1))/get("last_quarter_df_u25care", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
 
 *  `r get("this_month_df_oja", envir = env1)` people (`r round(((get("this_month_df_oja", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left other justice accommodation within the last 85 days - `r sign(get("quarterly_change_df_oja", envir = env1))` `r round(((get("quarterly_change_df_oja", envir = env1))/get("last_quarter_df_oja", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
 
@@ -346,29 +343,49 @@ new_df$Date <- as.Date(new_df$Date)
 min_date <- min(new_df$Date)
 max_date <- max(new_df$Date)
 
+label_range <- new_df %>%
+  mutate(Year = format(Date, "%Y")) %>% 
+  group_by(Year) %>%
+  summarize(
+    xmin = min(Date),
+    xmax = max(Date),
+    ymin = 0,  
+    ymax = 3500   #
+  )
 
+
+label_range <- label_range %>%
+  mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
 
  figure_1 <- ggplot(new_df, aes(x = Date)) +
-   geom_line(aes(y = `New snapshot`, color = "Snapshot_new"), size = 1.1, group = 1) +
-   geom_point(aes(y = `New snapshot`), color = "#012169", size = 2) +  # Add points for Snapshot_new
-   geom_line(aes(y = `New month`, color = "Month_new"), size = 1.1, group = 1) +
-   geom_point(aes(y = `New month`), color = "#95B3D7", size = 2) +
+   geom_line(aes(y = `New snapshot`, color = "Snapshot_new"), size = 1.4, group = 1) +
+   geom_point(aes(y = `New snapshot`), color = "#012169", size = 3) +  # Add points for Snapshot_new
+   geom_line(aes(y = `New month`, color = "Month_new"), size = 1.4, group = 1) +
+   geom_point(aes(y = `New month`), color = "#95B3D7", size = 3) +
+  geom_rect(data = label_range, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+             fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+  geom_text(data = label_range, aes(x = xmid, y = ymin -150 , label = Year, group = Year),
+            color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
    labs(title = NULL, x = "Date", y = "Number of people") +
    theme(legend.position = "none") +
    scale_color_manual(values = c("Snapshot_new" = "#012169", "Month_new" = "#95B3D7")) +
    dluhc_style(size = 1.5) +
-   scale_y_continuous(breaks = seq(0,3500, by = 500),labels = comma, , limits = c(0,3500))+
-   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", limits = c(min_date, max_date), , expand = c(0, 8)) +
+   scale_y_continuous(breaks = seq(0,3500, by = 500),labels = comma, limits = c(-150,3500))+
+   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", limits = c(min_date, max_date), expand = c(0, 10)) +
    theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
-    axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10)
+    axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 11),
+    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
+    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+   axis.ticks = element_line(color = "#F2F2F2", size = 0.3), 
   ) +
    theme(legend.position = "none") +
    geom_text(data = new_df[1, ], aes(x = Date, y = `New snapshot`, label = "          New people sleeping\n rough on a single night (P1)"), 
             color = "#012169",vjust = -2, hjust = -2.5, size = 3.5) +
   geom_text(data = new_df[1, ], aes(x = Date, y = `New month`, label = "        New people sleeping\n rough over the month (P1)"),
-            color = "#95B3D7", vjust = -6.4, hjust = -2.1, size = 3.5)
-print(figure_1)
+            color = "#012169", vjust = -6.4, hjust = -2.1, size = 3.5)
+ 
+ print(figure_1)
 
  output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
  output_file <- file.path(output_folder, "figure_1.svg")
@@ -470,7 +487,7 @@ figure_2 <- ggplot(donut_data, aes(ymax=ymax, ymin=ymin, xmax=5, xmin=3.25, fill
   geom_rect() +
   geom_text(data=subset(donut_data, Institutions != "UK armed forces"), aes(x=4, y=labelPosition, label=label), size=4, color = "white") +
   geom_text(data=subset(donut_data, Institutions == "UK armed forces"), aes(x=5.75, y=custom_labelPosition, label=label), size=4, color = "#767171") +
-  geom_segment(data=subset(donut_data, Institutions == "UK armed forces"), aes(x=4, y=original_label_position, xend=5.45, yend=custom_labelPosition), color="#767171", size=01) +
+  geom_segment(data=subset(donut_data, Institutions == "UK armed forces"), aes(x=4, y=original_label_position, xend=5.45, yend=custom_labelPosition), color="#767171", size=0.5) +
   coord_polar(theta="y") +
   xlim(c(0, 6)) +
   scale_fill_manual(values = colors) + 
@@ -478,7 +495,9 @@ figure_2 <- ggplot(donut_data, aes(ymax=ymax, ymin=ymin, xmax=5, xmin=3.25, fill
   theme(
     text = element_text(family = "Arial", color = "#7F7F7F"),
     legend.position = "bottom",
-    legend.title = element_blank())+
+    legend.title = element_blank(),
+     legend.margin = margin(t = -25, b = 0, l = 0, r = 0),  # Adjusts the margin around the legend
+    legend.box.margin = margin(t = -25, b = 10, l = 0, r = 0))+  # Adjusts the margin between the legend and plot area)+
   annotate("text", x = 1, y = 0, label = total_value, size = 18, color = "#012169", fontface = "bold")+
   annotate("text", x = 0, y = 0 , label = "\n \n \n People sleeping rough \n over the month who left\n an institution", size = 4, color = "#767171", fontface = "bold", family = "Arial")
 
