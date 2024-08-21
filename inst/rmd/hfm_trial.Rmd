@@ -32,7 +32,7 @@ params:
 # library("showtext")
 # 
 # #Load the dataframes in from the latest tables
-# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
+ input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
 df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -589,34 +589,57 @@ institutions_data <- transposed %>%
          `Asylum Support` = as.numeric(`Asylum Support`),
          `Under 25 care leavers` = as.numeric(`Under 25 care leavers`))
 
+label_range_3 <- institutions_data %>%
+  mutate(Year = format(Date, "%Y")) %>% 
+  group_by(Year) %>%
+  summarize(
+    xmin = min(Date),
+    xmax = max(Date),
+    ymin = 0,  
+    ymax = 600   #
+  )
+
+
+label_range_3 <- label_range_3 %>%
+  mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+
+
+
 #Figure 3
 figure_3 <- ggplot(institutions_data, aes(x = Date)) +
-  geom_line(aes(y = `Prison (adult or youth)`, color = "Prison (adult or youth)"), size = 1.1, group = 1) +
-  geom_point(aes(y = `Prison (adult or youth)`), color = "#000000", size = 2) +
-  geom_line(aes(y = `Other justice accommodation`, color = "Other justice accommodation"), size = 1.1, group = 1) +
-  geom_point(aes(y = `Other justice accommodation`), color = "#12239E", size = 2) +
-  geom_line(aes(y = `General or Psychiatric Hospital`, color = "General or Psychiatric Hospital"), size = 1.1, group = 1) +
-  geom_point(aes(y = `General or Psychiatric Hospital`), color = "#118DFF", size = 2) +
-  geom_line(aes(y = `UK Armed Forces`, color = "UK Armed Forces"), size = 1.1, group = 1) +
-  geom_point(aes(y = `UK Armed Forces`), color = "#A0D1FF", size = 2) +
-  geom_line(aes(y =  `Asylum Support`, color = "Asylum Support"), size = 1.1, group = 1) +
-  geom_point(aes(y =  `Asylum Support`), color = "#7F7F7F", size = 2) +
-  geom_line(aes(y = `Under 25 care leavers`, color = "Under 25 care leavers"), size = 1.1, group = 1) +
-  geom_point(aes(y = `Under 25 care leavers`), color = "#EFB5B9", size = 2) +
+  geom_line(aes(y = `Prison (adult or youth)`, color = "Prison (adult or youth)"), size = 1.4, group = 1) +
+  geom_point(aes(y = `Prison (adult or youth)`), color = "#000000", size = 3) +
+  geom_line(aes(y = `Other justice accommodation`, color = "Other justice accommodation"), size = 1.4, group = 1) +
+  geom_point(aes(y = `Other justice accommodation`), color = "#12239E", size = 3) +
+  geom_line(aes(y = `General or Psychiatric Hospital`, color = "General or Psychiatric Hospital"), size = 1.4, group = 1) +
+  geom_point(aes(y = `General or Psychiatric Hospital`), color = "#118DFF", size = 3) +
+  geom_line(aes(y = `UK Armed Forces`, color = "UK Armed Forces"), size = 1.4, group = 1) +
+  geom_point(aes(y = `UK Armed Forces`), color = "#A0D1FF", size = 3) +
+  geom_line(aes(y =  `Asylum Support`, color = "Asylum Support"), size = 1.4, group = 1) +
+  geom_point(aes(y =  `Asylum Support`), color = "#E6E6E6", size = 3) +
+  geom_line(aes(y = `Under 25 care leavers`, color = "Under 25 care leavers"), size = 1.4, group = 1) +
+  geom_point(aes(y = `Under 25 care leavers`), color = "#EFB5B9", size = 3) +
+  geom_rect(data = label_range_3, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+             fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+  geom_text(data = label_range_3, aes(x = xmid, y = ymin -50, label = Year, group = Year),
+            color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
   dluhc_style(size = 1.5)+
-  scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma)+
+  scale_y_continuous(breaks = seq(0,500, by = 50),labels = comma)+
   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 8))+
   theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
-    axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10),
+    axis.text.x = element_text(angle = 0, hjust = 1, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
+    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
     text = element_text(family = "Arial", color = "#7F7F7F"),
+    axis.ticks = element_line(color = "#F2F2F2", size = 0.3), 
     legend.position = "bottom",
     legend.title = element_blank(),
-    legend.text = element_text(family = "Arial", color = "#7F7F7F")) +
+    legend.margin = margin(t = -5, b = 0, l = 0, r = 0),  # Adjusts the margin around the legend
+    legend.box.margin = margin(t = -5, b = 10, l = 0, r = 0),  # Adjusts the margin between the legend and plot area)+
+    legend.text = element_text(family = "Arial", color = "#7F7F7F", size = 10)) +
   guides(fill = guide_legend(override.aes = list(shape = 21, size = 5))) +
-  scale_color_manual(values = c("Prison (adult or youth)" = "#000000", "Other justice accommodation" = "#12239E", "General or Psychiatric Hospital" = "#118DFF", "UK Armed Forces" = "#A0D1FF", "Asylum Support" = "#7F7F7F", "Under 25 care leavers" = "#EFB5B9")) +
-  scale_x_date(labels = scales::date_format("%b %Y"), date_breaks = "1 month")
-
+  scale_color_manual(values = c("Prison (adult or youth)" = "#000000", "Other justice accommodation" = "#12239E", "General or Psychiatric Hospital" = "#118DFF", "UK Armed Forces" = "#A0D1FF", "Asylum Support" = "#E6E6E6", "Under 25 care leavers" = "#EFB5B9")) 
 
  output_file <- file.path(output_folder, "figure_3.svg")
  output_file2 <- file.path(output_folder, "figure_3.png")
@@ -694,27 +717,49 @@ The rate of people sleeping rough on a single night in `r this_month` in England
    select(3, 2, 1)
  
  #Update the below with the above data frames
+ 
+ label_range_4 <- df %>%
+  mutate(Year = format(Date, "%Y")) %>% 
+  group_by(Year) %>%
+  summarize(
+    xmin = min(Date),
+    xmax = max(Date),
+    ymin = 0,  
+    ymax = 9000   #
+  )
+
+
+label_range_4 <- label_range_4 %>%
+  mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+
 
  figure_4 <- ggplot(df, aes(x = Date)) +
-   geom_line(aes(y = `Snapshot`, color = "Snapshot"), size = 1.1, group = 1) +
-   geom_point(aes(y = `Snapshot`), color = "#012169", size = 2) +  # Add points for Snapshot_new
-   geom_line(aes(y = `Month`, color = "Month"), size = 1.1, group = 1) +
-   geom_point(aes(y = `Month`), color = "#95B3D7", size = 2) +
+   geom_line(aes(y = `Snapshot`, color = "Snapshot"), size = 1.4, group = 1) +
+   geom_point(aes(y = `Snapshot`), color = "#012169", size = 3) +  # Add points for Snapshot_new
+   geom_line(aes(y = `Month`, color = "Month"), size = 1.4, group = 1) +
+   geom_point(aes(y = `Month`), color = "#95B3D7", size = 3) +
+   geom_rect(data = label_range_4, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+             fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+   geom_text(data = label_range_4, aes(x = xmid, y = ymin -300 , label = Year, group = Year),
+            color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
    labs(title = NULL, x = "Date", y = "Number of people") +
    theme(legend.position = "none") +
    scale_color_manual(values = c("Snapshot" = "#012169", "Month" = "#95B3D7")) +
    dluhc_style(size = 1.5) +
-   scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma)+
-   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month")+ #expand = c(0, 1)) +THIS IS IF YOU WANT TO REMOVE EXTRA DATA POINTS
+   scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma, limits = c(-300,9000))+
+   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand =c(0,10))+ #expand = c(0, 1)) +THIS IS IF YOU WANT TO REMOVE EXTRA DATA POINTS
    theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
-    axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10)
+    axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
+    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+   axis.ticks = element_line(color = "#F2F2F2", size = 0.3), 
   ) +
    theme(legend.position = "none") +
    geom_text(data = df[1, ], aes(x = Date, y = `Snapshot`, label = " Number of people \n sleeping rough on \n a single night (R1)"), 
             color = "#012169",vjust = -0.8, hjust = -3.6, size = 3.5) +
   geom_text(data = df[1, ], aes(x = Date, y = `Month`, label = "   Number of people \n sleeping rough over \n       the month (R1)"),
-            color = "#95B3D7", vjust = -3.3, hjust = -2.25, size = 3.5)
+            color = "#012169", vjust = -3.3, hjust = -2.25, size = 3.5)
 
 
  output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
@@ -792,6 +837,20 @@ comb_last_year_long$Value <- as.numeric(comb_last_year_long$Value)
 comb_last_year_long$Category <- factor(comb_last_year_long$Category, levels = c( "Returners (NR1)", "Long term (B1)", "New monthly (P1)"))
 
 
+ label_range_5 <- comb_last_year_long %>%
+  mutate(Year = format(Date, "%Y")) %>% 
+  group_by(Year) %>%
+  summarize(
+    xmin = min(Date),
+    xmax = max(Date),
+    ymin = 0,  
+    ymax = 8000   #
+  )
+
+
+label_range_5 <- label_range_5 %>%
+  mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+
 # Create the stacked column chart using ggplot2
 figure_5 <- ggplot(comb_last_year_long, aes(x = Date, y = Value, fill = Category)) +
   geom_col() +
@@ -799,17 +858,27 @@ figure_5 <- ggplot(comb_last_year_long, aes(x = Date, y = Value, fill = Category
             position = position_stack(vjust = 0.5),
             color = "white",
             fontface = "plain",
-            family = "Arial") +
+            family = "Arial",
+            size = 3.2) +
+  geom_rect(data = label_range_5, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+             fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+  geom_text(data = label_range_5, aes(x = xmid, y = ymin -300 , label = Year, group = Year),
+            color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
   labs(title = NULL, x = "Date", y = "Value") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   dluhc_style(size = 1.5) +
-  scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma, limits = c(0, 8000))+
-  scale_x_date(labels = scales::date_format("%b %Y"), date_breaks = "1 month", expand = c(0,0)) +
+  scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma, limits = c(-300, 8000))+
+  scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0,0)) +
   theme(
-    axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, family = "Arial", color = "#7F7F7F", size = 11),
-    axis.text.y = element_text(family = "Arial", color = "#7F7F7F", size = 10)
+    axis.text.x = element_text(angle = 0, hjust = 1, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
+    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = element_line(color = "#F2F2F2", size = 0.3), 
+
   ) +
-  theme(legend.position = "bottom", legend.direction = "horizontal") +
+  theme(legend.position = "bottom", legend.direction = "horizontal",legend.key.size = unit(0.3, "cm"),
+        legend.text = element_text(family = "Arial", color = "#7F7F7F", size = 10)) +
   scale_fill_manual(values = c("Long term (B1)" = "#012169",
                                "Returners (NR1)" = "#8FAADC",
                                 "New monthly (P1)" = "#000000"
