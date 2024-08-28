@@ -10,27 +10,27 @@ params:
 ---
 
 ```{r setup, include=FALSE}
-# library("odbc")
-# library("dbplyr")
-# library("dtplyr")
-# library("dplyr")
-# library("tidyr")
-# library ("xlsx")
-# library("writexl")
-# library("openxlsx")
-# library("ggplot2")
-# library("devtools")
-# library("profvis")
-# library("shiny")
-# library("dluhctheme")
-# library("readxl")
-# library("scales")
-# library("tidyverse")
-# library("sf")
-# library("tmap")
-# library("scales")
-# library("showtext")
-# 
+library("odbc")
+library("dbplyr")
+library("dtplyr")
+library("dplyr")
+library("tidyr")
+library ("xlsx")
+library("writexl")
+library("openxlsx")
+library("ggplot2")
+library("devtools")
+library("profvis")
+library("shiny")
+library("dluhctheme")
+library("readxl")
+library("scales")
+library("tidyverse")
+library("sf")
+library("tmap")
+library("scales")
+library("showtext")
+
 # #Load the dataframes in from the latest tables
  input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
@@ -270,8 +270,7 @@ There are eight core indicators of the framework. This publication covers the fi
 
 * The number of people returning to sleeping rough, known as NR1. 
 
-This publication provides information about these five core indicators for all local authorities in England up to March 2024. This new data framework will be relevant to people working locally to end rough sleeping and is an important step towards driving better outcomes and realising the cross-government goal to end rough sleeping. 
-These indicators have been designed to measure progress towards the vision to end rough sleeping.
+This publication provides information about these five core indicators for all local authorities in England up to March 2024. This new data framework will be relevant to people working locally to end rough sleeping and is an important step towards driving better outcomes for vulnerable people.
 
 <br>
 
@@ -933,16 +932,23 @@ England <- England %>%
 
 England_map <- England %>%
   tm_shape() +
-  tm_fill("snapshot", style = "cont", breaks = c(0,3,6,12,20,50,450),
-          labels = c("0","5","10","20","50","100+",""),
-          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-          title = "People") +
-  tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
+  tm_fill("snapshot", style = "cont", breaks = c(0,5,10,15,20),
+          labels = c("0","5","10","15","20+"),
+          palette = c("#EFF3FF","#BDD7EE", "#6BAED6",  "#3182BD", "#08519C"),
+          title = "People sleeping \nrough per 100k \npopulation") +
+  tm_borders(lwd = 0.7, lty = "solid", alpha = 1) +
   tm_style("col_blind") +
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA,
+            legend.position = c("right", "top"),
+            legend.outside = TRUE,
+            legend.outside.position = "right",
+            legend.text.size = 0.5,
+            legend.title.size = 0.7,
+            legend.width = 0.9,                    # Adjust width of the legend
+            legend.height = 0.7 )
 
 #Use England shape files, this will need updating if there's boundary changes
-tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=2000, height=2000, asp=0)
+tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=1000, height=1000, asp=0)
 tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
 
 
@@ -961,9 +967,9 @@ London_join <- London_join %>%
 
 London_map <- London_join %>%
   tm_shape() +
-  tm_fill("snapshot.y", style = "cont", breaks = c(0,10,15,30,75,150,285),
-          labels = c("0","5","10","20","50","100+",""),
-          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+  tm_fill("snapshot.y", style = "cont", breaks = c(0,5,10,15,20),
+          labels = c("0","5","10","15","20+"),
+          palette = c("#EFF3FF","#9FADCD", "#788AB3",  "#50679B", "#012169"),
           title = "People",
           legend.show = FALSE) +
   tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
