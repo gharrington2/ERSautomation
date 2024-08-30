@@ -230,7 +230,7 @@ sign <- function(num){
 <br>
 <br>
 
-In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to ensure rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication of the framework and covers monthly information up to June 2024. 
+In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to ensure rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication of the framework and covers monthly information up to `r this_month`. 
 
 The number of people sleeping rough tends to be higher in the summer months when it is warmer and lower in the winter months, reflecting the seasonality of rough sleeping.
 
