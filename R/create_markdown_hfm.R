@@ -11,7 +11,7 @@ create_markdown_hfm <- function(input_path){
 )
 
   rmd_filename <- system.file("rmd", "hfm_trial.rmd", package = "ERSautomation")
-  word_filename <- gsub(".Rmd$", ".doc", rmd_filename)
+  word_filename <- paste("Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_word/RSDF_06_",Sys.Date(),".doc")
 
   rmarkdown::render(input = rmd_filename, output_file = word_filename, params = params, envir = new.env())
 

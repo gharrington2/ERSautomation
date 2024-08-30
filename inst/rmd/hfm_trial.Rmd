@@ -32,24 +32,24 @@ library("scales")
 library("showtext")
 
 # #Load the dataframes in from the latest tables
- input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
+# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
-df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
-df_month <- read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
-df_snapshot_new <- read_excel(input_path, sheet = "Table_P1(a)_-_RS_snapshot_new", skip = 3)
-df_snapshot <- read_excel(input_path, sheet = "Table_R1(a)_-_RS_snapshot", skip = 3)
-df_institutions <- read_excel(input_path, sheet = "Table_P2(a)_-_Left_institutions", skip = 3)
-df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3)
-df_long_term <- read_excel(input_path, sheet = "Table_B1_-_RS_monthly_long_term", skip = 3)
-df_prison <- read_excel(input_path, sheet = "Table_P2(b)_-_RS_month_prison", skip = 3)
-df_asylum <- read_excel(input_path, sheet = "Table_P2(f)_-_left_asylum", skip = 3)
-df_hospital <- read_excel(input_path, sheet = "Table_P2(d)_-_left_hospital", skip = 3)
-df_oja <- read_excel(input_path, sheet = "Table_P2(c)_-_left_OJA", skip = 3)
-df_u25care <- read_excel(input_path, sheet = "Table_P2(g)_-_RS_under_25_care", skip = 3)
-df_ukaf <- read_excel(input_path, sheet = "Table_P2(e)_-_left_UKAF", skip = 3)
-df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3)
-df_snapshot_rate <- read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3)
-df_returners <- read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip = 3)
+df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
+df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
+df_snapshot_new <- readxl::read_excel(input_path, sheet = "Table_P1(a)_-_RS_snapshot_new", skip = 3)
+df_snapshot <- readxl::read_excel(input_path, sheet = "Table_R1(a)_-_RS_snapshot", skip = 3)
+df_institutions <- readxl::read_excel(input_path, sheet = "Table_P2(a)_-_Left_institutions", skip = 3)
+df_month_rate <- readxl::read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3)
+df_long_term <- readxl::read_excel(input_path, sheet = "Table_B1_-_RS_monthly_long_term", skip = 3)
+df_prison <- readxl::read_excel(input_path, sheet = "Table_P2(b)_-_RS_month_prison", skip = 3)
+df_asylum <- readxl::read_excel(input_path, sheet = "Table_P2(f)_-_left_asylum", skip = 3)
+df_hospital <- readxl::read_excel(input_path, sheet = "Table_P2(d)_-_left_hospital", skip = 3)
+df_oja <- readxl::read_excel(input_path, sheet = "Table_P2(c)_-_left_OJA", skip = 3)
+df_u25care <- readxl::read_excel(input_path, sheet = "Table_P2(g)_-_RS_under_25_care", skip = 3)
+df_ukaf <- readxl::read_excel(input_path, sheet = "Table_P2(e)_-_left_UKAF", skip = 3)
+df_month_rate <- readxl::read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3)
+df_snapshot_rate <- readxl::read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3)
+df_returners <- readxl::read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip = 3)
 
 colnames(df_month_new) <- colnames(df_month)
 knitr::opts_chunk$set(echo = TRUE)
@@ -797,9 +797,9 @@ There were `r get("this_month_df_returners", envir = env1)` people sleeping roug
 
 ```{r 5-Stacked bars, include=FALSE}
 
-df_month_new <- read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
-df_long_term <- read_excel(input_path, sheet = "Table_B1_-_RS_monthly_long_term", skip = 3)
-df_returners <- read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip = 3)
+df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
+df_long_term <- readxl::read_excel(input_path, sheet = "Table_B1_-_RS_monthly_long_term", skip = 3)
+df_returners <- readxl::read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip = 3)
 colnames(df_month_new) <- colnames(df_month)
 
 
@@ -918,7 +918,7 @@ library(tmap)
 library(scales)
 
 #This is for rate despite saying just snapshot
-df_snapshot <- read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3) %>%
+df_snapshot <- readxl::read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3) %>%
   select(c(1,2,3,50))
 colnames(df_snapshot) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
 
@@ -1003,7 +1003,7 @@ knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map.png")
 
 ```{r figure 7,  include=FALSE}
 
-df_month_rate <- read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>%
+df_month_rate <- readxl::read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>%
   select(c(1,2,3,46))
 colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
 
