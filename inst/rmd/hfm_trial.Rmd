@@ -10,26 +10,6 @@ params:
 ---
 
 ```{r setup, include=FALSE}
-library("odbc")
-library("dbplyr")
-library("dtplyr")
-library("dplyr")
-library("tidyr")
-library ("xlsx")
-library("writexl")
-library("openxlsx")
-library("ggplot2")
-library("devtools")
-library("profvis")
-library("shiny")
-library("dluhctheme")
-library("readxl")
-library("scales")
-library("tidyverse")
-library("sf")
-library("tmap")
-library("scales")
-library("showtext")
 
 # #Load the dataframes in from the latest tables
 # input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
@@ -328,24 +308,23 @@ There were `r get("this_month_df_institutions", envir = env1)` people sleeping r
   colnames(new_snapshot_tot) <- new_colnames
 
  #Create dataframe and transpose, needs to be in long format for charts
- new_comb <- bind_rows(new_month_tot, new_snapshot_tot)
+ new_comb <- dplyr::bind_rows(new_month_tot, new_snapshot_tot)
  transposed_new <- data.frame(t(new_comb))
- transposed_new <-  mutate(transposed_new, "Date" = rownames(transposed_new))
+ transposed_new <-  dplyr::mutate(transposed_new, "Date" = rownames(transposed_new))
  rownames(transposed_new) <- NULL
  colnames(transposed_new) <- c("New month", "New snapshot", "Date")
- new_df <- transposed_new %>%
- mutate(Date = as.Date(Date, format = "%Y_%m_%d"),
+ new_df <- dplyr::mutate(transposed_new, Date = as.Date(Date, format = "%Y_%m_%d"),
         `New month` = as.numeric(`New month`),
-        `New snapshot` = as.numeric(`New snapshot`)) %>%
-   select(3, 2, 1)
+        `New snapshot` = as.numeric(`New snapshot`))
+   dplyr::select(new_df, 3, 2, 1)
 new_df$Date <- as.Date(new_df$Date)
 min_date <- min(new_df$Date)
 max_date <- max(new_df$Date)
 
 label_range <- new_df %>%
-  mutate(Year = format(Date, "%Y")) %>% 
-  group_by(Year) %>%
-  summarize(
+  dplyr::mutate(Year = format(Date, "%Y")) %>% 
+  dplyr::group_by(Year) %>%
+  dplyr::summarize(
     xmin = min(Date),
     xmax = max(Date),
     ymin = 0,  
@@ -354,43 +333,47 @@ label_range <- new_df %>%
 
 
 label_range <- label_range %>%
-  mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+  dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+# Rewriting with explicit package references
 
- figure_1 <- ggplot(new_df, aes(x = Date)) +
-   geom_line(aes(y = `New snapshot`, color = "Snapshot_new"), size = 1.4, group = 1) +
-   geom_point(aes(y = `New snapshot`), color = "#012169", size = 3) +  # Add points for Snapshot_new
-   geom_line(aes(y = `New month`, color = "Month_new"), size = 1.4, group = 1) +
-   geom_point(aes(y = `New month`), color = "#95B3D7", size = 3) +
-  geom_rect(data = label_range, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
-             fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
-  geom_text(data = label_range, aes(x = xmid, y = ymin -150 , label = Year, group = Year),
-            color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
-   labs(title = NULL, x = "Date", y = "Number of people") +
-   theme(legend.position = "none") +
-   scale_color_manual(values = c("Snapshot_new" = "#012169", "Month_new" = "#95B3D7")) +
-   dluhc_style(size = 1.5) +
-   scale_y_continuous(breaks = seq(0,3500, by = 500),labels = comma, limits = c(-150,3500))+
-   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", limits = c(min_date, max_date), expand = c(0, 10)) +
-   theme(
-    axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 11),
-    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
-    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
-    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
-   axis.ticks = element_line(color = "#F2F2F2", size = 0.3), 
+label_range <- dplyr::mutate(label_range, 
+                             xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+
+figure_1 <- ggplot2::ggplot(new_df, ggplot2::aes(x = Date)) +
+  ggplot2::geom_line(ggplot2::aes(y = `New snapshot`, color = "Snapshot_new"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `New snapshot`), color = "#012169", size = 3) +  # Add points for Snapshot_new
+  ggplot2::geom_line(ggplot2::aes(y = `New month`, color = "Month_new"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `New month`), color = "#95B3D7", size = 3) +
+  ggplot2::geom_rect(data = label_range, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+                     fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+  ggplot2::geom_text(data = label_range, ggplot2::aes(x = xmid, y = ymin - 150, label = Year, group = Year),
+                     color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
+  ggplot2::labs(title = NULL, x = "Date", y = "Number of people") +
+  ggplot2::theme(legend.position = "none") +
+  ggplot2::scale_color_manual(values = c("Snapshot_new" = "#012169", "Month_new" = "#95B3D7")) +
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::scale_y_continuous(breaks = seq(0, 3500, by = 500), labels = scales::comma, limits = c(-150, 3500)) +
+  ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", limits = c(min_date, max_date), expand = c(0, 10)) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 11),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
   ) +
-   theme(legend.position = "none") +
-   geom_text(data = new_df[1, ], aes(x = Date, y = `New snapshot`, label = "          New people sleeping\n rough on a single night (P1)"), 
-            color = "#012169",vjust = -2, hjust = -2.5, size = 3.5) +
-  geom_text(data = new_df[1, ], aes(x = Date, y = `New month`, label = "        New people sleeping\n rough over the month (P1)"),
-            color = "#012169", vjust = -6.4, hjust = -2.1, size = 3.5)
- 
- print(figure_1)
+  ggplot2::theme(legend.position = "none") +
+  ggplot2::geom_text(data = new_df[1, ], ggplot2::aes(x = Date, y = `New snapshot`, label = "          New people sleeping\n rough on a single night (P1)"), 
+                     color = "#012169", vjust = -2, hjust = -2.5, size = 3.5) +
+  ggplot2::geom_text(data = new_df[1, ], ggplot2::aes(x = Date, y = `New month`, label = "        New people sleeping\n rough over the month (P1)"),
+                     color = "#012169", vjust = -6.4, hjust = -2.1, size = 3.5)
 
+ print(figure_1)
+ 
  output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
  output_file <- file.path(output_folder, "figure_1.svg")
  output_file2 <- file.path(output_folder, "figure_1.png")
- ggsave(filename = output_file, plot = figure_1, device = "svg", width = 8, height = 6)
- ggsave(filename = output_file2, plot = figure_1, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave(filename = output_file, plot = figure_1, device = "svg", width = 8, height = 6)
+ ggplot2::ggsave(filename = output_file2, plot = figure_1, width = 8, height = 6, dpi = 300)
 
  
 ```
@@ -411,8 +394,8 @@ knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_1.png")
 ```{r 4-Figure 2 P2, include=FALSE}
 
 # Load Arial font
-font_add("Arial", "Arial.ttf")
-showtext_auto()
+sysfonts::font_add("Arial", "Arial.ttf")
+showtext::showtext_auto()
 
 #Access env1
 this_month_df_prison <- get("this_month_df_prison", envir = env1)
@@ -482,23 +465,23 @@ donut_data$custom_labelPosition <- ifelse(donut_data$Institutions == "UK armed f
 original_label_position <- donut_data$labelPosition[donut_data$Institutions == "UK armed forces"]
 
 
-figure_2 <- ggplot(donut_data, aes(ymax=ymax, ymin=ymin, xmax=5, xmin=3.25, fill=Institutions)) +
-  geom_rect() +
-  geom_text(data=subset(donut_data, Institutions != "UK armed forces"), aes(x=4, y=labelPosition, label=label), size=4, color = "white") +
-  geom_text(data=subset(donut_data, Institutions == "UK armed forces"), aes(x=5.75, y=custom_labelPosition, label=label), size=4, color = "#767171") +
-  geom_segment(data=subset(donut_data, Institutions == "UK armed forces"), aes(x=4, y=original_label_position, xend=5.45, yend=custom_labelPosition), color="#767171", size=0.5) +
-  coord_polar(theta="y") +
-  xlim(c(0, 6)) +
-  scale_fill_manual(values = colors) + 
-  theme_void() +
-  theme(
-    text = element_text(family = "Arial", color = "#7F7F7F"),
+figure_2 <- ggplot2::ggplot(donut_data, ggplot2::aes(ymax = ymax, ymin = ymin, xmax = 5, xmin = 3.25, fill = Institutions)) +
+  ggplot2::geom_rect() +
+  ggplot2::geom_text(data = subset(donut_data, Institutions != "UK armed forces"), ggplot2::aes(x = 4, y = labelPosition, label = label), size = 4, color = "white") +
+  ggplot2::geom_text(data = subset(donut_data, Institutions == "UK armed forces"), ggplot2::aes(x = 5.75, y = custom_labelPosition, label = label), size = 4, color = "#767171") +
+  ggplot2::geom_segment(data = subset(donut_data, Institutions == "UK armed forces"), ggplot2::aes(x = 4, y = original_label_position, xend = 5.45, yend = custom_labelPosition), color = "#767171", size = 0.5) +
+  ggplot2::coord_polar(theta = "y") +
+  ggplot2::xlim(c(0, 6)) +
+  ggplot2::scale_fill_manual(values = colors) + 
+  ggplot2::theme_void() +
+  ggplot2::theme(
+    text = ggplot2::element_text(family = "Arial", color = "#7F7F7F"),
     legend.position = "bottom",
-    legend.title = element_blank(),
-     legend.margin = margin(t = -25, b = 0, l = 0, r = 0),  # Adjusts the margin around the legend
-    legend.box.margin = margin(t = -25, b = 10, l = 0, r = 0))+  # Adjusts the margin between the legend and plot area)+
-  annotate("text", x = 1, y = 0, label = total_value, size = 18, color = "#012169", fontface = "bold")+
-  annotate("text", x = 0, y = 0 , label = "\n \n \n People sleeping rough \n over the month who left\n an institution", size = 4, color = "#767171", fontface = "bold", family = "Arial")
+    legend.title = ggplot2::element_blank(),
+    legend.margin = ggplot2::margin(t = -25, b = 0, l = 0, r = 0),
+    legend.box.margin = ggplot2::margin(t = -25, b = 10, l = 0, r = 0)) +
+  ggplot2::annotate("text", x = 1, y = 0, label = total_value, size = 18, color = "#012169", fontface = "bold") +
+  ggplot2::annotate("text", x = 0, y = 0, label = "\n \n \n People sleeping rough \n over the month who left\n an institution", size = 4, color = "#767171", fontface = "bold", family = "Arial")
 
 print(figure_2)
 
@@ -526,12 +509,12 @@ print(figure_2)
 # total_value <- sum(donut_data$this_month_inst)
 # 
 # # Make the plot
-# figure_2 <- ggplot(donut_data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Institutions)) +
+# figure_2 <- ggplot2::ggplot(donut_data, ggplot2::aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Institutions)) +
 #   geom_rect() +
-#   geom_text(aes(x=3.5, y=labelPosition, label=label), size=4, color = "white") +
+#   geom_text(ggplot2::aes(x=3.5, y=labelPosition, label=label), size=4, color = "white") +
 #   coord_polar(theta="y") +
-#   xlim(c(1, 4)) +
-#   scale_fill_manual(values = colors) + 
+#   ggplot2::xlim(c(1, 4)) +
+#   ggplot2::scale_fill_manual(values = colors) + 
 #   theme_void() +
 #   theme(
 #     text = element_text(family = "Arial", color = "#7F7F7F"),
@@ -545,8 +528,8 @@ print(figure_2)
  output_file <- file.path(output_folder, "figure_2.svg")
  output_file2 <- file.path(output_folder, "figure_2.png")
 
- ggsave(filename = output_file, plot = figure_2, device = "svg", width = 8, height = 6)
- ggsave(filename = output_file2, plot = figure_2, width = 8, height = 6, dpi = 300)
+  ggplot2::ggsave(filename = output_file, plot = figure_2, device = "svg", width = 8, height = 6)
+  ggplot2::ggsave(filename = output_file2, plot = figure_2, width = 8, height = 6, dpi = 300)
 
 ```
 
@@ -563,10 +546,17 @@ knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_2.png")
 ```{r 4-Figure 3 P2, include=FALSE}
 
 #Bind into one df
-inst_all <- bind_rows(as.vector(df_prison[1, ]), as.vector(df_oja[1, ]), as.vector(df_hospital[1, ]), as.vector(df_ukaf[1, ]), as.vector(df_asylum[1, ]), as.vector(df_u25care[1,c(14:length(df_u25care)) ])) %>% 
-  select(-c(1:4), -c(19:22)) # update when you need new data included
+inst_all <- dplyr::bind_rows(
+  as.vector(df_prison[1, ]),
+  as.vector(df_oja[1, ]),
+  as.vector(df_hospital[1, ]),
+  as.vector(df_ukaf[1, ]),
+  as.vector(df_asylum[1, ]),
+  as.vector(df_u25care[1, c(14:length(df_u25care))])
+) %>%
+  dplyr::select(-c(1:4), -c(19:22))  # update when you need new data included
 
-#convert date formats
+# Convert date formats
 start_date <- as.Date("2023-05-01")
 num_months <- ncol(inst_all)
 
@@ -574,77 +564,88 @@ dates <- seq(from = start_date, by = "month", length.out = num_months)
 formatted_dates <- format(dates, "%Y_%m_%d")
 colnames(inst_all) <- formatted_dates
 
-#Wrangling to get into desired format - change date to date format rather than character
+# Wrangling to get into the desired format
 transposed <- data.frame(t(inst_all))
-transposed <-  mutate(transposed, "Date" = rownames(transposed))
+transposed <- dplyr::mutate(transposed, "Date" = rownames(transposed))
 rownames(transposed) <- NULL
-colnames(transposed) <- c("Prison (adult or youth)", "Other justice accommodation", "General or Psychiatric Hospital", "UK Armed Forces", "Asylum Support", "Under 25 care leavers", "Date")
-institutions_data <- transposed %>%
-  mutate(Date = as.Date(Date, format = "%Y_%m_%d"),
-         `Prison (adult or youth)` = as.numeric(`Prison (adult or youth)`),
-         `Other justice accommodation` = as.numeric(`Other justice accommodation`),
-         `General or Psychiatric Hospital` = as.numeric(`General or Psychiatric Hospital`),
-         `UK Armed Forces` = as.numeric(`UK Armed Forces`),
-         `Asylum Support` = as.numeric(`Asylum Support`),
-         `Under 25 care leavers` = as.numeric(`Under 25 care leavers`))
+colnames(transposed) <- c(
+  "Prison (adult or youth)", "Other justice accommodation",
+  "General or Psychiatric Hospital", "UK Armed Forces",
+  "Asylum Support", "Under 25 care leavers", "Date"
+)
 
-label_range_3 <- institutions_data %>%
-  mutate(Year = format(Date, "%Y")) %>% 
-  group_by(Year) %>%
-  summarize(
-    xmin = min(Date),
-    xmax = max(Date),
-    ymin = 0,  
-    ymax = 600   #
+institutions_data <- transposed %>%
+  dplyr::mutate(
+    Date = as.Date(Date, format = "%Y_%m_%d"),
+    `Prison (adult or youth)` = as.numeric(`Prison (adult or youth)`),
+    `Other justice accommodation` = as.numeric(`Other justice accommodation`),
+    `General or Psychiatric Hospital` = as.numeric(`General or Psychiatric Hospital`),
+    `UK Armed Forces` = as.numeric(`UK Armed Forces`),
+    `Asylum Support` = as.numeric(`Asylum Support`),
+    `Under 25 care leavers` = as.numeric(`Under 25 care leavers`)
   )
 
+label_range_3 <- institutions_data %>%
+  dplyr::mutate(Year = format(Date, "%Y")) %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarize(
+    xmin = min(Date),
+    xmax = max(Date),
+    ymin = 0,
+    ymax = 600
+  )
 
 label_range_3 <- label_range_3 %>%
-  mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+  dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
 
-
-
-#Figure 3
-figure_3 <- ggplot(institutions_data, aes(x = Date)) +
-  geom_line(aes(y = `Prison (adult or youth)`, color = "Prison (adult or youth)"), size = 1.4, group = 1) +
-  geom_point(aes(y = `Prison (adult or youth)`), color = "#000000", size = 3) +
-  geom_line(aes(y = `Other justice accommodation`, color = "Other justice accommodation"), size = 1.4, group = 1) +
-  geom_point(aes(y = `Other justice accommodation`), color = "#12239E", size = 3) +
-  geom_line(aes(y = `General or Psychiatric Hospital`, color = "General or Psychiatric Hospital"), size = 1.4, group = 1) +
-  geom_point(aes(y = `General or Psychiatric Hospital`), color = "#118DFF", size = 3) +
-  geom_line(aes(y = `UK Armed Forces`, color = "UK Armed Forces"), size = 1.4, group = 1) +
-  geom_point(aes(y = `UK Armed Forces`), color = "#A0D1FF", size = 3) +
-  geom_line(aes(y =  `Asylum Support`, color = "Asylum Support"), size = 1.4, group = 1) +
-  geom_point(aes(y =  `Asylum Support`), color = "#E6E6E6", size = 3) +
-  geom_line(aes(y = `Under 25 care leavers`, color = "Under 25 care leavers"), size = 1.4, group = 1) +
-  geom_point(aes(y = `Under 25 care leavers`), color = "#EFB5B9", size = 3) +
-  geom_rect(data = label_range_3, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
-             fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
-  geom_text(data = label_range_3, aes(x = xmid, y = ymin -50, label = Year, group = Year),
-            color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
-  dluhc_style(size = 1.5)+
-  scale_y_continuous(breaks = seq(0,500, by = 50),labels = comma)+
-  scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 8))+
-  theme(
-    axis.text.x = element_text(angle = 0, hjust = 1, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
-    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
-    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
-    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
-    text = element_text(family = "Arial", color = "#7F7F7F"),
-    axis.ticks = element_line(color = "#F2F2F2", size = 0.3), 
+# Figure 3
+figure_3 <- ggplot2::ggplot(institutions_data, ggplot2::aes(x = Date)) +
+  ggplot2::geom_line(ggplot2::aes(y = `Prison (adult or youth)`, color = "Prison (adult or youth)"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `Prison (adult or youth)`), color = "#000000", size = 3) +
+  ggplot2::geom_line(ggplot2::aes(y = `Other justice accommodation`, color = "Other justice accommodation"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `Other justice accommodation`), color = "#12239E", size = 3) +
+  ggplot2::geom_line(ggplot2::aes(y = `General or Psychiatric Hospital`, color = "General or Psychiatric Hospital"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `General or Psychiatric Hospital`), color = "#118DFF", size = 3) +
+  ggplot2::geom_line(ggplot2::aes(y = `UK Armed Forces`, color = "UK Armed Forces"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `UK Armed Forces`), color = "#A0D1FF", size = 3) +
+  ggplot2::geom_line(ggplot2::aes(y = `Asylum Support`, color = "Asylum Support"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `Asylum Support`), color = "#E6E6E6", size = 3) +
+  ggplot2::geom_line(ggplot2::aes(y = `Under 25 care leavers`, color = "Under 25 care leavers"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `Under 25 care leavers`), color = "#EFB5B9", size = 3) +
+  ggplot2::geom_rect(data = label_range_3, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+    fill = "white", color = NA, alpha = 0, inherit.aes = FALSE
+  ) +
+  ggplot2::geom_text(data = label_range_3, ggplot2::aes(x = xmid, y = ymin - 50, label = Year, group = Year),
+    color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE
+  ) +
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::scale_y_continuous(breaks = seq(0, 500, by = 50), labels = scales::comma) +
+  ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 8)) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 1, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    text = ggplot2::element_text(family = "Arial", color = "#7F7F7F"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3),
     legend.position = "bottom",
-    legend.title = element_blank(),
-    legend.margin = margin(t = -5, b = 0, l = 0, r = 0),  # Adjusts the margin around the legend
-    legend.box.margin = margin(t = -5, b = 10, l = 0, r = 0),  # Adjusts the margin between the legend and plot area)+
-    legend.text = element_text(family = "Arial", color = "#7F7F7F", size = 10)) +
-  guides(fill = guide_legend(override.aes = list(shape = 21, size = 5))) +
-  scale_color_manual(values = c("Prison (adult or youth)" = "#000000", "Other justice accommodation" = "#12239E", "General or Psychiatric Hospital" = "#118DFF", "UK Armed Forces" = "#A0D1FF", "Asylum Support" = "#E6E6E6", "Under 25 care leavers" = "#EFB5B9")) 
+    legend.title = ggplot2::element_blank(),
+    legend.margin = ggplot2::margin(t = -5, b = 0, l = 0, r = 0),
+    legend.box.margin = ggplot2::margin(t = -5, b = 10, l = 0, r = 0),
+    legend.text = ggplot2::element_text(family = "Arial", color = "#7F7F7F", size = 10)
+  ) +
+  ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(shape = 21, size = 5))) +
+  ggplot2::scale_color_manual(values = c(
+    "Prison (adult or youth)" = "#000000", "Other justice accommodation" = "#12239E",
+    "General or Psychiatric Hospital" = "#118DFF", "UK Armed Forces" = "#A0D1FF",
+    "Asylum Support" = "#E6E6E6", "Under 25 care leavers" = "#EFB5B9"
+  ))
 
  output_file <- file.path(output_folder, "figure_3.svg")
  output_file2 <- file.path(output_folder, "figure_3.png")
 
- ggsave(filename = output_file, plot = figure_3, device = "svg", width = 8, height = 6)
- ggsave(filename = output_file2, plot = figure_3, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave(filename = output_file, plot = figure_3, device = "svg", width = 8, height = 6)
+ ggplot2::ggsave(filename = output_file2, plot = figure_3, width = 8, height = 6, dpi = 300)
 
  
 ```
@@ -688,85 +689,91 @@ The rate of people sleeping rough on a single night in `r this_month` in England
 
 ```{r 4-Figure 4 R1, include=FALSE}
 
- month_tot <- as.vector(df_month[1, c(5:length(df_month))])
- snapshot_tot <- as.vector(df_snapshot[1, c(5:length(df_month))])
+month_tot <- as.vector(df_month[1, c(5:length(df_month))])
+snapshot_tot <- as.vector(df_snapshot[1, c(5:length(df_month))])
 
-  # Apply the function to dfs
-  new_colnames <- sapply(colnames(month_tot), convert_to_date)
+# Apply the function to dfs
+new_colnames <- sapply(colnames(month_tot), convert_to_date)
 
-  # Update the column names of the data frame
-  colnames(month_tot) <- new_colnames
-  colnames(snapshot_tot) <- new_colnames
-  
-  month_tot <- as.data.frame(month_tot) %>% 
-    mutate(across(everything(), as.numeric))
- snapshot_tot <- as.data.frame(snapshot_tot) %>% 
-    mutate(across(everything(), as.numeric))
+# Update the column names of the data frame
+colnames(month_tot) <- new_colnames
+colnames(snapshot_tot) <- new_colnames
 
-  comb <- bind_rows(month_tot, snapshot_tot)
- 
- transposed <- data.frame(t(comb))
- transposed <-  mutate(transposed, "Date" = rownames(transposed))
- rownames(transposed) <- NULL
- colnames(transposed) <- c("Month", "Snapshot", "Date")
- df <- transposed %>%
- mutate(Date = as.Date(Date, format = "%Y_%m_%d"),
-        `Month` = as.numeric(`Month`),
-        `Snapshot` = as.numeric(`Snapshot`)) %>%
-   select(3, 2, 1)
- 
- #Update the below with the above data frames
- 
- label_range_4 <- df %>%
-  mutate(Year = format(Date, "%Y")) %>% 
-  group_by(Year) %>%
-  summarize(
+month_tot <- as.data.frame(month_tot) %>%
+  dplyr::mutate(across(everything(), as.numeric))
+snapshot_tot <- as.data.frame(snapshot_tot) %>%
+  dplyr::mutate(across(everything(), as.numeric))
+
+comb <- dplyr::bind_rows(month_tot, snapshot_tot)
+
+transposed <- data.frame(t(comb))
+transposed <- dplyr::mutate(transposed, "Date" = rownames(transposed))
+rownames(transposed) <- NULL
+colnames(transposed) <- c("Month", "Snapshot", "Date")
+
+df <- transposed %>%
+  dplyr::mutate(
+    Date = as.Date(Date, format = "%Y_%m_%d"),
+    `Month` = as.numeric(`Month`),
+    `Snapshot` = as.numeric(`Snapshot`)
+  ) %>%
+  dplyr::select(3, 2, 1)
+
+# Update the below with the above data frames
+
+label_range_4 <- df %>%
+  dplyr::mutate(Year = format(Date, "%Y")) %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarize(
     xmin = min(Date),
     xmax = max(Date),
-    ymin = 0,  
-    ymax = 9000   #
+    ymin = 0,
+    ymax = 9000
   )
 
-
 label_range_4 <- label_range_4 %>%
-  mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+  dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
 
-
- figure_4 <- ggplot(df, aes(x = Date)) +
-   geom_line(aes(y = `Snapshot`, color = "Snapshot"), size = 1.4, group = 1) +
-   geom_point(aes(y = `Snapshot`), color = "#012169", size = 3) +  # Add points for Snapshot_new
-   geom_line(aes(y = `Month`, color = "Month"), size = 1.4, group = 1) +
-   geom_point(aes(y = `Month`), color = "#95B3D7", size = 3) +
-   geom_rect(data = label_range_4, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
-             fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
-   geom_text(data = label_range_4, aes(x = xmid, y = ymin -300 , label = Year, group = Year),
-            color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
-   labs(title = NULL, x = "Date", y = "Number of people") +
-   theme(legend.position = "none") +
-   scale_color_manual(values = c("Snapshot" = "#012169", "Month" = "#95B3D7")) +
-   dluhc_style(size = 1.5) +
-   scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma, limits = c(-300,9000))+
-   scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand =c(0,10))+ #expand = c(0, 1)) +THIS IS IF YOU WANT TO REMOVE EXTRA DATA POINTS
-   theme(
-    axis.text.x = element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
-    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
-    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
-    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
-   axis.ticks = element_line(color = "#F2F2F2", size = 0.3), 
+# Figure 4
+figure_4 <- ggplot2::ggplot(df, ggplot2::aes(x = Date)) +
+  ggplot2::geom_line(ggplot2::aes(y = `Snapshot`, color = "Snapshot"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `Snapshot`), color = "#012169", size = 3) +
+  ggplot2::geom_line(ggplot2::aes(y = `Month`, color = "Month"), size = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = `Month`), color = "#95B3D7", size = 3) +
+  ggplot2::geom_rect(data = label_range_4, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+    fill = "white", color = NA, alpha = 0, inherit.aes = FALSE
   ) +
-   theme(legend.position = "none") +
-   geom_text(data = df[1, ], aes(x = Date, y = `Snapshot`, label = " Number of people \n sleeping rough on \n a single night (R1)"), 
-            color = "#012169",vjust = -0.8, hjust = -3.6, size = 3.5) +
-  geom_text(data = df[1, ], aes(x = Date, y = `Month`, label = "   Number of people \n sleeping rough over \n       the month (R1)"),
-            color = "#012169", vjust = -3.3, hjust = -2.25, size = 3.5)
+  ggplot2::geom_text(data = label_range_4, ggplot2::aes(x = xmid, y = ymin - 300, label = Year, group = Year),
+    color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE
+  ) +
+  ggplot2::labs(title = NULL, x = "Date", y = "Number of people") +
+  ggplot2::theme(legend.position = "none") +
+  ggplot2::scale_color_manual(values = c("Snapshot" = "#012169", "Month" = "#95B3D7")) +
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::scale_y_continuous(breaks = seq(0, 9000, by = 1000), labels = scales::comma, limits = c(-300, 9000)) +
+  ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 10)) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
+  ) +
+  ggplot2::theme(legend.position = "none") +
+  ggplot2::geom_text(data = df[1, ], ggplot2::aes(x = Date, y = `Snapshot`, label = " Number of people \n sleeping rough on \n a single night (R1)"),
+    color = "#012169", vjust = -0.8, hjust = -3.6, size = 3.5
+  ) +
+  ggplot2::geom_text(data = df[1, ], ggplot2::aes(x = Date, y = `Month`, label = "   Number of people \n sleeping rough over \n       the month (R1)"),
+    color = "#012169", vjust = -3.3, hjust = -2.25, size = 3.5
+  )
 
 
  output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
  output_file <- file.path(output_folder, "figure_4.svg")
  output_file2 <- file.path(output_folder, "figure_4.png")
 
- ggsave(filename = output_file, plot = figure_4, device = "svg", width = 8, height = 6)
- ggsave(filename = output_file2, plot = figure_4, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave(filename = output_file, plot = figure_4, device = "svg", width = 8, height = 6)
+ ggplot2::ggsave(filename = output_file2, plot = figure_4, width = 8, height = 6, dpi = 300)
 
  
 ```
@@ -807,89 +814,88 @@ colnames(df_month_new) <- colnames(df_month)
 new_month <- df_month_new[, c((length(df_month_new)-13 ): length(df_month_new))]
 long_term <- df_long_term[, c((length(df_long_term)-13 ): length(df_long_term))]
 returners <- df_returners[, c((length(df_returners)-13 ): length(df_returners))]
-
-#Function to get just all england values for each variable
-england_values <- function(df1, df2, df3){
-
+# Function to get just all England values for each variable
+england_values <- function(df1, df2, df3) {
   top_row_df1 <- df1[1, , drop = FALSE]
   top_row_df2 <- df2[1, , drop = FALSE]
   top_row_df3 <- df3[1, , drop = FALSE]
 
   combined_top_rows <- rbind(top_row_df1, top_row_df2, top_row_df3)
-
   return(combined_top_rows)
 }
 
 comb_last_year <- england_values(new_month, long_term, returners)
-colnames(comb_last_year) <- formatted_dates #uses same start point as set in previous figure
+colnames(comb_last_year) <- formatted_dates # Uses same start point as set in previous figure
 
-#categorise first
+# Categorise first
 comb_last_year <- comb_last_year %>%
-  mutate(Category = c("New monthly (P1)", "Long term (B1)", "Returners (NR1)"))
+  dplyr::mutate(Category = c("New monthly (P1)", "Long term (B1)", "Returners (NR1)"))
 
-#Reshape to long format to create chart
+# Reshape to long format to create chart
 comb_last_year_long <- comb_last_year %>%
-  pivot_longer(cols = -Category, names_to = "Date", values_to = "Value") %>%
-  mutate(Date = as.Date(Date, format = "%Y_%m_%d"))
+  tidyr::pivot_longer(cols = -Category, names_to = "Date", values_to = "Value") %>%
+  dplyr::mutate(Date = as.Date(Date, format = "%Y_%m_%d"))
 
 comb_last_year_long$Value <- as.numeric(comb_last_year_long$Value)
-comb_last_year_long$Category <- factor(comb_last_year_long$Category, levels = c( "Returners (NR1)", "Long term (B1)", "New monthly (P1)"))
+comb_last_year_long$Category <- factor(comb_last_year_long$Category, levels = c("Returners (NR1)", "Long term (B1)", "New monthly (P1)"))
 
-
- label_range_5 <- comb_last_year_long %>%
-  mutate(Year = format(Date, "%Y")) %>% 
-  group_by(Year) %>%
-  summarize(
+# Label ranges for plotting
+label_range_5 <- comb_last_year_long %>%
+  dplyr::mutate(Year = format(Date, "%Y")) %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarize(
     xmin = min(Date),
     xmax = max(Date),
-    ymin = 0,  
-    ymax = 8000   #
+    ymin = 0,
+    ymax = 8000
   )
 
-
 label_range_5 <- label_range_5 %>%
-  mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+  dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
 
 # Create the stacked column chart using ggplot2
-figure_5 <- ggplot(comb_last_year_long, aes(x = Date, y = Value, fill = Category)) +
-  geom_col() +
-  geom_text(aes(label = scales::comma(Value)),
-            position = position_stack(vjust = 0.5),
-            color = "white",
-            fontface = "plain",
-            family = "Arial",
-            size = 3.2) +
-  geom_rect(data = label_range_5, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
-             fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
-  geom_text(data = label_range_5, aes(x = xmid, y = ymin -300 , label = Year, group = Year),
-            color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
-  labs(title = NULL, x = "Date", y = "Value") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  dluhc_style(size = 1.5) +
-  scale_y_continuous(breaks = seq(0,9000, by = 1000),labels = comma, limits = c(-300, 8000))+
-  scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0,0)) +
-  theme(
-    axis.text.x = element_text(angle = 0, hjust = 1, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
-    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
-    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),   
-    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
-    axis.ticks = element_line(color = "#F2F2F2", size = 0.3), 
-
+figure_5 <- ggplot2::ggplot(comb_last_year_long, ggplot2::aes(x = Date, y = Value, fill = Category)) +
+  ggplot2::geom_col() +
+  ggplot2::geom_text(ggplot2::aes(label = scales::comma(Value)),
+    position = ggplot2::position_stack(vjust = 0.5),
+    color = "white",
+    fontface = "plain",
+    family = "Arial",
+    size = 3.2
   ) +
-  theme(legend.position = "bottom", legend.direction = "horizontal",legend.key.size = unit(0.3, "cm"),
-        legend.text = element_text(family = "Arial", color = "#7F7F7F", size = 10)) +
-  scale_fill_manual(values = c("Long term (B1)" = "#012169",
-                               "Returners (NR1)" = "#8FAADC",
-                                "New monthly (P1)" = "#000000"
-                               ))
-
+  ggplot2::geom_rect(data = label_range_5, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+    fill = "white", color = NA, alpha = 0, inherit.aes = FALSE
+  ) +
+  ggplot2::geom_text(data = label_range_5, ggplot2::aes(x = xmid, y = ymin - 300, label = Year, group = Year),
+    color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE
+  ) +
+  ggplot2::labs(title = NULL, x = "Date", y = "Value") +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::scale_y_continuous(breaks = seq(0, 9000, by = 1000), labels = scales::comma, limits = c(-300, 8000)) +
+  ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 0)) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 1, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
+  ) +
+  ggplot2::theme(legend.position = "bottom", legend.direction = "horizontal", legend.key.size = grid::unit(0.3, "cm"),
+    legend.text = ggplot2::element_text(family = "Arial", color = "#7F7F7F", size = 10)
+  ) +
+  ggplot2::scale_fill_manual(values = c(
+    "Long term (B1)" = "#012169",
+    "Returners (NR1)" = "#8FAADC",
+    "New monthly (P1)" = "#000000"
+  ))
 
   output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
  output_file <- file.path(output_folder, "figure_5.svg")
  output_file2 <- file.path(output_folder, "figure_5.png")
 
- ggsave(filename = output_file, plot = figure_5, device = "svg", width = 8, height = 6)
- ggsave(filename = output_file2, plot = figure_5, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave(filename = output_file, plot = figure_5, device = "svg", width = 8, height = 6)
+ ggplot2::ggsave(filename = output_file2, plot = figure_5, width = 8, height = 6, dpi = 300)
 
 ```
 ```{r figure 5, echo=FALSE,}
@@ -912,33 +918,28 @@ OFFICIAL
 
 # Script to create maps for the info graphic
 
-library(tidyverse)
-library(sf)
-library(tmap)
-library(scales)
-
 #This is for rate despite saying just snapshot
 df_snapshot <- readxl::read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3) %>%
-  select(c(1,2,3,50))
+  dplyr::select(c(1,2,3,50))
 colnames(df_snapshot) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
 
-England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+England <- sf::st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
 
 England <- England %>%
-  left_join(df_snapshot,  by = join_by(LAD23CD))
+  dplyr::left_join(df_snapshot,  by = join_by(LAD23CD))
 
 England <- England %>%
   filter(!is.na(England$snapshot))
 
 England_map <- England %>%
-  tm_shape() +
-  tm_fill("snapshot", style = "cont", breaks = c(0,5,10,15,20),
+  tmap::tm_shape() +
+  tmap::tm_fill("snapshot", style = "cont", breaks = c(0,5,10,15,20),
           labels = c("0","5","10","15","20+"),
           palette = c("#EFF3FF","#BDD7EE", "#6BAED6",  "#3182BD", "#08519C"),
           title = "People sleeping \nrough per 100k \npopulation") +
-  tm_borders(lwd = 0.4, lty = "solid", alpha = 1) +
-  tm_style("col_blind") +
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA,
+  tmap::tm_borders(lwd = 0.4, lty = "solid", alpha = 1) +
+  tmap::tm_style("col_blind") +
+  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA,
             legend.position = c("right", "top"),
             legend.outside = TRUE,
             legend.outside.position = "right",
@@ -948,8 +949,8 @@ England_map <- England %>%
             legend.height = 0.7 )
 
 #Use England shape files, this will need updating if there's boundary changes
-tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=1000, height=1000, asp=0)
-tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
+tmap::tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=1000, height=1000, asp=0)
+tmap::tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
 
 
 #Adjust for London
@@ -960,25 +961,25 @@ London <- df_snapshot[ c(12:307), ] %>%
 
 #Join with shape file and remove any values not in London
 London_join <- England %>%
-  left_join(London,  by = join_by(LAD23CD))
+  dplyr::left_join(London,  by = join_by(LAD23CD))
 
 London_join <- London_join %>%
   filter(!is.na(London_join$snapshot.y))
 
 London_map <- London_join %>%
-  tm_shape() +
-  tm_fill("snapshot.y", style = "cont", breaks = c(0,5,10,15,20),
+  tmap::tm_shape() +
+  tmap::tm_fill("snapshot.y", style = "cont", breaks = c(0,5,10,15,20),
           labels = c("0","5","10","15","20+"),
           palette = c("#EFF3FF","#BDD7EE", "#6BAED6",  "#3182BD", "#08519C"),
           legend.show = FALSE) +
-  tm_borders(lwd = 0.9, lty = "solid", alpha = 1)+
-  tm_style("col_blind")+
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+  tmap::tm_borders(lwd = 0.9, lty = "solid", alpha = 1)+
+  tmap::tm_style("col_blind")+
+  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
 
    
-tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.png", width=2000, height=2000, asp=0)
-tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.svg", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.png", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.svg", width=2000, height=2000, asp=0)
 
 ```
 <br>
@@ -1004,29 +1005,29 @@ knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map.png")
 ```{r figure 7,  include=FALSE}
 
 df_month_rate <- readxl::read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>%
-  select(c(1,2,3,46))
+  dplyr::select(c(1,2,3,46))
 colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
 
-England <- st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+England <- sf::st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
 
 England <- England %>%
-  left_join(df_month_rate,  by = join_by(LAD23CD))
+  dplyr::left_join(df_month_rate,  by = join_by(LAD23CD))
 
 England <- England %>%
   filter(!is.na(England$month))
 
 England_map_rate <- England %>%
-  tm_shape() +
-  tm_fill("month", style = "cont", breaks = c(0,3,6,12,20,50,450),
+  tmap::tm_shape() +
+  tmap::tm_fill("month", style = "cont", breaks = c(0,3,6,12,20,50,450),
           labels = c("0","5","10","20","50","100+",""),
           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
           title = "People") +
-  tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
-  tm_style("col_blind") +
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+  tmap::tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
+  tmap::tm_style("col_blind") +
+  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
-tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png", width=2000, height=2000, asp=0)
-tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.svg", width=2000, height=2000, asp=0)
+tmap::tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png", width=2000, height=2000, asp=0)
+tmap::tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.svg", width=2000, height=2000, asp=0)
 
 #Adjust for London
 
@@ -1036,24 +1037,24 @@ London <- df_month_rate[ c(12:307), ] %>%
 
 #Join with shape file and remove any values not in London
 London_join <- England %>%
-  left_join(London,  by = join_by(LAD23CD))
+  dplyr::left_join(London,  by = join_by(LAD23CD))
 
 London_join <- London_join %>%
   filter(!is.na(London_join$month.y))
 
 London_map_rate <- London_join %>%
-  tm_shape() +
-  tm_fill("month.y", style = "cont", breaks = c(0,10,15,30,75,100,150),
+  tmap::tm_shape() +
+  tmap::tm_fill("month.y", style = "cont", breaks = c(0,10,15,30,75,100,150),
           labels = c("0","5","10","20","50","100+",""),
           palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
           title = "People",
           legend.show = FALSE) +
-  tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
-  tm_style("col_blind")+
-  tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+  tmap::tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
+  tmap::tm_style("col_blind")+
+  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
-tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png", width=2000, height=2000, asp=0)
-tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.svg", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.svg", width=2000, height=2000, asp=0)
 
 
 ```

@@ -14,5 +14,27 @@ URL: https://github.com/communitiesuk/ERSautomation
 BugReports: https://github.com/communitiesuk/ERSautomation/issues
 Imports: 
     odbc,
-    readxl
-    devtools
+    readxl,
+    devtools,
+    dbplyr,
+    dtplyr,
+    dplyr,
+    tidyr,
+    xlsx,
+    writexl,
+    openxlsx,
+    ggplot2,
+    profvis,
+    shiny,
+    dluhctheme,
+    scales,
+    graphics,
+    tidyverse,
+    sf,
+    tmap,
+    scales,
+    showtext,
+    magrittr,
+    sysfonts,
+    tidyverse
+
