@@ -257,7 +257,7 @@ This publication provides information about these five core indicators for all l
 
 ```{r image 1, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/Indicator_breakdown_pub_graphic.png")
+knitr::include_graphics(system.file("rmd/images/Indicator_breakdown_pub_graphic.png", package = "ERSautomation"))
 
 ```
 
@@ -369,7 +369,10 @@ figure_1 <- ggplot2::ggplot(new_df, ggplot2::aes(x = Date)) +
 
  print(figure_1)
  
- output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
+ output_folder <- "inst/rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)
+} # specify desired folder path 
  output_file <- file.path(output_folder, "figure_1.svg")
  output_file2 <- file.path(output_folder, "figure_1.png")
  ggplot2::ggsave(filename = output_file, plot = figure_1, device = "svg", width = 8, height = 6)
@@ -382,7 +385,7 @@ figure_1 <- ggplot2::ggplot(new_df, ggplot2::aes(x = Date)) +
 
 ```{r line new, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_1.png")
+knitr::include_graphics(system.file("rmd/images/figure_1.png",  package = "ERSautomation"))
 
 ```
 <br>
@@ -539,7 +542,7 @@ print(figure_2)
 
 ```{r figure 1, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_2.png")
+knitr::include_graphics(system.file("rmd/images/figure_2.png",  package = "ERSautomation"))
 
 ```
 
@@ -661,7 +664,7 @@ figure_3 <- ggplot2::ggplot(institutions_data, ggplot2::aes(x = Date)) +
 
 ```{r figure 3, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_3.svg")
+knitr::include_graphics(system.file("rmd/images/figure_3.svg", package = "ERSautomation"))
 
 ```
 
@@ -768,7 +771,9 @@ figure_4 <- ggplot2::ggplot(df, ggplot2::aes(x = Date)) +
   )
 
 
- output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
+ output_folder <- "inst/rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)}  # specify desired folder path 
  output_file <- file.path(output_folder, "figure_4.svg")
  output_file2 <- file.path(output_folder, "figure_4.png")
 
@@ -780,7 +785,7 @@ figure_4 <- ggplot2::ggplot(df, ggplot2::aes(x = Date)) +
 
 ```{r figure 4, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_4.png")
+knitr::include_graphics(system.file("rmd/images/figure_4.png", package = "ERSautomation"))
 
 ```
 
@@ -890,7 +895,9 @@ figure_5 <- ggplot2::ggplot(comb_last_year_long, ggplot2::aes(x = Date, y = Valu
     "New monthly (P1)" = "#000000"
   ))
 
-  output_folder <- "~/GitHub/ERSautomation/inst/rmd/images"  # specify desired folder path 
+   output_folder <- "inst/rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)}  # specify desired folder path 
  output_file <- file.path(output_folder, "figure_5.svg")
  output_file2 <- file.path(output_folder, "figure_5.png")
 
@@ -900,7 +907,7 @@ figure_5 <- ggplot2::ggplot(comb_last_year_long, ggplot2::aes(x = Date, y = Valu
 ```
 ```{r figure 5, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/figure_5.png")
+knitr::include_graphics(system.file("rmd/images/figure_5.png",  package = "ERSautomation"))
 
 ```
 OFFICIAL
@@ -923,13 +930,13 @@ df_snapshot <- readxl::read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot
   dplyr::select(c(1,2,3,50))
 colnames(df_snapshot) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
 
-England <- sf::st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+England <- sf::st_read(system.file("rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp",  package = "ERSautomation"))
 
 England <- England %>%
-  dplyr::left_join(df_snapshot,  by = join_by(LAD23CD))
+  dplyr::left_join(df_snapshot,  by = dplyr::join_by(LAD23CD))
 
 England <- England %>%
-  filter(!is.na(England$snapshot))
+  dplyr::filter(!is.na(England$snapshot))
 
 England_map <- England %>%
   tmap::tm_shape() +
@@ -949,22 +956,27 @@ England_map <- England %>%
             legend.height = 0.7 )
 
 #Use England shape files, this will need updating if there's boundary changes
-tmap::tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.png", width=1000, height=1000, asp=0)
-tmap::tmap_save(England_map, "~/GitHub/ERSautomation/inst/rmd/images/England_map.svg", width=2000, height=2000, asp=0)
+output_folder <- "inst/rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)
+}
+
+tmap::tmap_save(England_map, file.path(output_folder, "England_map.png"), width=1000, height=1000, asp=0)
+tmap::tmap_save(England_map, file.path(output_folder, "England_map.svg"), width=2000, height=2000, asp=0)
 
 
 #Adjust for London
 
 #Create London dataframe
 London <- df_snapshot[ c(12:307), ] %>%
-  filter(Region == "London")
+  dplyr::filter(Region == "London")
 
 #Join with shape file and remove any values not in London
 London_join <- England %>%
-  dplyr::left_join(London,  by = join_by(LAD23CD))
+  dplyr::left_join(London,  by = dplyr::join_by(LAD23CD))
 
 London_join <- London_join %>%
-  filter(!is.na(London_join$snapshot.y))
+  dplyr::filter(!is.na(London_join$snapshot.y))
 
 London_map <- London_join %>%
   tmap::tm_shape() +
@@ -976,10 +988,13 @@ London_map <- London_join %>%
   tmap::tm_style("col_blind")+
   tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
-
+output_folder <- "inst/rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)
+}
    
-tmap::tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.png", width=2000, height=2000, asp=0)
-tmap::tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.svg", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map,file.path(output_folder, "London_map.png"), width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map, file.path(output_folder, "london_map.svg"), width=2000, height=2000, asp=0)
 
 ```
 <br>
@@ -992,8 +1007,8 @@ tmap::tmap_save(London_map, "~/GitHub/ERSautomation/inst/rmd/images/London_map.s
 
 ```{r figure 6 - map, echo=FALSE,}
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map.png")
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map.png")
+knitr::include_graphics(system.file("rmd/images/England_map.png",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/London_map.png",  package = "ERSautomation"))
 
 ```
 
@@ -1008,13 +1023,13 @@ df_month_rate <- readxl::read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_
   dplyr::select(c(1,2,3,46))
 colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
 
-England <- sf::st_read("~/GitHub/ERSautomation/inst/rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+England <- sf::st_read(system.file("rmd/England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp",  package = "ERSautomation"))
 
 England <- England %>%
-  dplyr::left_join(df_month_rate,  by = join_by(LAD23CD))
+  dplyr::left_join(df_month_rate,  by = dplyr::join_by(LAD23CD))
 
 England <- England %>%
-  filter(!is.na(England$month))
+  dplyr::filter(!is.na(England$month))
 
 England_map_rate <- England %>%
   tmap::tm_shape() +
@@ -1026,21 +1041,25 @@ England_map_rate <- England %>%
   tmap::tm_style("col_blind") +
   tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
-tmap::tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png", width=2000, height=2000, asp=0)
-tmap::tmap_save(England_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.svg", width=2000, height=2000, asp=0)
+output_folder <- "inst/rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)
+}
+tmap::tmap_save(England_map_rate, file.path(output_folder, "England_map_rate.png"), width=2000, height=2000, asp=0)
+tmap::tmap_save(England_map_rate, file.path(output_folder, "England_map_rate.svg"), width=2000, height=2000, asp=0)
 
 #Adjust for London
 
 #Create London dataframe
 London <- df_month_rate[ c(12:307), ] %>%
-  filter(Region == "London")
+  dplyr::filter(Region == "London")
 
 #Join with shape file and remove any values not in London
 London_join <- England %>%
-  dplyr::left_join(London,  by = join_by(LAD23CD))
+  dplyr::left_join(London,  by = dplyr::join_by(LAD23CD))
 
 London_join <- London_join %>%
-  filter(!is.na(London_join$month.y))
+  dplyr::filter(!is.na(London_join$month.y))
 
 London_map_rate <- London_join %>%
   tmap::tm_shape() +
@@ -1053,8 +1072,12 @@ London_map_rate <- London_join %>%
   tmap::tm_style("col_blind")+
   tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
-tmap::tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png", width=2000, height=2000, asp=0)
-tmap::tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.svg", width=2000, height=2000, asp=0)
+output_folder <- "inst/rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)
+}
+tmap::tmap_save(London_map_rate, file.path(output_folder, "London_map_rate.png"), width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map_rate, file.path(output_folder, "London_map_rate.svg"), width=2000, height=2000, asp=0)
 
 
 ```
@@ -1065,8 +1088,8 @@ tmap::tmap_save(London_map_rate, "~/GitHub/ERSautomation/inst/rmd/images/London_
 
 ```{r figure 7 - map, echo=FALSE,}
 # 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/England_map_rate.png")
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/London_map_rate.png")
+knitr::include_graphics(system.file("rmd/images/England_map_rate.png", package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/London_map_rate.png", package = "ERSautomation"))
 
 ```
 
@@ -1253,7 +1276,7 @@ An outline of the production process and quality assurance carried out prior to 
 ``` {r QA_flowchart, echo=FALSE,}
 
 
-knitr::include_graphics("~/GitHub/ERSautomation/inst/rmd/images/QA_flowchart.png")
+knitr::include_graphics(system.file("rmd/images/QA_flowchart.png", package = "ERSautomation"))
 
 ```
 
