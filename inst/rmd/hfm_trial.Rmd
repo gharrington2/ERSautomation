@@ -385,7 +385,7 @@ if (!dir.exists(output_folder)) {
 
 ```{r line new, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/figure_1.png",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/figure_1.svg",  package = "ERSautomation"))
 
 ```
 <br>
@@ -542,7 +542,7 @@ print(figure_2)
 
 ```{r figure 1, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/figure_2.png",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/figure_2.svg",  package = "ERSautomation"))
 
 ```
 
@@ -785,7 +785,7 @@ if (!dir.exists(output_folder)) {
 
 ```{r figure 4, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/figure_4.png", package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/figure_4.svg", package = "ERSautomation"))
 
 ```
 
@@ -907,7 +907,7 @@ if (!dir.exists(output_folder)) {
 ```
 ```{r figure 5, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/figure_5.png",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/figure_5.svg",  package = "ERSautomation"))
 
 ```
 OFFICIAL
@@ -1007,8 +1007,8 @@ tmap::tmap_save(London_map, file.path(output_folder, "london_map.svg"), width=20
 
 ```{r figure 6 - map, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/England_map.png",  package = "ERSautomation"))
-knitr::include_graphics(system.file("rmd/images/London_map.png",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/England_map.svg",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/London_map.svg",  package = "ERSautomation"))
 
 ```
 
@@ -1088,8 +1088,8 @@ tmap::tmap_save(London_map_rate, file.path(output_folder, "London_map_rate.svg")
 
 ```{r figure 7 - map, echo=FALSE,}
 # 
-knitr::include_graphics(system.file("rmd/images/England_map_rate.png", package = "ERSautomation"))
-knitr::include_graphics(system.file("rmd/images/London_map_rate.png", package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/England_map_rate.svg", package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/images/London_map_rate.svg", package = "ERSautomation"))
 
 ```
 
