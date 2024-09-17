@@ -12,7 +12,7 @@ params:
 ```{r setup, include=FALSE}
 
 # #Load the dataframes in from the latest tables
-# input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx"
 
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -940,20 +940,29 @@ England <- England %>%
 
 England_map <- England %>%
   tmap::tm_shape() +
-  tmap::tm_fill("snapshot", style = "cont", breaks = c(0,5,10,15,20),
-          labels = c("0","5","10","15","20+"),
-          palette = c("#EFF3FF","#BDD7EE", "#6BAED6",  "#3182BD", "#08519C"),
-          title = "People sleeping \nrough per 100k \npopulation") +
-  tmap::tm_borders(lwd = 0.4, lty = "solid", alpha = 1) +
-  tmap::tm_style("col_blind") +
-  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA,
-            legend.position = c("right", "top"),
-            legend.outside = TRUE,
-            legend.outside.position = "right",
-            legend.text.size = 0.5,
-            legend.title.size = 0.7,
-            legend.width = 0.9,                    # Adjust width of the legend
-            legend.height = 0.7 )
+  tmap::tm_fill(
+  "snapshot", 
+  style = "cont",  # Keep continuous style
+  breaks = c(0, 20),  # Only showing 0 and 20+ in legend
+  labels = c("0", "20+"),  # Simplify legend labels
+  palette = c("#EFF3FF", "#08519C"),  # Continuous palette from light to dark
+  title = "People sleeping \nrough per 100k \npopulation"
+) +
+tmap::tm_borders(lwd = 0.1, lty = "solid", alpha = 1) +
+tmap::tm_style("col_blind") +
+tmap::tm_layout(
+  frame = FALSE, 
+  frame.lwd = NA, 
+  panel.label.bg.color = NA,
+  legend.position = c("right", "top"),
+  legend.outside = TRUE,
+  legend.outside.position = "right",
+  legend.text.size = 0.5,
+  legend.title.size = 0.7,
+  legend.width = 0.9,
+  legend.height = 0.7
+)
+
 
 #Use England shape files, this will need updating if there's boundary changes
 output_folder <- "inst/rmd/images"
