@@ -22,6 +22,12 @@ In the console run the following
 
 `Load_all()`
 
+Or 
+
+devtools::document()
+
+devtools::load_all()
+
 `create_markdown_hfm(input_path = "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables240730.xlsx")` *(if you have updated the input path this needs amending here too)*
 
 The word document output will be located in *Q:\\ASCT\\P005 Homelessness\\008 Rough Sleeping\\RS MI R\\New monthly tables script\\Git_Version\\Publication_word*
