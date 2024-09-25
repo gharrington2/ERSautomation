@@ -946,7 +946,7 @@ England_map <- England %>%
   breaks = c(0, 20),  # Only showing 0 and 20+ in legend
   labels = c("0", "20+"),  # Simplify legend labels
   palette = c("#EFF3FF", "#08519C"),  # Continuous palette from light to dark
-  title = "People sleeping \nrough per 100k \npopulation"
+  #title = "People sleeping \nrough per 100k \npopulation"
 ) +
 tmap::tm_borders(lwd = 0.1, lty = "solid", alpha = 1) +
 tmap::tm_style("col_blind") +
@@ -960,7 +960,9 @@ tmap::tm_layout(
   legend.text.size = 0.5,
   legend.title.size = 0.7,
   legend.width = 0.9,
-  legend.height = 0.7
+  legend.height = 2,
+  legend.bg.color = NA,
+  legend.show = FALSE
 )
 
 
@@ -987,13 +989,15 @@ London_join <- England %>%
 London_join <- London_join %>%
   dplyr::filter(!is.na(London_join$snapshot.y))
 
+
+
 London_map <- London_join %>%
   tmap::tm_shape() +
-  tmap::tm_fill("snapshot.y", style = "cont", breaks = c(0,5,10,15,20),
-          labels = c("0","5","10","15","20+"),
-          palette = c("#EFF3FF","#BDD7EE", "#6BAED6",  "#3182BD", "#08519C"),
+  tmap::tm_fill("snapshot.y", style = "cont", breaks = c(0,20),
+          labels = c("0","20+"),
+          palette = c("#EFF3FF", "#08519C"),
           legend.show = FALSE) +
-  tmap::tm_borders(lwd = 0.9, lty = "solid", alpha = 1)+
+  tmap::tm_borders(lwd = 0.4, lty = "solid", alpha = 1)+
   tmap::tm_style("col_blind")+
   tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
@@ -1042,13 +1046,26 @@ England <- England %>%
 
 England_map_rate <- England %>%
   tmap::tm_shape() +
-  tmap::tm_fill("month", style = "cont", breaks = c(0,3,6,12,20,50,450),
-          labels = c("0","5","10","20","50","100+",""),
-          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
-          title = "People") +
-  tmap::tm_borders(lwd = 1, lty = "solid", alpha = 0.1) +
+  tmap::tm_fill("month", style = "cont", breaks = c(0,20),
+          labels = c("0","20"),
+          palette = c("#EFF3FF", "#08519C"))+
+          #title = "People") +
+  tmap::tm_borders(lwd = 0.1, lty = "solid", alpha = 1) +
   tmap::tm_style("col_blind") +
-  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+tmap::tm_layout(
+  frame = FALSE, 
+  frame.lwd = NA, 
+  panel.label.bg.color = NA,
+  legend.position = c("right", "top"),
+  legend.outside = TRUE,
+  legend.outside.position = "right",
+  legend.text.size = 0.5,
+  legend.title.size = 0.7,
+  legend.width = 0.9,
+  legend.height = 2,
+  legend.bg.color = NA,
+  legend.show = FALSE
+)
 
 output_folder <- "inst/rmd/images"
 if (!dir.exists(output_folder)) {
@@ -1072,12 +1089,12 @@ London_join <- London_join %>%
 
 London_map_rate <- London_join %>%
   tmap::tm_shape() +
-  tmap::tm_fill("month.y", style = "cont", breaks = c(0,10,15,30,75,100,150),
-          labels = c("0","5","10","20","50","100+",""),
-          palette = c("#EFF3FF","#C7D0E6","#9FADCD", "#788AB3",  "#50679B", "#284482", "#012169"),
+  tmap::tm_fill("month.y", style = "cont", breaks = c(0, 20),
+          labels = c("0","20+"),
+          palette = c("#EFF3FF","#08519C"),
           title = "People",
           legend.show = FALSE) +
-  tmap::tm_borders( lwd = 1, lty = "solid", alpha = 0.2)+
+  tmap::tm_borders( lwd = 0.4, lty = "solid", alpha = 1)+
   tmap::tm_style("col_blind")+
   tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
