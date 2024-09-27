@@ -22,7 +22,7 @@ In the console run the following
 
 `Load_all()`
 
-Or 
+Or
 
 devtools::document()
 

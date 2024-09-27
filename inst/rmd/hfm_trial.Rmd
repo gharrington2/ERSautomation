@@ -164,13 +164,13 @@ sign <- function(num){
 
 
 
-**`r  get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
+**`r  get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
 
 
-**`r  get("this_month_df_snapshot_new", envir = env1)`** new people sleeping rough on a single night in `r this_month` (`r round(abs(( get("this_month_df_snapshot_new", envir = env1) / get("this_month_df_snapshot", envir = env1))*100),digits = 0)`% of total) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% since `r last_year`.
+**`r  get("this_month_df_snapshot_new", envir = env1)`** new people sleeping rough on a single night in `r this_month` (`r round(abs(( get("this_month_df_snapshot_new", envir = env1) / get("this_month_df_snapshot", envir = env1))*100),digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% since `r last_year`.
 
 
-**`r get("this_month_df_institutions", envir = env1)`** people sleeping rough over the month in `r this_month` who have left an institution (`r round(abs((get("this_month_df_institutions", envir = env1) / get("this_month_df_month", envir = env1))*100), digits = 0)`% of the total) - `r sign(get("annual_change_df_institutions", envir = env1))` `r round(abs((get("annual_change_df_institutions", envir = env1))/get("last_year_df_institutions", envir = env1))*100, digits = 0)`% since `r last_year`. 
+**`r get("this_month_df_institutions", envir = env1)`** people sleeping rough over the month in `r this_month` who have left an institution (`r round(abs((get("this_month_df_institutions", envir = env1) / get("this_month_df_month", envir = env1))*100), digits = 0)`% of the total people sleeping rough over the month) - `r sign(get("annual_change_df_institutions", envir = env1))` `r round(abs((get("annual_change_df_institutions", envir = env1))/get("last_year_df_institutions", envir = env1))*100, digits = 0)`% since `r last_year`. 
 
 
 :::
@@ -194,7 +194,7 @@ sign <- function(num){
 ::: {custom-style="GreyBox"}
 
 #### Brief (B1)
-**`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
+**`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
 ::: 
 
@@ -203,14 +203,14 @@ sign <- function(num){
 ::: {custom-style="GreyBox"}
 
 #### Non-recurring (NR1)
-**`r get("this_month_df_returners", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough (`r round(((get("this_month_df_returners", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
+**`r get("this_month_df_returners", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough (`r round(((get("this_month_df_returners", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
 ::: 
 
 <br>
 <br>
 
-In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to ensure rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication of the framework and covers monthly information up to `r this_month`. 
+In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to better understand how far rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication of the framework and covers monthly information up to `r this_month`. 
 
 The number of people sleeping rough tends to be higher in the summer months when it is warmer and lower in the winter months, reflecting the seasonality of rough sleeping.
 
@@ -229,9 +229,9 @@ The number of people sleeping rough tends to be higher in the summer months when
 
 Since March 2022, the Ministry of Housing, Communities and Local Government has been working with the Centre for Homelessness Impact and 5 pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole) to develop rough sleeping metrics. 
 
-Developing the framework has demonstrated the success of close collaboration between local authorities, MHCLG and the Centre for Homelessness Impact. 
+This new data framework will be relevant to people working locally to end rough sleeping and is an important step towards driving better outcomes for vulnerable people.  
 
-There are eight core indicators of the framework. This publication covers the first five core indicators which we rolled out nationally in May 2023. These are: 
+There are eight core indicators of the framework, including three which were rolled out nationally in June 2024 and will be reported on in future publications. This publication provides information about the first five core indicators, which were rolled out nationally in May 2023, for all local authorities in England up to June 2024. These are:
 
 ### Prevented
 
