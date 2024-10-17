@@ -205,8 +205,8 @@ sign <- function(num){
 #### Non-recurring (NR1)
 **`r get("this_month_df_returners", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough (`r round(((get("this_month_df_returners", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
-<!-- #### Non-recurring (NR2) -->
-<!-- **`r get("this_month_df_prev_in_accomm", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough who had previously moved into settled accommodation within the last 12 months (`r round(((get("this_month_df_prev_in_accomm", envir = env1))/get("this_month_df_prev_in_accomm", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month)  -->
+#### Non-recurring (NR2)
+**`r get("this_month_df_prev_in_accomm", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough who had previously moved into settled accommodation within the last 12 months (`r round(((get("this_month_df_prev_in_accomm", envir = env1))/get("this_month_df_prev_in_accomm", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month)
 
 ::: 
 
