@@ -12,7 +12,7 @@ params:
 ```{r setup, include=FALSE}
 
 # #Load the dataframes in from the latest tables
-input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241004.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241016.xlsx"
 
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -38,7 +38,6 @@ df_month_rate <- readxl::read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_
 df_snapshot_rate <- readxl::read_excel(input_path, sheet = "Table_R1(c)_-_RS_snapshot_rate", skip = 3)
 df_returners <- readxl::read_excel(input_path, sheet = "Table_NR1_-_RS_returners", skip = 3)
 df_prev_in_accomm <- readxl::read_excel(input_path, sheet = "Table_NR2_-_RS_prev_in_accomm", skip = 3)
-
 colnames(df_month_new) <- colnames(df_month)
 knitr::opts_chunk$set(echo = TRUE)
 #options(scipen = 999)  # Prevents scientific notation
@@ -139,7 +138,8 @@ changes(df_ukaf, env = env1)
 changes(df_month_rate, env = env1)
 changes(df_snapshot_rate, env = env1)
 changes(df_returners, env = env1)
-#changes(df_prev_in_accomm, env = env1)
+changes(df_accommodation, env = env1)
+changes(df_prev_in_accomm, env = env1)
 
 #Function to work out increase or decrease
 up_down <- function(num1, num2){
@@ -188,13 +188,19 @@ sign <- function(num){
 
 ::: {custom-style="GreyBox"}
 
-#### Rare (R1)
+#### Rare (R1 & R2)
 
 **`r get("this_month_df_month", envir = env1)`** people sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month", envir = env1))` `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round(((get("quarterly_change_df_month", envir = env1))/get("last_quarter_df_month", envir = env1))*100, digits = 0)`% since `r last_quarter`. `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month_rate", envir = env1))` from `r round((get("last_year_df_month_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_month_rate", envir = env1))` from `r round((get("last_quarter_df_month_rate", envir = env1)), digits = 1)` `r last_quarter`.
 
 
 
 **`r get("this_month_df_snapshot", envir = env1)`** people sleeping rough on a single night in `r this_month` - `r sign(get("annual_change_df_snapshot", envir = env1))` `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_snapshot", envir = env1))` `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter`. `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough on a single night in `r this_month` - `r sign(get("annual_change_df_snapshot_rate", envir = env1))` from `r round((get("last_year_df_snapshot_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_snapshot_rate", envir = env1))` from `r round((get("last_quarter_df_snapshot_rate", envir = env1)), digits = 1)` `r last_quarter`.
+
+
+
+**`r get("this_month_df_accommodation", envir = env1)`** people who were sleeping rough over the month in `r this_month` were accommodated during the month, `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)` % since `r last_quarter` AND `r sign(get("monthly_change_df_accommodation", envir = env1))` `r round(abs((get("monthly_change_df_accommodation", envir = env1))/get("last_month_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_month`.
+
+
 
 ::: 
 
@@ -205,23 +211,25 @@ sign <- function(num){
 #### Brief (B1)
 **`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
+
+
 ::: 
 
 <br>
 
 ::: {custom-style="GreyBox"}
 
-#### Non-recurring (NR1)
+#### Non-recurring (NR1 & NR2)
 **`r get("this_month_df_returners", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough (`r round(((get("this_month_df_returners", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
-
+**`r get("this_month_df_prev_in_accomm", envir = env1)`** people returning to sleeping rough over the month in `r this_month` had previously moved into settled accommodation - `r sign(get("quarterly_change_df_prev_in_accomm", envir = env1))` `r round(abs((get("quarterly_change_df_prev_in_accomm", envir = env1))/get("last_quarter_df_prev_in_accomm", envir = env1))*100, digits = 0)`% since `r last_quarter`. AND `r sign(get("monthly_change_df_prev_in_accomm", envir = env1))` `r round(abs((get("monthly_change_df_prev_in_accomm", envir = env1))/get("last_month_df_prev_in_accomm", envir = env1))*100, digits = 0)`% since `r last_month`.
 
 ::: 
 
 <br>
 <br>
 
-In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to better understand how far rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the third quarterly publication of the framework and covers monthly information up to `r this_month`. 
+In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to better understand how far rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the fourth quarterly publication of the framework and covers monthly information up to `r this_month`, for the first time including the final three core indicators:  number of people sleeping rough who were accommodated over the month (R2), number of nights seen sleeping rough (B2) and number of people returning to sleeping rough after moving into settled accommodation (NR2). 
 
 The number of people sleeping rough tends to be higher in the summer months when it is warmer and lower in the winter months, reflecting the seasonality of rough sleeping.
 
@@ -229,7 +237,7 @@ The number of people sleeping rough tends to be higher in the summer months when
 <br>
 
 ::: {custom-style="GreyBox"}
-**Date of next publication**: It is expected that the next quarterly publication of monthly data up to September, will be published in November/December 2024.
+**Date of next publication**: It is expected that the next quarterly publication of monthly data up to September, will be published in February 2025.
 ::: 
 
 <br>
@@ -240,9 +248,11 @@ The number of people sleeping rough tends to be higher in the summer months when
 
 Since March 2022, the Ministry of Housing, Communities and Local Government has been working with the Centre for Homelessness Impact and 5 pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole) to develop rough sleeping metrics. 
 
-This new data framework will be relevant to people working locally to end rough sleeping and is an important step towards driving better outcomes for vulnerable people.  
+This data framework will be relevant to people working locally to reduce rough sleeping and is an important step towards driving better outcomes for vulnerable people.  
 
-There are eight core indicators of the framework, including three which were rolled out nationally in June 2024 and will be reported on in future publications. This publication provides information about the first five core indicators, which were rolled out nationally in May 2023, for all local authorities in England up to June 2024. These are:
+There are eight core indicators of the framework, including three which were rolled out nationally in June 2024, which are included for the first time in this publication.  
+
+The eight core indicators are:
 
 ### Prevented
 
@@ -252,14 +262,17 @@ There are eight core indicators of the framework, including three which were rol
 ### Rare
 
 * The number of people sleeping rough (on a single night and over the course of the month), known as R1.
+* The number of people sleeping rough over the course of the month who were accommodated by the end of the month, known as R2. 
 
 ### Brief
 
-* The number of people sleeping rough over the month who have been sleeping rough long term, known as B1
+* The number of people sleeping rough over the month who have been sleeping rough long term, known as B1.
+* The number of nights on which people were seen sleeping rough, known as B2. 
  
 ### Non-Recurring
 
 * The number of people returning to sleeping rough, known as NR1. 
+* The number of people returning to sleeping rough after moving into settled accommodation, known as NR2. 
 
 
 
@@ -568,9 +581,9 @@ inst_all <- dplyr::bind_rows(
   as.vector(df_hospital[1, ]),
   as.vector(df_ukaf[1, ]),
   as.vector(df_asylum[1, ]),
-  as.vector(df_u25care[1, c(14:length(df_u25care))])
+  as.vector(df_u25care[1, c(18:length(df_u25care))])
 ) %>%
-  dplyr::select(-c(1:4), -c(19:22))  # update when you need new data included
+  dplyr::select(-c(1:4))  # update when you need new data included
 
 # Convert date formats
 start_date <- as.Date("2023-05-01")
@@ -806,13 +819,23 @@ knitr::include_graphics(system.file("rmd/images/figure_4.svg", package = "ERSaut
 
 **Source: MHCLG**
 
+There were `r get("this_month_df_accommodation", envir = env1)` people sleeping rough over the month who were accommodated by the end of the month (`r round((get("this_month_df_accommodation", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough). This was `r sign(get("monthly_change_df_accommodation", envir = env1))` `r get("monthly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("monthly_change_df_accommodation", envir = env1))/get("last_month_df_accommodation", envir = env1))*100, digits = 0)`%, since `r last_month`. OR `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r get("quarterly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_quarter`.
+
+
+
 ## 5. Making rough sleeping brief
 
 There were `r get("this_month_df_long_term", envir = env1)` people sleeping rough over the month in `r this_month` who had been sleeping rough long term (`r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_long_term", envir = env1))` `r round((get("quarterly_change_df_long_term", envir = env1) /  get("last_quarter_df_long_term", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
+
+The majority of people sleeping rough over the month of `r this_month` (X, X%) had been seen sleeping rough 'only once' in the previous 6 months. 'This has been consistent for every month' since data collection started in June 2024, with '10+ nights' being the second most common category for number of nights seen sleeping rough over the last 6 months, with 'X' people ('X%' of all those sleeping rough over the month).  
+
+
 ## 6. Making rough sleeping a non-recurring experience
 
 There were `r get("this_month_df_returners", envir = env1)` people sleeping rough over the month in `r this_month` who had returned to  sleeping rough (`r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_returners", envir = env1))` `r round((get("quarterly_change_df_returners", envir = env1) /  get("last_quarter_df_returners", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
+
+Of these, (when further filtered to exclude those who hadn't been seen in more than 5 years) `r get("this_month_df_prev_in_accomm", envir = env1)` (`r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`%) were returning to sleeping rough after moving into settled accommodation in the preceding 12 months. 
 
 
 
@@ -828,10 +851,10 @@ df_returners <- readxl::read_excel(input_path, sheet = "Table_NR1_-_RS_returners
 colnames(df_month_new) <- colnames(df_month)
 
 
-#Generate combined df for variables - update for next publication number of cols included
-new_month <- df_month_new[, c((length(df_month_new)-13 ): length(df_month_new))]
-long_term <- df_long_term[, c((length(df_long_term)-13 ): length(df_long_term))]
-returners <- df_returners[, c((length(df_returners)-13 ): length(df_returners))]
+#Generate combined df for variables - UPDATE (+3) for next publication number of cols included
+new_month <- df_month_new[, c((length(df_month_new)-16 ): length(df_month_new))]
+long_term <- df_long_term[, c((length(df_long_term)-16 ): length(df_long_term))]
+returners <- df_returners[, c((length(df_returners)-16 ): length(df_returners))]
 # Function to get just all England values for each variable
 england_values <- function(df1, df2, df3) {
   top_row_df1 <- df1[1, , drop = FALSE]
@@ -1134,7 +1157,19 @@ knitr::include_graphics(system.file("rmd/images/London_map_rate.svg", package = 
 
 <br>
 
-# 7. Definitions
+# 7. Nationality and Immigration
+
+
+X people sleeping rough over the month of September were UK nationals, X% of the total number of people sleeping rough. X people (X%) were EU nationals, and X (X%) were non-EU nationals, with the rest having an unknown nationality. 
+
+Figure 
+
+
+Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, X (X%) had a status that allowed for access to public funds and X (X%) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition.  
+
+
+
+# 8. Definitions
 ::: {custom-style="GreyBox"}
 
 **New people sleeping rough (P1)** 
@@ -1195,20 +1230,64 @@ The number of people sleeping rough on a single night is an estimated figure det
 
 The number of people sleeping rough over the course of the month is an estimated figure based on outreach contacts.  
 
+
+**Number of people sleeping rough who have moved into accommodation (R2)**
+
+This is an estimate of the number of people seen sleeping rough over the month who have moved into accommodation by the end of the month, not including those accommodated under severe weather emergency protocols (SWEP). 
+
+
 **People sleeping rough long term (B1)** 
 
 Long term rough sleeping is defined as the number of people seen recently (within the reporting month) who have been seen sleeping rough in 3 or more months out of the last 12 months (1 year). 
+
+**Number of nights seen sleeping rough (B2)**
+
+For each person seen sleeping rough over the month, the number of nights over the last 6 months (180 days) on which each person was seen sleeping rough is categorised as follows:  
+
+* 1 night  
+
+* 2 nights  
+
+* 3-5 nights  
+
+* 6-10 nights  
+
+* More than 10 nights  
+
+* An unknown number of nights 
+
+
 
 **People returning to sleeping rough (NR1)** 
 
 A person is considered a ‘returner’ if they are seen sleeping rough again after no contact for 2 or more quarters (180 days), whichever is shorter, measured from the last date the person was seen. 
 <br>
 
+
+**Number of people sleeping rough who had previously moved into settled accommodation (NR2)** 
+
+For a person to be counted under this indicator, they should be returning to sleeping rough after no contact of 2 or more quarters (180 days) (as in NR1), they should have been seen in the previous 5 years (i.e., they don’t meet the criteria for P1), and they should have been moved into settled accommodation, defined as accommodation intended to last for an extended period of time and including the following categories:
+
+* Social rented sector (including council tenancy, registered providers) 
+
+* Supported Accommodation (including Housing First, care homes, and other supported accommodation pathways)
+
+* Hostels (including reception centres, emergency units and refuges) with accommodation for longer than 6 months 
+
+* Private rented sector (with an Assured Shorthold Tenancy Agreement) 
+
+* Staying with family or friends 
+
+* Owner-occupier 
+
+* Returned to home country 
+
+
 :::
 <br>
 <br>
 
-## 8. Things you need to know
+## 9. Things you need to know
 
 * The Ministry of Housing, Communities and Local Government have been collecting monthly management information from all local authorities in England about the support for people sleeping rough and those at risk of sleeping rough, since May 2020, alongside the annual rough sleeping snapshot statistics. 
 
@@ -1218,29 +1297,29 @@ A person is considered a ‘returner’ if they are seen sleeping rough again af
 
 * The management information also provides an estimate of the number of people sleeping rough over the course of the month in each local authority to better understand the flow of people sleeping rough. This figure is based on casework done by outreach teams and other service providers. 
 
-* The Rough Sleeping Data Framework includes 3 additional indicators which were rolled out nationally in June 2024 and will be available alongside the other indicators in the next quarterly publication. These indicators include the number of people sleeping rough who have moved into accommodation, known as R2, the average length of time sleeping rough, known as B2 and the number of people sleeping rough who had previously moved into settled accommodation, known as NR2.
+* The Rough Sleeping Data Framework comprises 8 core indicators, of which the final 3 were rolled out nationally in June 2024. 
 
 <br>
 <br>
 
 
-## 9. Technical notes
+## 10. Technical notes
 
 <br>
 
-### 9.1 Data tables and interactive dashboard
+### 10.1 Data tables and interactive dashboard
 
-Seventeen [accompanying tables](https://www.gov.uk/government/publications/supportforpeoplesleepingroughinenglandmarch2023/supportforpeoplesleepingroughinenglandmarch2023) are available alongside this release. These include information on the five new framework indicators, as well as information about accommodation offers for people sleeping rough, and information about medium and long term accommodation which are also collected as part of the monthly rough sleeping management information.
+Seventeen [accompanying tables](https://www.gov.uk/government/publications/supportforpeoplesleepingroughinenglandmarch2023/supportforpeoplesleepingroughinenglandmarch2023) are available alongside this release. These include information on the eight core framework indicators, as well as information about nationality and immigration status, which are also collected as part of the monthly rough sleeping management information.
 
 An [interactive dashboard](https://app.powerbi.com/view?r=eyJrIjoiMDFiNWYyYjItMGI5Yi00ZmNhLThmYmQtMWU1NGM5NzRkMmI5IiwidCI6ImJmMzQ2ODEwLTljN2QtNDNkZS1hODcyLTI0YTJlZjM5OTVhOCJ9) enables users to explore the new framework indicators in more detail.
 
 <br>
 
-### 9.2 Data quality and limitations
+### 10.2 Data quality and limitations
 
 This management information provides more timely and more detailed data on rough sleeping and the support for rough sleepers compared to the annual rough sleeping snapshot.
 
-The management information is collected via a regular survey to local authorities, which began in May 2020. Local authorities were asked to provide data underpinning the new framework indicators from May 2023, although some indicators have been collected for longer as they were already part of the rough sleeping management information collection. All local authorities are requested to complete the survey.
+The management information is collected via a regular survey to local authorities, which began in May 2020. Local authorities were asked to provide data underpinning the new framework indicators from May 2023, and the final 3 core indicators from June 2024, although some indicators have been collected for longer as they were already part of the rough sleeping management information collection. All local authorities are requested to complete the survey.
 
 Local authorities submit their management information via MHCLG's [DELTA](https://delta.communities.gov.uk/login) online data collection system. The DELTA online data collection system includes inbuilt rules and validation checks to ensure the data provided is complete and accurate.
 
@@ -1291,7 +1370,7 @@ Supporting society's need for information and accessible to all
 
 |**Pillar**|**How this framework aligns with this pillar**|
 |------ |-------|
-**V1 Relevance to users**| MHCLG developed the framework over 18 months in conjunction with the Centre for Homelessness Impact and 50 pilot local authorities. MHCLG also holds quarterly rough sleeping data forums with local areas to consult on any changes regards the monthly management information and keep areas up to date about new data requirements or improvements related to rough sleeping. MHCLG is also part of the cross-government housing and homelessness group, which enables analysts across the devolved nations working on homelessness to collaborate and learn from each other. The framework enables local government, national government and partners to know what is required to drive progress to end rough sleeping across England, so local areas can identify where specific action is needed to drive improved performance. This is an important step towards having a consistent data set across England that captures the complexity of rough sleeping. The management information provides more timely and more detailed data on rough sleeping and the support for rough sleepers compared to the annual rough sleeping snapshot statistics, which is MHCLG's official and most robust measure of rough sleeping on a single night. Users are encouraged to provide feedback on how these statistics are used and how well they meet user needs. An additional set of indicators is currently being tested with pilot areas to assess the usefulness before being adopted more widely.|
+**V1 Relevance to users**| MHCLG developed the framework over 18 months in conjunction with the Centre for Homelessness Impact and 50 pilot local authorities. MHCLG also holds quarterly rough sleeping data forums with local areas to consult on any changes regards the monthly management information and keep areas up to date about new data requirements or improvements related to rough sleeping. MHCLG is also part of the cross-government housing and homelessness group, which enables analysts across the devolved nations working on homelessness to collaborate and learn from each other. The framework enables local government, national government and partners to know what is required to drive progress to reduce rough sleeping across England, so local areas can identify where specific action is needed to drive improved performance. This is an important step towards having a consistent data set across England that captures the complexity of rough sleeping. The management information provides more timely and more detailed data on rough sleeping and the support for rough sleepers compared to the annual rough sleeping snapshot statistics, which is MHCLG's official and most robust measure of rough sleeping on a single night. Users are encouraged to provide feedback on how these statistics are used and how well they meet user needs. An additional set of indicators is currently being tested with pilot areas to assess the usefulness before being adopted more widely.|
 | **V2 Accessibility**                  | These data are released as soon as possible after collection. The data is used for operational purposes before publication, by rough sleeping advisers, policy officials, ministers and local authorities to monitor progress and develop timely interventions. This enables immediate action to be taken. To assist with public accessibility, the release is published as HTML, and aligns with Gov.UK accessibility principles.|
 | **V3 Clarity and insight**            | Complex data are clearly explained in each data release and accompanying [technical notes](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#technicalnotes). Explanations and definitions were built in collaboration with the Centre for Homelessness Impact and pilot areas. The HTML release which goes out alongside the data tables provides insight and commentary, and interactive dashboards are provided to offer more flexibility for those who are less data literate.|
 | **V4 Innovation and improvement**     | The data framework is a simple set of powerful indicators. The framework is a key step towards having a consistent data set across England that captures the complexity of rough sleeping, with future improvements including the development of additional indicators and further data verification processes.|
@@ -1342,7 +1421,7 @@ Accessible version of flowchart
 **End**: MHCLG publishes management information (approximately 12 weeks after collection).
 
 
-### 9.3 Related statistics 
+### 10.3 Related statistics 
 
 **Combined Homelessness and Information Network (CHAIN)**
 
@@ -1401,7 +1480,7 @@ MHCLG produce other statistical releases that can help build up the wider homele
 MHCLG publish [statistics on local authority revenue expenditure and financing in England](https://www.gov.uk/government/collections/local-authority-revenue-expenditure-and-financing). The RO4 return within the Revenue Outturn suite relates to housing services and includes information on local authorities’ expenditure on homelessness activities. 
 
 
-### 9.4 Revisions policy 
+### 10.4 Revisions policy 
 
 **Non-scheduled revisions** 
 
@@ -1413,7 +1492,7 @@ If a local authority notifies MHCLG of an error in the information they have sub
 
 There are no scheduled revisions for this release. 
 
-### 9.5 User engagement 
+### 10.5 User engagement 
 
 MHCLG, has developed the new framework over the last two years in conjunction with the Centre for Homelessness Impact and five early adopter pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole).
 
@@ -1430,22 +1509,23 @@ See the Ministry’s [engagement strategy to meet the needs of statistics users]
 <br>
 <br>
 
-### 9.6 Dates of future publication
+### 10.6 Dates of future publication
 
 The publication dates for future rough sleeping management information is as follows:
 
-*	Rough sleeping Data Framework, September 2024, due to be published November/December 2024
 
-*	Rough sleeping Data Framework, December 2024, due to be published February/March 2025
+*	Rough Sleeping Data Framework, December 2024, due to be published February/March 2025
 
-*	Rough sleeping Data Framework, March 2024, due to be published May/June 2025
+*	Rough Sleeping Data Framework, March 2024, due to be published May/June 2025
 
-
-
+*	Rough Sleeping Data Framework, June 2024, due to be published September/October 2025
 
 
 
-## 10. Enquiries
+
+
+
+## 11. Enquiries
 
 **Media** 
 
@@ -1461,7 +1541,7 @@ Email: [roughsleepingstatistics@communities.gov.uk](mailto:roughsleepingstatisti
 
 **Responsible analysts** 
 
-Jon White, Grace Harrington and Hudson Farley-Moore 
+Jon White, Grace Harrington, Saarah Nakhuda 
 
 
 
