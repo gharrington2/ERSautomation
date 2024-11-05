@@ -173,7 +173,7 @@ sign <- function(num){
 
 
 
-**`r  get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
+**`r get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
 
 
 **`r  get("this_month_df_snapshot_new", envir = env1)`** new people sleeping rough on a single night in `r this_month` (`r round(abs(( get("this_month_df_snapshot_new", envir = env1) / get("this_month_df_snapshot", envir = env1))*100),digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% since `r last_year`.
@@ -380,7 +380,7 @@ figure_1 <- ggplot2::ggplot(new_df, ggplot2::aes(x = Date)) +
 
  print(figure_1)
  
- output_folder <- "inst/rmd/images"
+ output_folder <- "rmd/images"
 if (!dir.exists(output_folder)) {
   dir.create(output_folder, recursive = TRUE)
 } # specify desired folder path 
@@ -568,7 +568,7 @@ print(figure_2)
 
 ```{r figure 1, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/figure_2.svg",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_2.svg",  package = "ERSautomation"))
 
 ```
 
@@ -690,7 +690,7 @@ figure_3 <- ggplot2::ggplot(institutions_data, ggplot2::aes(x = Date)) +
 
 ```{r figure 3, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/figure_3.svg", package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_3.svg", package = "ERSautomation"))
 
 ```
 
@@ -714,7 +714,7 @@ There were, `r get("this_month_df_snapshot", envir = env1)`  people sleeping rou
 The rate of people sleeping rough on a single night in `r this_month` in England was `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the previous quarter (`r last_quarter`) and `r round(get("last_year_df_snapshot_rate", envir = env1), digits = 1)` people per 100,00 in the same period last year.
 
 
-**Figure 4: People sleeping rough, October 2020 to March 2024 (R1)**
+**Figure 4: People sleeping rough, October 2020 to `r this_month` (R1)**
 
 ```{r 4-Figure 4 R1, include=FALSE}
 
@@ -723,6 +723,8 @@ snapshot_tot <- as.vector(df_snapshot[1, c(5:length(df_month))])
 
 # Apply the function to dfs
 new_colnames <- sapply(colnames(month_tot), convert_to_date)
+#new_colnames <- sapply(colnames(df_month)[5:length(df_month)], convert_to_date)
+
 
 # Update the column names of the data frame
 colnames(month_tot) <- new_colnames
@@ -757,7 +759,7 @@ label_range_4 <- df %>%
     xmin = min(Date),
     xmax = max(Date),
     ymin = 0,
-    ymax = 9000
+    ymax = 10000
   )
 
 label_range_4 <- label_range_4 %>%
@@ -779,7 +781,9 @@ figure_4 <- ggplot2::ggplot(df, ggplot2::aes(x = Date)) +
   ggplot2::theme(legend.position = "none") +
   ggplot2::scale_color_manual(values = c("Snapshot" = "#012169", "Month" = "#95B3D7")) +
   dluhctheme::dluhc_style(size = 1.5) +
-  ggplot2::scale_y_continuous(breaks = seq(0, 9000, by = 1000), labels = scales::comma, limits = c(-300, 9000)) +
+  ggplot2::scale_y_continuous(breaks = seq(0, 10000, by = 1000), labels = scales::comma, 
+                              limits = c(-300, 10000)) +
+                              
   ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 10)) +
   ggplot2::theme(
     axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
@@ -803,15 +807,19 @@ if (!dir.exists(output_folder)) {
  output_file <- file.path(output_folder, "figure_4.svg")
  output_file2 <- file.path(output_folder, "figure_4.png")
 
+ tryCatch({
  ggplot2::ggsave(filename = output_file, plot = figure_4, device = "svg", width = 8, height = 6)
  ggplot2::ggsave(filename = output_file2, plot = figure_4, width = 8, height = 6, dpi = 300)
-
+ message("Files saved successfully")
+}, error = function(e) {
+  message("Error saving file: ", e$message)
+})
  
 ```
 
 ```{r figure 4, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/figure_4.svg", package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_4.svg", package = "ERSautomation"))
 
 ```
 
@@ -821,6 +829,11 @@ knitr::include_graphics(system.file("rmd/images/figure_4.svg", package = "ERSaut
 
 There were `r get("this_month_df_accommodation", envir = env1)` people sleeping rough over the month who were accommodated by the end of the month (`r round((get("this_month_df_accommodation", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough). This was `r sign(get("monthly_change_df_accommodation", envir = env1))` `r get("monthly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("monthly_change_df_accommodation", envir = env1))/get("last_month_df_accommodation", envir = env1))*100, digits = 0)`%, since `r last_month`. OR `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r get("quarterly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_quarter`.
 
+**Figure 5: People sleeping rough who have moved into accommodation, June to `r this_month` (R2)**
+
+
+
+**Source: MHCLG**
 
 
 ## 5. Making rough sleeping brief
@@ -828,7 +841,30 @@ There were `r get("this_month_df_accommodation", envir = env1)` people sleeping 
 There were `r get("this_month_df_long_term", envir = env1)` people sleeping rough over the month in `r this_month` who had been sleeping rough long term (`r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_long_term", envir = env1))` `r round((get("quarterly_change_df_long_term", envir = env1) /  get("last_quarter_df_long_term", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
 
-The majority of people sleeping rough over the month of `r this_month` (X, X%) had been seen sleeping rough 'only once' in the previous 6 months. 'This has been consistent for every month' since data collection started in June 2024, with '10+ nights' being the second most common category for number of nights seen sleeping rough over the last 6 months, with 'X' people ('X%' of all those sleeping rough over the month).  
+
+
+There were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month in `r this_month`. Of these people  
+
+* X had been seen sleeping rough 1 night over the previous 6 months 
+
+* X had been seen sleeping rough 2 nights over the previous 6 months  
+
+* X had been seen sleeping rough 3 to 5 nights over the previous 6 months 
+
+* X had been seen sleeping rough 6 to 10 nights over the previous 6 months 
+
+* X had been seen sleeping rough more than 10 nights over the previous 6 months 
+
+* X had been seen sleeping rough an unknown number of nights over the previous 6 months 
+
+
+**Figure X: Number of nights people seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
+
+
+
+**Source: MHCLG**
+
+
 
 
 ## 6. Making rough sleeping a non-recurring experience
@@ -943,7 +979,7 @@ if (!dir.exists(output_folder)) {
 ```
 ```{r figure 5, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/figure_5.svg",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_5.svg",  package = "ERSautomation"))
 
 ```
 OFFICIAL
@@ -1056,8 +1092,8 @@ tmap::tmap_save(London_map, file.path(output_folder, "london_map.svg"), width=20
 
 ```{r figure 6 - map, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/images/England_map.svg",  package = "ERSautomation"))
-knitr::include_graphics(system.file("rmd/images/London_map.svg",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/inst/rmd/images/England_map.svg",  package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map.svg",  package = "ERSautomation"))
 
 ```
 
@@ -1150,8 +1186,8 @@ tmap::tmap_save(London_map_rate, file.path(output_folder, "London_map_rate.svg")
 
 ```{r figure 7 - map, echo=FALSE,}
 # 
-knitr::include_graphics(system.file("rmd/images/England_map_rate.svg", package = "ERSautomation"))
-knitr::include_graphics(system.file("rmd/images/London_map_rate.svg", package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/inst/rmd/images/England_map_rate.svg", package = "ERSautomation"))
+knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map_rate.svg", package = "ERSautomation"))
 
 ```
 
