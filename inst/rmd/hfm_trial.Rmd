@@ -12,7 +12,7 @@ params:
 ```{r setup, include=FALSE}
 
 # #Load the dataframes in from the latest tables
-input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241016.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241107.xlsx"
 
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -56,7 +56,19 @@ custom_format <- function(x) {
 
 ############### ALTERNATE METHOD TO REDUCE UPDATES ##############
 
+############### ALTERNATE METHOD TO REDUCE UPDATES ##############
 #Determines the month for publication, can be referenced in the following code 
+ 
+# this_month <- max(as.Date(names(df_month), "%Y_%m_%d"), na.rm = T)
+# last_month <- format(lubridate::rollback(this_month - lubridate::dmonths(), roll_to_first = T), "%Y_%m_%d") 
+# last_quarter <- format(lubridate::rollback(this_month - lubridate::dmonths(3), roll_to_first = T), "%Y_%m_%d")
+# last_year <- format(lubridate::rollback(this_month - lubridate::dyears(), roll_to_first = T), "%Y_%m_%d")
+# this_month <- format(this_month, "%Y_%m_%d")
+#   
+ 
+ 
+#  
+# #Determines the month for publication, can be referenced in the following code 
 this_month <- names(df_month)[ncol(df_month)]
 last_month <- names(df_month)[ncol(df_month) - 1]
 last_quarter <- names(df_month)[ncol(df_month) - 3]
@@ -140,6 +152,12 @@ changes(df_snapshot_rate, env = env1)
 changes(df_returners, env = env1)
 changes(df_accommodation, env = env1)
 changes(df_prev_in_accomm, env = env1)
+changes(df_1_night, env = env1)
+changes(df_2_nights, env = env1)
+changes(df_3_5_nights, env = env1)
+changes(df_6_10_nights, env = env1)
+changes(df_10_more_nights, env = env1)
+changes(df_unknown_nights, env = env1)
 
 #Function to work out increase or decrease
 up_down <- function(num1, num2){
@@ -229,7 +247,7 @@ sign <- function(num){
 <br>
 <br>
 
-In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to better understand how far rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the fourth quarterly publication of the framework and covers monthly information up to `r this_month`, for the first time including the final three core indicators:  number of people sleeping rough who were accommodated over the month (R2), number of nights seen sleeping rough (B2) and number of people returning to sleeping rough after moving into settled accommodation (NR2). 
+In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to better understand how far rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the fourth quarterly publication of the framework and covers monthly information up to `r this_month`, for the first time including the final three core indicators: number of people sleeping rough who were accommodated over the month (R2), number of nights seen sleeping rough (B2) and number of people returning to sleeping rough after moving into settled accommodation (NR2). 
 
 The number of people sleeping rough tends to be higher in the summer months when it is warmer and lower in the winter months, reflecting the seasonality of rough sleeping.
 
@@ -237,7 +255,7 @@ The number of people sleeping rough tends to be higher in the summer months when
 <br>
 
 ::: {custom-style="GreyBox"}
-**Date of next publication**: It is expected that the next quarterly publication of monthly data up to September, will be published in February 2025.
+**Date of next publication**: It is expected that the next quarterly publication of monthly data up to December, will be published in February 2025.
 ::: 
 
 <br>
@@ -262,17 +280,17 @@ The eight core indicators are:
 ### Rare
 
 * The number of people sleeping rough (on a single night and over the course of the month), known as R1.
-* The number of people sleeping rough over the course of the month who were accommodated by the end of the month, known as R2. 
+* The number of people sleeping rough over the course of the month who have moved into accommodation by the end of the month, known as R2. 
 
 ### Brief
 
-* The number of people sleeping rough over the month who have been sleeping rough long term, known as B1.
+* The number of people sleeping rough over the course of the month who have been sleeping rough long term, known as B1.
 * The number of nights on which people were seen sleeping rough, known as B2. 
  
 ### Non-Recurring
 
-* The number of people returning to sleeping rough, known as NR1. 
-* The number of people returning to sleeping rough after moving into settled accommodation, known as NR2. 
+* The number of people sleeping rough over the course of the month who are returning to sleeping rough, known as NR1. 
+* The number of people sleeping rough over the course of the month who are returning to sleeping rough after moving into settled accommodation, known as NR2. 
 
 
 
@@ -829,7 +847,7 @@ knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_4.svg", package 
 
 There were `r get("this_month_df_accommodation", envir = env1)` people sleeping rough over the month who were accommodated by the end of the month (`r round((get("this_month_df_accommodation", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough). This was `r sign(get("monthly_change_df_accommodation", envir = env1))` `r get("monthly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("monthly_change_df_accommodation", envir = env1))/get("last_month_df_accommodation", envir = env1))*100, digits = 0)`%, since `r last_month`. OR `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r get("quarterly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_quarter`.
 
-**Figure 5: People sleeping rough who have moved into accommodation, June to `r this_month` (R2)**
+**Figure 5: People sleeping rough who have moved into accommodation, June 2024 to `r this_month` (R2)**
 
 
 
@@ -845,21 +863,146 @@ There were `r get("this_month_df_long_term", envir = env1)` people sleeping roug
 
 There were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month in `r this_month`. Of these people  
 
-* X had been seen sleeping rough 1 night over the previous 6 months 
+* `r get("this_month_df_1_night", envir = env1)` had been seen sleeping rough 1 night over the previous 6 months 
 
-* X had been seen sleeping rough 2 nights over the previous 6 months  
+* `r get("this_month_df_2_nights", envir = env1)` had been seen sleeping rough 2 nights over the previous 6 months  
 
-* X had been seen sleeping rough 3 to 5 nights over the previous 6 months 
+* `r get("this_month_df_3_5_nights", envir = env1)` had been seen sleeping rough 3 to 5 nights over the previous 6 months 
 
-* X had been seen sleeping rough 6 to 10 nights over the previous 6 months 
+* `r get("this_month_df_6_10_nights", envir = env1)` had been seen sleeping rough 6 to 10 nights over the previous 6 months 
 
-* X had been seen sleeping rough more than 10 nights over the previous 6 months 
+* `r get("this_month_df_10_more_nights", envir = env1)` had been seen sleeping rough more than 10 nights over the previous 6 months 
 
-* X had been seen sleeping rough an unknown number of nights over the previous 6 months 
+* `r get("this_month_df_unknown_nights", envir = env1)` had been seen sleeping rough an unknown number of nights over the previous 6 months 
 
 
-**Figure X: Number of nights people seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
+**Figure 12: Number of nights people seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
 
+
+```{r 12-Figure 12 B2, include=FALSE}
+
+# Generate combined df for variables - UPDATE (+3) for next publication number of cols included
+one_night <- df_1_night[, c((length(df_1_night) - 3):length(df_1_night))]
+two_nights <- df_2_nights[, c((length(df_2_nights) - 3):length(df_2_nights))]
+three_five_nights <- df_3_5_nights[, c((length(df_3_5_nights) - 3):length(df_3_5_nights))]
+six_ten_nights <- df_6_10_nights[, c((length(df_6_10_nights) - 3):length(df_6_10_nights))]
+ten_more_nights<- df_10_more_nights[, c((length(df_10_more_nights) - 3):length(df_10_more_nights))]
+unknown_nights<- df_unknown_nights[, c((length(df_unknown_nights) - 3):length(df_unknown_nights))]
+
+
+
+# Function to get just all England values for each variable
+england_values <- function(df1, df2, df3, df4, df5, df6) {
+  top_row_df1 <- df1[1, , drop = FALSE]
+  top_row_df2 <- df2[1, , drop = FALSE]
+  top_row_df3 <- df3[1, , drop = FALSE]
+  top_row_df4 <- df4[1, , drop = FALSE]
+  top_row_df5 <- df5[1, , drop = FALSE]
+  top_row_df6 <- df6[1, , drop = FALSE]
+  
+  combined_top_rows <- rbind(top_row_df1, top_row_df2, top_row_df3, top_row_df4, top_row_df5, top_row_df6)
+  return(combined_top_rows)
+}
+
+comb_B2 <- england_values(one_night, two_nights, three_five_nights, six_ten_nights, ten_more_nights, unknown_nights)
+colnames(comb_B2) <- tail(formatted_dates,4) # Uses same start point as set in previous figure
+
+# Categorise first
+comb_B2 <- comb_B2 %>%
+  dplyr::mutate(Category = c("One night", "Two nights", "Three to five nights", "Six to ten nights", "10 or more nights", "Unknown number of nights"))
+
+# Reshape to long format to create chart
+comb_B2_long <- comb_B2 %>%
+  tidyr::pivot_longer(cols = -Category, names_to = "Date", values_to = "Value") %>%
+  dplyr::mutate(Date = as.Date(Date, format = "%Y_%m_%d"))
+
+comb_B2_long$Value <- as.numeric(comb_B2_long$Value)
+comb_B2_long$Category <- factor(comb_B2_long$Category, levels = c("One night", "Two nights", "Three to five nights", "Six to ten nights", "10 or more nights", "Unknown number of nights"))
+
+# Calculate percentages
+comb_B2_long <- comb_B2_long %>%
+  dplyr::group_by(Date) %>%
+  dplyr::mutate(Percentage = round(Value / sum(Value) * 100))
+
+# Remove rows with NA values
+comb_B2_long <- comb_B2_long %>%
+  dplyr::filter(!is.na(Percentage))
+
+# Label ranges for plotting
+label_range_12 <- comb_B2_long %>%
+  dplyr::mutate(Year = format(Date, "%Y")) %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarize(
+    xmin = min(Date),
+    xmax = max(Date),
+    ymin = 0,
+    ymax = 100
+  )
+
+label_range_12 <- label_range_12 %>%
+  dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+
+# Create the stacked column chart using ggplot2
+figure_12 <- ggplot2::ggplot(comb_B2_long, ggplot2::aes(x = Date, y = Percentage, fill = Category)) +
+  ggplot2::geom_col() +
+  ggplot2::geom_text(ggplot2::aes(label = paste0(Percentage, "%")),
+                             # sprintf("%.1f%%", Percentage)),
+                     position = ggplot2::position_stack(vjust = 0.5),
+                     color = "white",
+                     fontface = "plain",
+                     family = "Arial",
+                     size = 3.2
+  ) +
+  ggplot2::geom_rect(data = label_range_12, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+                     fill = "white", color = NA, alpha = 0, inherit.aes = FALSE
+  ) +
+  ggplot2::geom_text(data = label_range_12, ggplot2::aes(x = xmid, y = ymin - 5, label = Year, group = Year),
+                     color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE
+  ) +
+  ggplot2::labs(title = NULL, x = "Date", y = "Percentage") +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 1), limits = c(0, 105)) + #Adjust axis to accommodate rouding to more than 100%
+  ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 0)) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 1, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
+  ) +
+  ggplot2::theme(legend.position = "bottom", legend.direction = "horizontal", legend.key.size = grid::unit(0.3, "cm"),
+                 legend.text = ggplot2::element_text(family = "Arial", color = "#7F7F7F", size = 10)
+  ) +
+  ggplot2::scale_fill_manual(values = c(
+    "One night" = "#00625E",
+    "Two nights" = "#000000",
+    "Three to five nights" = "#932A72",
+    "Six to ten nights" = "#205083",
+    "10 or more nights" = "#FAA332",
+    "Unknown number of nights" = "#FF5D88"
+  ))
+ output_folder <- "rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)}  # specify desired folder path 
+ output_file <- file.path(output_folder, "figure_12.svg")
+ output_file2 <- file.path(output_folder, "figure_12.png")
+
+  tryCatch({
+ ggplot2::ggsave(filename = output_file, plot = figure_12, device = "svg", width = 8, height = 6)
+ ggplot2::ggsave(filename = output_file2, plot = figure_12, width = 8, height = 6, dpi = 300)
+ message("Files saved successfully")
+}, error = function(e) {
+  message("Error saving file: ", e$message)
+})
+ 
+```
+
+```{r figure 12, echo=FALSE,}
+
+knitr::include_graphics(system.file("rmd/rmd/images/figure_12.svg", package = "ERSautomation"))
+
+```
 
 
 **Source: MHCLG**
@@ -872,6 +1015,12 @@ There were `r get("this_month_df_month", envir = env1)` people sleeping rough ov
 There were `r get("this_month_df_returners", envir = env1)` people sleeping rough over the month in `r this_month` who had returned to  sleeping rough (`r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_returners", envir = env1))` `r round((get("quarterly_change_df_returners", envir = env1) /  get("last_quarter_df_returners", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
 Of these, (when further filtered to exclude those who hadn't been seen in more than 5 years) `r get("this_month_df_prev_in_accomm", envir = env1)` (`r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`%) were returning to sleeping rough after moving into settled accommodation in the preceding 12 months. 
+
+**Figure 9: People returning to sleeping rough (NR1) including those returning to sleeping rough after moving into settled accommodation (NR2), May 2023 to `r this_month`**
+
+
+
+
 
 
 
