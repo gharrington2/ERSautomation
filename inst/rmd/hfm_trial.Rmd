@@ -3,7 +3,7 @@ title: "Rough Sleeping Data Framework, X 2024"
 output: 
   word_document:
     reference_docx: "styles1.dotx"
-date: 'Published 3 October 2024'
+date: 'Published 28 November 2024'
 params:
   para_1: ""
 
@@ -863,17 +863,17 @@ There were `r get("this_month_df_long_term", envir = env1)` people sleeping roug
 
 There were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month in `r this_month`. Of these people  
 
-* `r get("this_month_df_1_night", envir = env1)` had been seen sleeping rough 1 night over the previous 6 months 
+* `r get("this_month_df_1_night", envir = env1)` people (`r round(((get("this_month_df_1_night", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough 1 night over the previous 6 months 
 
-* `r get("this_month_df_2_nights", envir = env1)` had been seen sleeping rough 2 nights over the previous 6 months  
+* `r get("this_month_df_2_nights", envir = env1)` people (`r round(((get("this_month_df_2_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough 2 nights over the previous 6 months  
 
-* `r get("this_month_df_3_5_nights", envir = env1)` had been seen sleeping rough 3 to 5 nights over the previous 6 months 
+* `r get("this_month_df_3_5_nights", envir = env1)` people (`r round(((get("this_month_df_3_5_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough 3 to 5 nights over the previous 6 months 
 
-* `r get("this_month_df_6_10_nights", envir = env1)` had been seen sleeping rough 6 to 10 nights over the previous 6 months 
+* `r get("this_month_df_6_10_nights", envir = env1)` people (`r round(((get("this_month_df_6_10_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough 6 to 10 nights over the previous 6 months 
 
-* `r get("this_month_df_10_more_nights", envir = env1)` had been seen sleeping rough more than 10 nights over the previous 6 months 
+* `r get("this_month_df_10_more_nights", envir = env1)` people (`r round(((get("this_month_df_10_more_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough more than 10 nights over the previous 6 months 
 
-* `r get("this_month_df_unknown_nights", envir = env1)` had been seen sleeping rough an unknown number of nights over the previous 6 months 
+* `r get("this_month_df_unknown_nights", envir = env1)` people (`r round(((get("this_month_df_unknown_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough an unknown number of nights over the previous 6 months 
 
 
 **Figure 12: Number of nights people seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
@@ -1014,13 +1014,226 @@ knitr::include_graphics(system.file("rmd/rmd/images/figure_12.svg", package = "E
 
 There were `r get("this_month_df_returners", envir = env1)` people sleeping rough over the month in `r this_month` who had returned to  sleeping rough (`r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_returners", envir = env1))` `r round((get("quarterly_change_df_returners", envir = env1) /  get("last_quarter_df_returners", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
-Of these, (when further filtered to exclude those who hadn't been seen in more than 5 years) `r get("this_month_df_prev_in_accomm", envir = env1)` (`r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`%) were returning to sleeping rough after moving into settled accommodation in the preceding 12 months. 
-
-**Figure 9: People returning to sleeping rough (NR1) including those returning to sleeping rough after moving into settled accommodation (NR2), May 2023 to `r this_month`**
+Of the `r get("this_month_df_returners", envir = env1)` people sleeping rough over the month in `r this_month` who had returned to  sleeping rough, `r get("this_month_df_prev_in_accomm", envir = env1)` people (`r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`% of total people sleeping rough) were returning to sleeping rough after moving into settled accommodation in the preceding 12 months. 
 
 
 
+Of these, (when further filtered to exclude those who hadn't been seen in more than 5 years) `r get("this_month_df_prev_in_accomm", envir = env1)` people (`r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`%) were returning to sleeping rough after moving into settled accommodation in the preceding 12 months. 
 
+**Figure 7: People returning to sleeping rough (NR1) including those returning to sleeping rough after moving into settled accommodation (NR2), May 2023 to `r this_month`**
+
+``` {r 7-Figure 7 NR1_NR22, include=FALSE}
+
+# Bind into one df
+NR_all <- dplyr::bind_rows(
+  as.vector(df_returners[1, ]),
+  as.vector(df_prev_in_accomm[1, ])
+) %>%
+  dplyr::select(-c(1:4))
+
+# Convert date formats
+start_date <- as.Date("2023-05-01")
+num_months <- ncol(NR_all)
+
+dates <- seq(from = start_date, by = "month", length.out = num_months)
+formatted_dates <- format(dates, "%Y_%m_%d")
+colnames(NR_all) <- formatted_dates
+
+# Wrangling to get into the desired format
+transposed <- data.frame(t(NR_all))
+transposed <- dplyr::mutate(transposed, "Date" = rownames(transposed))
+rownames(transposed) <- NULL
+colnames(transposed) <- c("NR1", "NR2", "Date")
+
+NR_data <- transposed %>%
+  dplyr::mutate(
+    Date = as.Date(Date, format = "%Y_%m_%d"),
+    NR1 = as.numeric(NR1),
+    NR2 = as.numeric(NR2)
+  )
+
+label_range_X <- NR_data %>%
+  dplyr::mutate(Year = format(Date, "%Y")) %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarize(
+    xmin = min(Date),
+    xmax = max(Date),
+    ymin = 0,
+    ymax = 1500
+  )
+
+label_range_X <- label_range_X %>%
+  dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+
+# Separate data frames for each label 
+NR1_label <- data.frame( Date = as.Date("2024-01-01"), 
+                         y = 1100, 
+                         label = "Number of people returning to \n sleeping rough (NR1)" ) 
+
+NR2_label <- data.frame( Date = as.Date("2024-06-01"), 
+                         y = 450, 
+                         label = "Number of people returning to rough sleeping \n afrer moving into settled accommodation (NR2)" )
+
+# Figure 7
+figure_7 <- ggplot2::ggplot(NR_data, ggplot2::aes(x = Date)) +
+  ggplot2::geom_line(ggplot2::aes(y = NR1, color = "NR1"), linewidth = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = NR1), color = "#95B3D7", size = 3) +
+  ggplot2::geom_line(ggplot2::aes(y = NR2, color = "NR2"), linewidth = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = NR2), color = "#012169", size = 3) +
+  # Adding labels directly to the lines
+ ggplot2::geom_rect(data = label_range_X, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+                     fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+     ggplot2::geom_text(data = label_range_X, ggplot2::aes(x = xmid, y = ymin - 300, label = Year, group = Year),
+                     color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
+    ggplot2::geom_text(data = NR1_label, ggplot2::aes(x = Date, y = y, label = label),
+                     color = "#012169", vjust = -0.5, 
+                     # hjust = -3.6, 
+                     size = 3.5) +
+  ggplot2::geom_text(data = NR2_label, ggplot2::aes(x = Date, y = y, label = label),
+                     color = "#012169", vjust = -0.5, 
+                     # hjust = -2.25, 
+                     size = 3.5) +
+  ggplot2::labs(title = NULL, x = "Date", y = "Number of people") +
+  ggplot2::theme(legend.position = "none") +
+  ggplot2::scale_color_manual(values = c("NR1" = "#95B3D7", "NR2" = "#012169"), guide ='none') +
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::scale_y_continuous(breaks = seq(0, 1500, by = 250), labels = scales::comma, limits = c(-300, 1500)) +
+  ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 10)) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", linewidth = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", linewidth = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
+  )
+
+# print(figure_7)
+
+ output_folder <- "rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)}  # specify desired folder path 
+output_file <- file.path(output_folder, "figure_7.svg")
+output_file2 <- file.path(output_folder, "figure_7.png")
+
+ggplot2::ggsave(filename = output_file, plot = figure_7, device = "svg", width = 8, height = 6)
+ggplot2::ggsave(filename = output_file2, plot = figure_7, width = 8, height = 6, dpi = 300)
+
+
+```
+
+
+```{r figure 7, echo=FALSE,}
+
+knitr::include_graphics(system.file("rmd/rmd/images/figure_7.svg", package = "ERSautomation"))
+
+```
+
+
+``` {r 7a-Figure 7a NR1_NR22, include=FALSE}
+
+# Bind into one df
+NRa_all <- dplyr::bind_rows(
+  as.vector(df_returners[1, c(18:length(df_returners))]),
+  as.vector(df_prev_in_accomm[1, ]) 
+) %>%
+  dplyr::select(-c(5:8))
+
+# Convert date formats
+start_date <- as.Date("2024-06-01")
+num_months_nra <- ncol(NRa_all)
+
+dates <- seq(from = start_date, by = "month", length.out = num_months)
+formatted_dates <- format(dates, "%Y_%m_%d")
+colnames(NRa_all) <- formatted_dates
+
+# Wrangling to get into the desired format
+transposed <- data.frame(t(NRa_all))
+transposed <- dplyr::mutate(transposed, "Date" = rownames(transposed))
+rownames(transposed) <- NULL
+colnames(transposed) <- c("NR1", "NR2", "Date")
+
+NRa_data <- transposed %>%
+  dplyr::mutate(
+    Date = as.Date(Date, format = "%Y_%m_%d"),
+    NR1 = as.numeric(NR1),
+    NR2 = as.numeric(NR2)
+  )
+
+label_range_7a <- NRa_data %>%
+  dplyr::mutate(Year = format(Date, "%Y")) %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarize(
+    xmin = min(Date),
+    xmax = max(Date),
+    ymin = 0,
+    ymax = 1500
+  )
+
+label_range_7a <- label_range_7a %>%
+  dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
+
+# Separate data frames for each label 
+NR1a_label <- data.frame( Date = as.Date("2024-07-01"), 
+                         y = 1100, 
+                         label = "Number of people returning to \n sleeping rough (NR1)" ) 
+
+NR2a_label <- data.frame( Date = as.Date("2024-07-01"), 
+                         y = 450, 
+                         label = "Number of people returning to rough sleeping \n afrer moving into settled accommodation (NR2)" )
+
+# Figure 7a
+figure_7a <- ggplot2::ggplot(NRa_data, ggplot2::aes(x = Date)) +
+  ggplot2::geom_line(ggplot2::aes(y = NR1, color = "NR1"), linewidth = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = NR1), color = "#95B3D7", size = 3) +
+  ggplot2::geom_line(ggplot2::aes(y = NR2, color = "NR2"), linewidth = 1.4, group = 1) +
+  ggplot2::geom_point(ggplot2::aes(y = NR2), color = "#012169", size = 3) +
+  # Adding labels directly to the lines
+ ggplot2::geom_rect(data = label_range_7a, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+                     fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+     ggplot2::geom_text(data = label_range_7a, ggplot2::aes(x = xmid, y = ymin - 300, label = Year, group = Year),
+                     color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
+    ggplot2::geom_text(data = NR1a_label, ggplot2::aes(x = Date, y = y, label = label),
+                     color = "#012169", vjust = -0.5, 
+                     # hjust = -3.6, 
+                     size = 3.5) +
+  ggplot2::geom_text(data = NR2a_label, ggplot2::aes(x = Date, y = y, label = label),
+                     color = "#012169", vjust = -0.5, 
+                     # hjust = -2.25, 
+                     size = 3.5) +
+  ggplot2::labs(title = NULL, x = "Date", y = "Number of people") +
+  ggplot2::theme(legend.position = "none") +
+  ggplot2::scale_color_manual(values = c("NR1" = "#95B3D7", "NR2" = "#012169"), guide ='none') +
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::scale_y_continuous(breaks = seq(0, 1500, by = 250), labels = scales::comma, limits = c(-300, 1500)) +
+  ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 10)) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", linewidth = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", linewidth = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
+  )
+
+# print(figure_7)
+
+ output_folder <- "rmd/images"
+if (!dir.exists(output_folder)) {
+  dir.create(output_folder, recursive = TRUE)}  # specify desired folder path 
+output_file <- file.path(output_folder, "figure_7a.svg")
+output_file2 <- file.path(output_folder, "figure_7a.png")
+
+ggplot2::ggsave(filename = output_file, plot = figure_7a, device = "svg", width = 8, height = 6)
+ggplot2::ggsave(filename = output_file2, plot = figure_7a, width = 8, height = 6, dpi = 300)
+
+
+```
+
+
+```{r figure 7a, echo=FALSE,}
+
+knitr::include_graphics(system.file("rmd/rmd/images/figure_7a.svg", package = "ERSautomation"))
+
+```
 
 
 
@@ -1251,7 +1464,7 @@ knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map.svg",  packa
 **Source: MHCLG**
 <br>
 
-```{r figure 7,  include=FALSE}
+```{r figure 10,  include=FALSE}
 
 df_month_rate <- readxl::read_excel(input_path, sheet = "Table_R1(d)_-_RS_month_rate", skip = 3) %>%
   dplyr::select(c(1,2,3,46))
@@ -1330,10 +1543,10 @@ tmap::tmap_save(London_map_rate, file.path(output_folder, "London_map_rate.svg")
 ```
 
 
-**Figure 7: Map of rate of people sleeping rough over the month per 100,000 people (R1), `r this_month`**
+**Figure 10: Map of rate of people sleeping rough over the month per 100,000 people (R1), `r this_month`**
 
 
-```{r figure 7 - map, echo=FALSE,}
+```{r figure 10 - map, echo=FALSE,}
 # 
 knitr::include_graphics(system.file("rmd/inst/rmd/images/England_map_rate.svg", package = "ERSautomation"))
 knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map_rate.svg", package = "ERSautomation"))
