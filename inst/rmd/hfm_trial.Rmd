@@ -1,5 +1,5 @@
 ---
-title: "Rough Sleeping Data Framework, X 2024"
+title: "Rough Sleeping Data Framework, September 2024"
 output: 
   word_document:
     reference_docx: "styles1.dotx"
@@ -18,7 +18,7 @@ library(pacman)
 p_load(tidyr, dplyr, xlsx, readxl, writexl, openxlsx, lubridate, stringr, ggplot2)
 
 # #Load the dataframes in from the latest tables
-input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241111_sn_wrong_rates.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241113.xlsx"
 
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -59,7 +59,7 @@ custom_format <- function(x) {
 }
 
 # Automatically apply commas to all numbers necessary
- knitr::knit_hooks$set(inline = function(x) custom_format(x))
+knitr::knit_hooks$set(inline = function(x) custom_format(x))
 
 #Determines the month for publication, can be referenced in the following code 
 this_month <- max(as.Date(paste0("01 ", names(df_month)), "%d %B %Y"), na.rm = T)
@@ -68,18 +68,10 @@ last_quarter <- format(lubridate::rollback(this_month - lubridate::dmonths(3), r
 last_year <- format(lubridate::rollback(this_month - lubridate::dyears(), roll_to_first = T), "%B %Y")
 this_month <- format(this_month, "%B %Y")
 
-# AF colours, have added some extra
-af_colours <- c("#12436D",
-             "#28A197",
-             "#801650",
-             "#F46A25",
-             "#3D3D3D",
-             "#A285D1",
-             "#4a7555",
-             "#d1194d",
-             "#b8d453",
-             "#8424e3"
-)
+# colours for graphs
+af_colours <- c("#12436D", "#28A197", "#801650", "#F46A25", "#3D3D3D", "#A285D1", "#4a7555", "#d1194d", "#b8d453", "#8424e3")
+shades_of_blue <- c("#000000", "#012169", "#4A6F9E", "#95B3D7", "#AFABAB", "#D0CECE")
+publish_colours <-  c("#00625E", "#000000", "#932A72", "#205083", "#FAA332", "#FF5D88")
 
 #Function to work out values for each driver this year, last quarter and last year (if used as not all variables have a years worth of data)
 changes <- function(df, env = parent.frame()){
@@ -190,75 +182,31 @@ sign <- function(num){
 # for use in percentage calculations
 r1_month <- df_month[[this_month]][1]
 
+direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > 3898, "higher than",
+                                  ifelse(get("this_month_df_snapshot", envir = env1) < 3898, "lower than",
+                                         "the same as"))
+
+# TODO: Make dynamic the drivers part of the Kay Statistics
 
 ```
 <br>
 <br>
 
 ## 1. Key statistics
+The latest Rough Sleeping Data Framework Management information for `r this_month` shows there were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month - `r sign(get("annual_change_df_month", envir = env1))` `r get("annual_change_df_month", envir = env1)` people or `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% since `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r get("quarterly_change_df_month", envir = env1)`% on the last quarter publication in `r last_quarter`. Of these
 
-<br>
-<br>
+* `r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% were new people sleeping rough
+* `r round(((get("this_month_df_1_night", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of people had been seen sleeping rough for 1 night only over last 6 months
+* `r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people returning to sleeping rough, `r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`% of these had previously been in settled accommodation in the last year
+* `r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people who had been sleeping rough long term
+* `r get("this_month_df_institutions", envir = env1)`% of people sleeping rough had recently left an institution – `r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of these people had recently left prison
 
-::: {custom-style="GreyBox"}
-
-#### Prevented (P1 & P2)
-
-
-
-**`r get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
-
-
-**`r  get("this_month_df_snapshot_new", envir = env1)`** new people sleeping rough on a single night in `r this_month` (`r round(abs(( get("this_month_df_snapshot_new", envir = env1) / get("this_month_df_snapshot", envir = env1))*100),digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% since `r last_year`.
-
-
-**`r get("this_month_df_institutions", envir = env1)`** people sleeping rough over the month in `r this_month` who have left an institution (`r round(abs((get("this_month_df_institutions", envir = env1) / get("this_month_df_month", envir = env1))*100), digits = 0)`% of the total people sleeping rough over the month) - `r sign(get("annual_change_df_institutions", envir = env1))` `r round(abs((get("annual_change_df_institutions", envir = env1))/get("last_year_df_institutions", envir = env1))*100, digits = 0)`% since `r last_year`. 
-
-
-:::
-
-<br>
-
-::: {custom-style="GreyBox"}
-
-#### Rare (R1 & R2)
-
-**`r get("this_month_df_month", envir = env1)`** people sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month", envir = env1))` `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round(((get("quarterly_change_df_month", envir = env1))/get("last_quarter_df_month", envir = env1))*100, digits = 0)`% since `r last_quarter`. `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month_rate", envir = env1))` from `r round((get("last_year_df_month_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_month_rate", envir = env1))` from `r round((get("last_quarter_df_month_rate", envir = env1)), digits = 1)` `r last_quarter`.
-
-
-
-**`r get("this_month_df_snapshot", envir = env1)`** people sleeping rough on a single night in `r this_month` - `r sign(get("annual_change_df_snapshot", envir = env1))` `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_snapshot", envir = env1))` `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter`. `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough on a single night in `r this_month` - `r sign(get("annual_change_df_snapshot_rate", envir = env1))` from `r round((get("last_year_df_snapshot_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_snapshot_rate", envir = env1))` from `r round((get("last_quarter_df_snapshot_rate", envir = env1)), digits = 1)` `r last_quarter`.
-
-
-
-**`r get("this_month_df_accommodation", envir = env1)`** people (`r round((get("this_month_df_accommodation", envir = env1) / r1_month) * 100)`% of all those sleeping rough over the month) were accommodated by end of the month , `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)` % since `r last_quarter` AND `r sign(get("monthly_change_df_accommodation", envir = env1))` `r round(abs((get("monthly_change_df_accommodation", envir = env1))/get("last_month_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_month`.
-
-
-
+`r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times more people sleep rough over the month compared to a single night. There were `r get("this_month_df_snapshot", envir = env1)` people were sleeping rough on a single night in `r this_month`, which is `r direction_2023_snapshot` the 2023 annual snapshot figure.
+ 
+The increases in rough sleeping have largely been driven by a small number of areas – over half the increase in rough sleeping over the month compared to last year has been driven by 12 areas but rough sleeping is increasing across majority of the country – 53% of areas have increased compared to last year.
+ 
+Key drivers are an increase in people sleeping rough long term, and people returning to sleeping rough. These are up 16% and 18% respectively and account for 98% of the overall change in rough sleeping over the month compared to September last year.
 ::: 
-
-<br>
-
-::: {custom-style="GreyBox"}
-
-#### Brief (B1)
-**`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
-
-
-
-::: 
-
-<br>
-
-::: {custom-style="GreyBox"}
-
-#### Non-recurring (NR1 & NR2)
-**`r get("this_month_df_returners", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough (`r round(((get("this_month_df_returners", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
-
-**`r get("this_month_df_prev_in_accomm", envir = env1)`** people returning to sleeping rough over the month in `r this_month` had previously moved into settled accommodation - `r sign(get("quarterly_change_df_prev_in_accomm", envir = env1))` `r round(abs((get("quarterly_change_df_prev_in_accomm", envir = env1))/get("last_quarter_df_prev_in_accomm", envir = env1))*100, digits = 0)`% since `r last_quarter`. AND `r sign(get("monthly_change_df_prev_in_accomm", envir = env1))` `r round(abs((get("monthly_change_df_prev_in_accomm", envir = env1))/get("last_month_df_prev_in_accomm", envir = env1))*100, digits = 0)`% since `r last_month`.
-
-::: 
-
 
 <br>
 <br>
@@ -412,7 +360,7 @@ figure_1 <- ggplot2::ggplot(new_df, ggplot2::aes(x = Date)) +
   ggplot2::geom_text(data = new_df[1, ], ggplot2::aes(x = Date, y = `New month`, label = "        New people sleeping\n rough over the month (P1)"),
                      color = "#012169", vjust = -6.4, hjust = -2.1, size = 3.5)
 
- print(figure_1)
+ # print(figure_1)
  
  
  output_folder <- "images" # this should just look for the folder inside the folder you currently are in i.e. repo/inst/rmd
@@ -552,7 +500,7 @@ figure_2 <- ggplot2::ggplot(donut_data, ggplot2::aes(ymax = ymax, ymin = ymin, x
   ggplot2::annotate("text", x = 1, y = 0, label = total_value, size = 18, color = "#012169", fontface = "bold") +
   ggplot2::annotate("text", x = 0, y = 0, label = "\n \n \n People sleeping rough \n over the month who left\n an institution", size = 4, color = "#767171", fontface = "bold", family = "Arial")
 
-print(figure_2)
+#print(figure_2)
 
 #Old version - before label for small numbers was added
 # #Compute percentages
@@ -751,7 +699,7 @@ This is `r round(get("this_month_df_month", envir = env1) / get("this_month_df_s
 The rate of people sleeping rough over the month of `r this_month` in England was  `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_month_rate", envir = env1), digits = 1)` people per 100,000 in the `r last_quarter` and `r round(get("last_year_df_month_rate", envir = env1), digits = 1)` people per 100,00 in the same period last year[^1].
 
 
-There were, `r get("this_month_df_snapshot", envir = env1)`  people sleeping rough on a single night in `r this_month` - `r sign( get("quarterly_change_df_snapshot", envir = env1))` `r get("quarterly_change_df_snapshot", envir = env1)` people or  `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot", envir = env1))` `r get("annual_change_df_snapshot", envir = env1)` people or `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% since last year. 
+There were, `r get("this_month_df_snapshot", envir = env1)` people sleeping rough on a single night in `r this_month` - `r sign( get("quarterly_change_df_snapshot", envir = env1))` `r get("quarterly_change_df_snapshot", envir = env1)` people or  `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot", envir = env1))` `r get("annual_change_df_snapshot", envir = env1)` people or `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% since last year. 
 
 The rate of people sleeping rough on a single night in `r this_month` in England was `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the previous quarter (`r last_quarter`) and `r round(get("last_year_df_snapshot_rate", envir = env1), digits = 1)` people per 100,00 in the same period last year.
 
@@ -842,16 +790,9 @@ figure_4 <- ggplot2::ggplot(df, ggplot2::aes(x = Date)) +
     color = "#012169", vjust = -3.3, hjust = -2.25, size = 3.5
   )
 
-
- output_folder <- "inst/rmd/images"
-if (!dir.exists(output_folder)) {
-  dir.create(output_folder, recursive = TRUE)}  # specify desired folder path 
- output_file <- file.path(output_folder, "figure_4.svg")
- output_file2 <- file.path(output_folder, "figure_4.png")
-
  tryCatch({
- ggplot2::ggsave(filename = output_file, plot = figure_4, device = "svg", width = 8, height = 6)
- ggplot2::ggsave(filename = output_file2, plot = figure_4, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave("images/figure_4.svg", plot = figure_4, width = 8, height = 6)
+ ggplot2::ggsave("images/figure_4.png", plot = figure_4, width = 8, height = 6, dpi = 300)
  message("Files saved successfully")
 }, error = function(e) {
   message("Error saving file: ", e$message)
@@ -861,7 +802,7 @@ if (!dir.exists(output_folder)) {
 
 ```{r figure 4, echo=FALSE, warning = FALSE, message = FALSE}
 
-knitr::include_graphics(paste0(output_folder, "/figure_4.svg"))
+knitr::include_graphics("images/figure_4.svg")
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_4.svg", package = "ERSautomation"))
 
 ```
@@ -870,9 +811,193 @@ knitr::include_graphics(paste0(output_folder, "/figure_4.svg"))
 
 **Source: MHCLG**
 
-There were `r get("this_month_df_accommodation", envir = env1)` people sleeping rough over the month who were accommodated over the course of the month (`r round((get("this_month_df_accommodation", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough). This was `r sign(get("monthly_change_df_accommodation", envir = env1))` `r get("monthly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("monthly_change_df_accommodation", envir = env1))/get("last_month_df_accommodation", envir = env1))*100, digits = 0)`%, since `r last_month`. OR `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r get("quarterly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_quarter`.
 
-**Figure 5: People sleeping rough who have moved into accommodation, June 2024 to `r this_month` (R2)**
+```{r figure 6,  include=FALSE}
+
+# Script to create maps for the info graphic
+latest_column <- which(names(df_snapshot) == this_month)
+  
+#This is for rate 
+# I assume this is recreating rates from the snapshot df rather than using the rates that are in the original df_snapshot_rate column?
+# bit confused because the df used in the next chunk starts with the monthly rate
+df_snapshot_rate <- df_snapshot %>%
+  dplyr::select(c(1, 2, 3, all_of(latest_column)))
+
+colnames(df_snapshot_rate) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
+
+England <- sf::st_read("England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+
+England <- England %>%
+  dplyr::left_join(df_snapshot_rate, by = dplyr::join_by(LAD23CD))
+
+England <- England %>%
+  dplyr::filter(!is.na(England$snapshot))
+
+England_map <- England %>%
+  tmap::tm_shape() +
+  tmap::tm_fill(
+  "snapshot", 
+  style = "cont",  # Keep continuous style
+  breaks = c(0, 20),  # Only showing 0 and 20+ in legend
+  labels = c("0", "20+"),  # Simplify legend labels
+  palette = c("#EFF3FF", "#08519C"),  # Continuous palette from light to dark
+  #title = "People sleeping \nrough per 100k \npopulation"
+) +
+tmap::tm_borders(lwd = 0.1, lty = "solid", alpha = 1) +
+tmap::tm_style("col_blind") +
+tmap::tm_layout(
+  frame = FALSE, 
+  frame.lwd = NA, 
+  panel.label.bg.color = NA,
+  legend.position = c("right", "top"),
+  legend.outside = TRUE,
+  legend.outside.position = "right",
+  legend.text.size = 0.5,
+  legend.title.size = 0.7,
+  legend.width = 0.9,
+  legend.height = 2,
+  legend.bg.color = NA,
+  legend.show = FALSE
+)
+
+
+#Use England shape files, this will need updating if there's boundary changes
+tmap::tmap_save(England_map, "images/England_map.png", width=1000, height=1000, asp=0)
+tmap::tmap_save(England_map, "images/England_map.svg", width=2000, height=2000, asp=0)
+
+
+#Adjust for London
+
+#Create London dataframe
+London <- df_snapshot_rate[ c(12:307), ] %>% # i.e. not incuding regions
+  dplyr::filter(Region == "London")
+
+#Join with shape file and remove any values not in London
+London_join <- England %>%
+  dplyr::left_join(London, by = dplyr::join_by(LAD23CD))
+
+London_join <- London_join %>%
+  dplyr::filter(!is.na(London_join$snapshot.y))
+
+London_map <- London_join %>%
+  tmap::tm_shape() +
+  tmap::tm_fill("snapshot.y", style = "cont", breaks = c(0,20),
+          labels = c("0","20+"),
+          palette = c("#EFF3FF", "#08519C"),
+          legend.show = FALSE) +
+  tmap::tm_borders(lwd = 0.4, lty = "solid", alpha = 1)+
+  tmap::tm_style("col_blind")+
+  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+
+tmap::tmap_save(London_map, "images/London_map.png", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map, "images/london_map.svg", width=2000, height=2000, asp=0)
+
+```
+<br>
+
+**Figure 5: Map of rate of people sleeping rough on a single night per 100,000 people (R1), `r this_month`** 
+
+```{r figure 6 - map, echo=FALSE,}
+knitr::include_graphics("images/England_map.svg")
+#knitr::include_graphics(system.file("rmd/inst/rmd/images/.svg",  package = "ERSautomation"))
+knitr::include_graphics("images/London_map.svg")
+#knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map.svg",  package = "ERSautomation"))
+
+```
+
+**Source: MHCLG**
+<br>
+
+```{r figure_7,  include=FALSE}
+
+latest_column <- which(names(df_month_rate) == this_month)
+
+df_month_rate <- df_month_rate %>%
+  dplyr::select(c(1, 2, 3, all_of(latest_column)))
+
+colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
+
+England <- sf::st_read("England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
+
+England <- England %>%
+  dplyr::left_join(df_month_rate,  by = dplyr::join_by(LAD23CD))
+
+England <- England %>%
+  dplyr::filter(!is.na(England$month))
+
+England_map_rate <- England %>%
+  tmap::tm_shape() +
+  tmap::tm_fill("month", style = "cont", breaks = c(0,20),
+          labels = c("0","20"),
+          palette = c("#EFF3FF", "#08519C"))+
+          #title = "People") +
+  tmap::tm_borders(lwd = 0.1, lty = "solid", alpha = 1) +
+  tmap::tm_style("col_blind") +
+tmap::tm_layout(
+  frame = FALSE, 
+  frame.lwd = NA, 
+  panel.label.bg.color = NA,
+  legend.position = c("right", "top"),
+  legend.outside = TRUE,
+  legend.outside.position = "right",
+  legend.text.size = 0.5,
+  legend.title.size = 0.7,
+  legend.width = 0.9,
+  legend.height = 2,
+  legend.bg.color = NA,
+  legend.show = FALSE
+)
+
+tmap::tmap_save(England_map_rate, "images/England_map_rate.png", width=2000, height=2000, asp=0)
+tmap::tmap_save(England_map_rate, "images/England_map_rate.svg", width=2000, height=2000, asp=0)
+
+#Adjust for London
+
+#Create London dataframe
+London <- df_month_rate[ c(12:307), ] %>% # no regions
+  dplyr::filter(Region == "London")
+
+#Join with shape file and remove any values not in London
+London_join <- England %>%
+  dplyr::left_join(London,  by = dplyr::join_by(LAD23CD))
+
+London_join <- London_join %>%
+  dplyr::filter(!is.na(London_join$month.y))
+
+London_map_rate <- London_join %>%
+  tmap::tm_shape() +
+  tmap::tm_fill("month.y", style = "cont", breaks = c(0, 20),
+          labels = c("0","20+"),
+          palette = c("#EFF3FF","#08519C"),
+          title = "People",
+          legend.show = FALSE) +
+  tmap::tm_borders( lwd = 0.4, lty = "solid", alpha = 1)+
+  tmap::tm_style("col_blind")+
+  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
+
+tmap::tmap_save(London_map_rate, "images/London_map_rate.png", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map_rate, "images/London_map_rate.svg", width=2000, height=2000, asp=0)
+
+
+```
+
+
+**Figure 6: Map of rate of people sleeping rough over the month per 100,000 people (R1), `r this_month`**
+
+
+```{r figure 7 - map, echo=FALSE, warning = FALSE, message = FALSE}
+knitr::include_graphics("images/England_map_rate.svg")
+knitr::include_graphics("images/London_map_rate.svg")
+#knitr::include_graphics(system.file("rmd/inst/rmd/images/England_map_rate.svg", package = "ERSautomation"))
+#knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map_rate.svg", package = "ERSautomation"))
+
+```
+
+
+
+There were `r get("this_month_df_accommodation", envir = env1)` people sleeping rough over the month who were accommodated over the course of the month (`r round((get("this_month_df_accommodation", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough). This was `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r get("quarterly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_quarter`.
+
+**Figure 7: People sleeping rough who have moved into accommodation, June 2024 to `r this_month` (R2)**
 
 ```{r r2_graph, echo = FALSE, warning = FALSE, message = FALSE}
 
@@ -880,19 +1005,48 @@ n_months_r2 <- ncol(df_accommodation) - 4
 
 r2_row <- df_accommodation[1, 5:ncol(df_accommodation)] %>% 
   mutate(across(everything(), as.numeric),
-         indicator = "People accommodated over the month")
+         indicator = "People accommodated\nover the month")
 
 r1_row <- df_month[1, (ncol(df_month) - n_months_r2 + 1):ncol(df_month)] %>%
-  mutate(across(everything(), as.numeric),                                                                                                     indicator = "Total people sleeping rough over the month")
+  mutate(across(everything(), as.numeric),
+         indicator = "Total people sleeping rough\nover the month")
 
 r2_graph_data <- bind_rows(r2_row, r1_row) %>%
-   pivot_longer(cols = -indicator, names_to = "month")
+  mutate(indicator = forcats::fct_relevel(indicator,
+                                          c("Total people sleeping rough\nover the month",
+                                            "People accommodated\nover the month"))) %>%
+  pivot_longer(cols = -indicator, names_to = "month") %>%
+  mutate(month = as.Date(paste0("01 ", month), "%d %B %Y")) %>%
+  arrange(month)
 
-ggplot() +
-  geom_col(r2_graph_data, mapping = aes(x = month, y = value, fill = indicator), width = 0.75, position = "dodge") + 
-  dluhctheme::dluhc_style() + 
-  scale_fill_manual(values = af_colours)
+label_range_r2 <- r2_graph_data %>%
+  dplyr::mutate(Year = format(month, "%Y")) %>%
+  dplyr::group_by(Year) %>%
+  dplyr::summarise(xmin = min(month), xmax = max(month), ymin = 0, ymax = max(r2_graph_data$value) * 1.1) %>%
+  dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
 
+r2_graph <- ggplot() +
+  geom_col(r2_graph_data, mapping = aes(x = month, y = value, fill = indicator), position = "dodge") +
+  ggplot2::geom_rect(data = label_range_r2, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+                     fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+  ggplot2::geom_text(data = label_range_r2, mapping = aes(x = xmid, y = ymin - 20, label = Year, group = Year),
+                     color = "#636363", size = 3.5, angle = 0, hjust = 0.5, vjust = 1.7, inherit.aes = FALSE) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 0)) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 0, hjust = 1, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+                 axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+                 panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+                 panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+                 axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)) +
+  ggplot2::theme(legend.position = "bottom", legend.direction = "horizontal", legend.key.size = grid::unit(0.3, "cm"),
+                 legend.text = ggplot2::element_text(family = "Arial", color = "#7F7F7F", size = 10)) +
+  ggplot2::scale_fill_manual(values = c(publish_colours)) 
+
+ggsave("images/r2_graph.svg", r2_graph, width = 8, height = 6)
+ggsave("images/r2_graph.png", r2_graph, width = 8, height = 6)
+
+knitr::include_graphics("images/r2_graph.svg")
 
 ```
 
@@ -919,7 +1073,7 @@ There were `r get("this_month_df_month", envir = env1)` people sleeping rough ov
 * `r get("this_month_df_unknown_nights", envir = env1)` people (`r round(((get("this_month_df_unknown_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough an unknown number of nights over the previous 6 months 
 
 
-**Figure 12: Number of nights people seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
+**Figure 8: Number of nights people seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
 
 
 ```{r 12-Figure 12 B2, include=FALSE}
@@ -1041,71 +1195,48 @@ if (!dir.exists(output_folder)) {
  
 ```
 
-```{r figure 12, echo=FALSE, warning = FALSE, message = FALSE}
+```{r figure 12, include = FALSE, echo=FALSE, warning = FALSE, message = FALSE}
 
-# knitr::include_graphics(paste0(output_folder, "/figure_12.svg"))
+knitr::include_graphics(paste0(output_folder, "/figure_12.svg"))
 #knitr::include_graphics(system.file("rmd/rmd/images/figure_12.svg", package = "ERSautomation"))
 
 ```
-
-**Figure X: Number of nights people seen sleeping rough over the last 6 months, September 2024**
 
 ```{r b2_bar_chart, echo = FALSE, warning = FALSE, message = FALSE}
 
 b2_graph_data <- data.frame(
   "nights_seen" = c("1 night",
                     "2 nights",
-                    "3 - 5 nights",
-                    "6 - 10 nights",
-                    "10 or more\nnights",
+                    "3 - 5\nnights",
+                    "6 - 10\nnights",
+                    "More than\n10 nights",
                     "Unknown\nnumber of\nnights"),
-  "value" = c((as.numeric(df_1_night[[this_month]][1]) / r1_month) * 100,
-              (as.numeric(df_2_nights[[this_month]][1]) / r1_month) * 100,
-              (as.numeric(df_3_5_nights[[this_month]][1]) / r1_month) * 100,
-              (as.numeric(df_6_10_nights[[this_month]][1]) / r1_month) * 100,
-              (as.numeric(df_10_more_nights[[this_month]][1]) / r1_month) * 100,
-              (as.numeric(df_unknown_nights[[this_month]][1]) / r1_month) * 100)
-              ) %>%
+  "value" = c(as.numeric(df_1_night[[this_month]][1]),
+              as.numeric(df_2_nights[[this_month]][1]),
+              as.numeric(df_3_5_nights[[this_month]][1]),
+              as.numeric(df_6_10_nights[[this_month]][1]),
+              as.numeric(df_10_more_nights[[this_month]][1]),
+              as.numeric(df_unknown_nights[[this_month]][1]))) %>%
   mutate(nights_seen = factor(nights_seen,levels = c("1 night",
                     "2 nights",
-                    "3 - 5 nights",
-                    "6 - 10 nights",
-                    "10 or more\nnights",
+                    "3 - 5\nnights",
+                    "6 - 10\nnights",
+                    "More than\n10 nights",
                     "Unknown\nnumber of\nnights")))
-size <- 1.5
 
-b2_figure <- ggplot() +
-  geom_col(b2_graph_data, mapping = aes(x = nights_seen, y = value), width = 0.75) + 
-  dluhctheme::dluhc_style()
-  # ylab("People sleeping rough\n(% of all people sleeping rough)") +
-  # xlab("Number of nights seen") + 
-  # theme(
-  #   plot.title = ggplot2::element_text(size = size * 11, face = "bold"),
-  #   plot.subtitle = ggplot2::element_text(size = size * 8),
-  #   plot.caption = ggplot2::element_blank(),
-  #   legend.position = "top",
-  #   # legend.text.align = 0,
-  #   legend.background = ggplot2::element_blank(),
-  #   legend.title = ggplot2::element_blank(),
-  #   legend.key = ggplot2::element_blank(),
-  #   legend.text = ggplot2::element_text(size = size * 8, color = "#222222"),
-  #   axis.title = ggplot2::element_text(size = size * 9, color = "#222222"),
-  #   axis.title.y = element_text(margin = margin(r = 15)),
-  #   axis.title.x = element_text(margin = margin(t = 5)),
-  #   axis.text = ggplot2::element_text(size = size * 8, color = "#222222"),
-  #   axis.text.x = ggplot2::element_text(margin = ggplot2::margin(5, b = 10)),
-  #   axis.ticks = ggplot2::element_line(color = "#cbcbcb"),
-  #   axis.line = ggplot2::element_blank(),
-  #   panel.grid.minor = ggplot2::element_blank(),
-  #   panel.grid.major.y = ggplot2::element_line(color = "#cbcbcb"),
-  #   panel.grid.major.x = ggplot2::element_blank(),
-  #   panel.background = ggplot2::element_blank(),
-  #   strip.background = ggplot2::element_rect(fill = "white"),
-  #   strip.text = ggplot2::element_text(size = size * 11, hjust = 0)
-  # )
+b2_graph <- ggplot() +
+  geom_col(b2_graph_data, mapping = aes(x = nights_seen, y = value), fill = shades_of_blue[2], width = 0.8) + 
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 0, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
+  ) 
 
-ggsave("images/b2_bar.svg")
-ggsave("images/b2_bar.png")
+ggsave("images/b2_bar.svg", b2_graph, width = 8, height = 6)
+ggsave("images/b2_bar.png", b2_graph, width = 8, height = 6)
 
 knitr::include_graphics("images/b2_bar.svg")
 
@@ -1122,10 +1253,10 @@ knitr::include_graphics("images/b2_bar.svg")
 
 There were `r get("this_month_df_returners", envir = env1)` people returning to sleeping rough over the month in `r this_month` (`r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_returners", envir = env1))` `r round((get("quarterly_change_df_returners", envir = env1) /  get("last_quarter_df_returners", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
-* Of these, `r get("this_month_df_prev_in_accomm", envir = env1)` (`r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`%) were returning to sleeping rough after moving into settled accommodation in the preceding 12 months. 
+* Of these, `r get("this_month_df_prev_in_accomm", envir = env1)` (`r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`%) were returning to sleeping rough after moving into settled accommodation in the preceding 12 months. This is `r sign(get("quarterly_change_df_prev_in_accomm", envir = env1))`  `r get("quarterly_change_df_returners", envir = env1)` people (or `r round((get("quarterly_change_df_prev_in_accomm", envir = env1) /  get("last_quarter_df_prev_in_accomm", envir = env1))*100, digits = 0)`%) on `r last_quarter`.
 
 
-**Figure 7: People returning to sleeping rough (NR1) including those returning to sleeping rough after moving into settled accommodation (NR2), May 2023 to `r this_month`**
+**Figure 9: People returning to sleeping rough (NR1) including those returning to sleeping rough after moving into settled accommodation (NR2), May 2023 to `r this_month`**
 
 ``` {r 7-Figure 7 NR1_NR22, include=FALSE}
 
@@ -1205,21 +1336,16 @@ figure_7 <- ggplot2::ggplot(NR_data, ggplot2::aes(x = Date)) +
   ggplot2::scale_y_continuous(breaks = seq(0, 1500, by = 250), labels = scales::comma, limits = c(-300, 1500)) +
   ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 10)) +
   ggplot2::theme(
-    axis.text.x = ggplot2::element_text(angle = 90, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
     axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
     panel.grid.major = ggplot2::element_line(color = "#F2F2F2", linewidth = 0.3, linetype = "solid"),
     panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", linewidth = 0.3, linetype = "solid"),
     axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
   )
 
-# print(figure_7)
-
-
-output_file <- file.path(output_folder, "figure_7.svg")
-output_file2 <- file.path(output_folder, "figure_7.png")
-
-ggplot2::ggsave(filename = output_file, plot = figure_7, device = "svg", width = 8, height = 6)
-ggplot2::ggsave(filename = output_file2, plot = figure_7, width = 8, height = 6, dpi = 300)
+#print(figure_7)
+ggplot2::ggsave("images/figure_7.svg", plot = figure_7, width = 8, height = 6)
+ggplot2::ggsave("images/figure_7.png", plot = figure_7, width = 8, height = 6)
 
 
 ```
@@ -1227,19 +1353,15 @@ ggplot2::ggsave(filename = output_file2, plot = figure_7, width = 8, height = 6,
 
 ```{r figure 7, echo=FALSE,}
 
-knitr::include_graphics(system.file("rmd/rmd/images/figure_7.svg", package = "ERSautomation"))
+knitr::include_graphics("images/figure_7.svg")
 
 ```
 
 
 
-
-
-**Figure 5: Number of people sleeping rough over the month who are new (P1), long term (B1) or returners (NR1), May 2023 to `r this_month`[^2]**
-
-
-
 ```{r 5-Stacked bars, include=FALSE}
+
+# **Figure 5: Number of people sleeping rough over the month who are new (P1), long term (B1) or returners (NR1), May 2023 to `r this_month`[^2]**
 
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_long_term <- readxl::read_excel(input_path, sheet = "Table_B1_-_RS_monthly_long_term", skip = 3)
@@ -1327,20 +1449,15 @@ figure_5 <- ggplot2::ggplot(comb_last_year_long, ggplot2::aes(x = Date, y = Valu
     "New monthly (P1)" = "#000000"
   ))
 
-   output_folder <- "inst/rmd/images"
-if (!dir.exists(output_folder)) {
-  dir.create(output_folder, recursive = TRUE)}  # specify desired folder path 
- output_file <- file.path(output_folder, "figure_5.svg")
- output_file2 <- file.path(output_folder, "figure_5.png")
-
- ggplot2::ggsave(filename = output_file, plot = figure_5, device = "svg", width = 8, height = 6)
- ggplot2::ggsave(filename = output_file2, plot = figure_5, width = 8, height = 6, dpi = 300)
+   
+ ggplot2::ggsave("images/figure_5.svg", plot = figure_5, width = 8, height = 6)
+ ggplot2::ggsave("images/figure_5.png",  plot = figure_5, width = 8, height = 6, dpi = 300)
 
 ```
 
-```{r figure 5, echo=FALSE, warning = FALSE, message = FALSE}
-
-knitr::include_graphics(paste0(output_folder, "/figure_5.svg"))
+```{r figure 5, include = FALSE, echo=FALSE, warning = FALSE, message = FALSE}
+# this is the old stacked bar, not included
+knitr::include_graphics("images/figure_5.svg")
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_5.svg",  package = "ERSautomation"))
 
 ```
@@ -1381,11 +1498,11 @@ prep_cols_for_combo <- function(df, first_month = "June 2024") {
   
   return(df_long)
 }
-
-r1_months <- df_month[1, 5:ncol(df_month)] 
-r1_months <- r1_months %>%
-  mutate(across(everything(), as.numeric)) %>%
-  pivot_longer(cols = everything(), names_to = "month", values_to = "r1_value")
+# 
+# r1_months <- df_month[1, 5:ncol(df_month)] 
+# r1_months <- r1_months %>%
+#   mutate(across(everything(), as.numeric)) %>%
+#   pivot_longer(cols = everything(), names_to = "month", values_to = "r1_value")
   
 new_combo_data <- bind_rows(
   #prep_cols_for_combo(df_month),
@@ -1394,48 +1511,56 @@ new_combo_data <- bind_rows(
   prep_cols_for_combo(df_long_term),
   prep_cols_for_combo(df_1_night),
   prep_cols_for_combo(df_returners),
-  prep_cols_for_combo(df_prev_in_accomm),
-  prep_cols_for_combo(df_accommodation),
-) %>%
-  left_join(r1_months, by = "month") %>%
-  mutate(perc = (value / r1_value) * 100) %>%
-  select(-r1_value)
+  prep_cols_for_combo(df_prev_in_accomm)#,
+ # prep_cols_for_combo(df_accommodation),
+) 
+# %>%
+#   left_join(r1_months, by = "month") %>%
+#   mutate(perc = (value / r1_value) * 100) %>%
+#   select(-r1_value)
 
-r1_row <- prep_cols_for_combo(df_month) %>%
-  mutate(perc = 100,
-         indicator = "Rough sleeping over the month")
-  
-new_combo_data <- bind_rows(new_combo_data,
-                            r1_row) %>%
-  mutate(
+# r1_row <- prep_cols_for_combo(df_month) %>%
+#   mutate(perc = 100,
+#          indicator = "Rough sleeping over the month")
+#   
+# new_combo_data <- bind_rows(new_combo_data,
+#                             r1_row) %>%
+
+new_combo_data <- new_combo_data %>%
+    mutate(
     indicator = forcats::fct_recode(indicator,
-                                    # renaming - top 4 are the same
-                                    "Rough sleeping over the month" = "Rough sleeping over the month",
+                                    # renaming
+                                    "New to\nsleeping rough" = "Month new",
                                     "Institutions" = "Institutions",
                                     "Long term" = "Long term", 
                                     "1 night" = "1 night", 
                                     "Returners" = "Returners",
-                                    "New to rough sleeping" = "Month new",
-                                      "Returning after settled accommodation" = "Prev in accomm",
-                                      "Accommodated" = "Accommodation")) %>%
+                                    "Returning after\nsettled\naccommodation" = "Prev in accomm"
+                                     )) %>%
   mutate(indicator = forcats::fct_relevel(indicator,
-        "Rough sleeping over the month",
-        "New to rough sleeping",
+        "New to\nsleeping rough",
         "Institutions",
         "Long term",
         "1 night",
         "Returners",
-        "Returning after settled accommodation",
-        "Accommodated"))
+        "Returning after\nsettled\naccommodation")) %>%
+    filter(month == format(max(as.Date(paste("01", month), "%d %B %Y")), "%B %Y"))
 
 new_combo_graph <- ggplot() +
-  geom_col(new_combo_data, mapping = aes(x = month, y = perc, fill = indicator), position = "dodge") +
+  geom_col(new_combo_data, mapping = aes(x = indicator, y = value), fill = shades_of_blue[2], position = "dodge") +
   dluhctheme::dluhc_style() + 
-  scale_fill_manual(values = af_colours)
+  #scale_fill_manual(values = shades_of_blue) + 
+  dluhctheme::dluhc_style(size = 1.5) +
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
+  ) 
 
-
-ggsave("images/new_combo_graph.png", new_combo_graph)
-ggsave("images/new_combo_graph.svg", new_combo_graph)
+ggsave("images/new_combo_graph.png", new_combo_graph, width = 8, height = 6)
+ggsave("images/new_combo_graph.svg", new_combo_graph, width = 8, height = 6)
 
 knitr::include_graphics("images/new_combo_graph.svg")
 
@@ -1444,192 +1569,6 @@ knitr::include_graphics("images/new_combo_graph.svg")
 
 
 
-```{r figure 6,  include=FALSE}
-
-# Script to create maps for the info graphic
-latest_column <- which(names(df_snapshot) == this_month)
-  
-#This is for rate 
-# I assume this is recreating rates from the snapshot df rather than using the rates that are in the original df_snapshot_rate column?
-# bit confused because the df used in the next chunk starts with the monthly rate
-df_snapshot_rate <- df_snapshot %>%
-  dplyr::select(c(1, 2, 3, all_of(latest_column)))
-
-colnames(df_snapshot_rate) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
-
-England <- sf::st_read("England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
-
-England <- England %>%
-  dplyr::left_join(df_snapshot_rate, by = dplyr::join_by(LAD23CD))
-
-England <- England %>%
-  dplyr::filter(!is.na(England$snapshot))
-
-England_map <- England %>%
-  tmap::tm_shape() +
-  tmap::tm_fill(
-  "snapshot", 
-  style = "cont",  # Keep continuous style
-  breaks = c(0, 20),  # Only showing 0 and 20+ in legend
-  labels = c("0", "20+"),  # Simplify legend labels
-  palette = c("#EFF3FF", "#08519C"),  # Continuous palette from light to dark
-  #title = "People sleeping \nrough per 100k \npopulation"
-) +
-tmap::tm_borders(lwd = 0.1, lty = "solid", alpha = 1) +
-tmap::tm_style("col_blind") +
-tmap::tm_layout(
-  frame = FALSE, 
-  frame.lwd = NA, 
-  panel.label.bg.color = NA,
-  legend.position = c("right", "top"),
-  legend.outside = TRUE,
-  legend.outside.position = "right",
-  legend.text.size = 0.5,
-  legend.title.size = 0.7,
-  legend.width = 0.9,
-  legend.height = 2,
-  legend.bg.color = NA,
-  legend.show = FALSE
-)
-
-
-#Use England shape files, this will need updating if there's boundary changes
-tmap::tmap_save(England_map, "images/England_map.png", width=1000, height=1000, asp=0)
-tmap::tmap_save(England_map, "images/England_map.svg", width=2000, height=2000, asp=0)
-
-
-#Adjust for London
-
-#Create London dataframe
-London <- df_snapshot_rate[ c(12:307), ] %>% # i.e. not incuding regions
-  dplyr::filter(Region == "London")
-
-#Join with shape file and remove any values not in London
-London_join <- England %>%
-  dplyr::left_join(London, by = dplyr::join_by(LAD23CD))
-
-London_join <- London_join %>%
-  dplyr::filter(!is.na(London_join$snapshot.y))
-
-London_map <- London_join %>%
-  tmap::tm_shape() +
-  tmap::tm_fill("snapshot.y", style = "cont", breaks = c(0,20),
-          labels = c("0","20+"),
-          palette = c("#EFF3FF", "#08519C"),
-          legend.show = FALSE) +
-  tmap::tm_borders(lwd = 0.4, lty = "solid", alpha = 1)+
-  tmap::tm_style("col_blind")+
-  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-
-tmap::tmap_save(London_map, "images/London_map.png", width=2000, height=2000, asp=0)
-tmap::tmap_save(London_map, "images/london_map.svg", width=2000, height=2000, asp=0)
-
-```
-<br>
-
-**Figure 6: Map of rate of people sleeping rough on a single night per 100,000 people (R1), `r this_month`** 
-
-
-
-<br>
-
-```{r figure 6 - map, echo=FALSE,}
-knitr::include_graphics(paste0(output_folder, "/England_map.svg"))
-#knitr::include_graphics(system.file("rmd/inst/rmd/images/.svg",  package = "ERSautomation"))
-knitr::include_graphics(paste0(output_folder, "/London_map.svg"))
-#knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map.svg",  package = "ERSautomation"))
-
-```
-
-
-
-**Source: MHCLG**
-<br>
-
-```{r figure_7,  include=FALSE}
-
-latest_column <- which(names(df_month_rate) == this_month)
-
-df_month_rate <- df_month_rate %>%
-  dplyr::select(c(1, 2, 3, all_of(latest_column)))
-
-colnames(df_month_rate) <- c("LAD23NM", "LAD23CD", "Region", "month")
-
-England <- sf::st_read("England_map_2023/LAD_MAY_2023_UK_BGC_V2.shp")
-
-England <- England %>%
-  dplyr::left_join(df_month_rate,  by = dplyr::join_by(LAD23CD))
-
-England <- England %>%
-  dplyr::filter(!is.na(England$month))
-
-England_map_rate <- England %>%
-  tmap::tm_shape() +
-  tmap::tm_fill("month", style = "cont", breaks = c(0,20),
-          labels = c("0","20"),
-          palette = c("#EFF3FF", "#08519C"))+
-          #title = "People") +
-  tmap::tm_borders(lwd = 0.1, lty = "solid", alpha = 1) +
-  tmap::tm_style("col_blind") +
-tmap::tm_layout(
-  frame = FALSE, 
-  frame.lwd = NA, 
-  panel.label.bg.color = NA,
-  legend.position = c("right", "top"),
-  legend.outside = TRUE,
-  legend.outside.position = "right",
-  legend.text.size = 0.5,
-  legend.title.size = 0.7,
-  legend.width = 0.9,
-  legend.height = 2,
-  legend.bg.color = NA,
-  legend.show = FALSE
-)
-
-tmap::tmap_save(England_map_rate, "images/England_map_rate.png", width=2000, height=2000, asp=0)
-tmap::tmap_save(England_map_rate, "images/England_map_rate.svg", width=2000, height=2000, asp=0)
-
-#Adjust for London
-
-#Create London dataframe
-London <- df_month_rate[ c(12:307), ] %>% # no regions
-  dplyr::filter(Region == "London")
-
-#Join with shape file and remove any values not in London
-London_join <- England %>%
-  dplyr::left_join(London,  by = dplyr::join_by(LAD23CD))
-
-London_join <- London_join %>%
-  dplyr::filter(!is.na(London_join$month.y))
-
-London_map_rate <- London_join %>%
-  tmap::tm_shape() +
-  tmap::tm_fill("month.y", style = "cont", breaks = c(0, 20),
-          labels = c("0","20+"),
-          palette = c("#EFF3FF","#08519C"),
-          title = "People",
-          legend.show = FALSE) +
-  tmap::tm_borders( lwd = 0.4, lty = "solid", alpha = 1)+
-  tmap::tm_style("col_blind")+
-  tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
-
-tmap::tmap_save(London_map_rate, "images/London_map_rate.png", width=2000, height=2000, asp=0)
-tmap::tmap_save(London_map_rate, "images/London_map_rate.svg", width=2000, height=2000, asp=0)
-
-
-```
-
-
-**Figure 7: Map of rate of people sleeping rough over the month per 100,000 people (R1), `r this_month`**
-
-
-```{r figure 7 - map, echo=FALSE, warning = FALSE, message = FALSE}
-knitr::include_graphics(paste0(output_folder, "/England_map_rate.svg"))
-knitr::include_graphics(paste0(output_folder, "/London_map_rate.svg"))
-#knitr::include_graphics(system.file("rmd/inst/rmd/images/England_map_rate.svg", package = "ERSautomation"))
-#knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map_rate.svg", package = "ERSautomation"))
-
-```
 
 <br>
 
@@ -1703,13 +1642,10 @@ for (name in names(dfs)) {
 
 `r nat_UK[[this_month]][1]` people sleeping rough over the month of `r this_month` were UK nationals, `r round((nat_UK[[this_month]][1] / r1_month) * 100)`% of the total number of people sleeping rough. `r nat_EEA[[this_month]][1]` people (`r round((nat_EEA[[this_month]][1] / r1_month) * 100)`%) were EEA nationals, and `r nat_NonEEA[[this_month]][1]` (`r round((nat_NonEEA[[this_month]][1] / r1_month) * 100)`%) were non-EEA nationals, with the rest having an unknown nationality. 
 
-Figure 
-
-
 Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, `r imm_access[[this_month]][1]` (`r round((imm_access[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)` %) had a status that allowed for access to public funds and `r imm_restricted[[this_month]][1]` (`r round((imm_restricted[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)` %) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition.  
 
 
-```{r nat_imm_graphs, echo = FALSE, warning = FALSE, message = FALSE}
+```{r nat_imm_pie, echo = FALSE, warning = FALSE, message = FALSE, include = FALSE}
 
 nat_graph_data <- data.frame(
   category = c("EEA", "NonEEA", "UK", "Unknown nationality", " "),# empty category to split legend
@@ -1749,7 +1685,7 @@ nat_imm_graph_data <- bind_rows(nat_graph_data, imm_graph_data) %>%
 
 # NUKN_start_angle <- sum(nat_graph_data$value[nat_graph_data$category == "UK"]) / sum(nat_graph_data$value)
 
-nat_imm_chart <- ggplot() +
+nat_imm_pie_chart <- ggplot() +
 # nationality pie
   geom_bar(data = nat_imm_graph_data %>% filter(layer == "Nationality"),
           aes(x = 1, y = value, fill = category), stat = "identity", width = 1, position = "stack") + 
@@ -1791,10 +1727,44 @@ nat_imm_chart <- ggplot() +
   #           aes(x = 2, y = value, label = labels), position = position_stack(vjust = 0.1), color = "black", size = 4)
 
 
-ggsave("images/nat_imm_chart.png", nat_imm_chart)
-ggsave("images/nat_imm_chart.svg", nat_imm_chart)
+ggsave("images/nat_imm_pie_chart.png", nat_imm_pie_chart, width = 8, height = 6)
+ggsave("images/nat_imm_pie_chart.svg", nat_imm_pie_chart, width = 8, height = 6)
 
-knitr::include_graphics("images/nat_imm_chart.svg")
+knitr::include_graphics("images/nat_imm_pie_chart.svg")
+
+```
+
+**Figure 10: Number of people sleeping rough over the month, by nationality and immigration status, `r this_month`**
+
+```{r nat_imm_bar, echo = FALSE, warning = FALSE, message = FALSE}
+
+nat_imm_graph_data <- nat_imm_graph_data %>%
+  filter(!category %in% c("  ")) %>%
+  mutate(category = forcats::fct_recode(category, "Unknown" = "Unknown nationality",
+                                        "Access to\npublic funds" = "Of those with access to public funds", 
+                                        "Presettled" = "Restricted eligibility: presettled", 
+                                        "Unknown\nstatus" = "Unknown immigration status"   
+                                        ),
+    category = factor(category, levels = c("UK", "EEA", "NonEEA",  "Unknown", " ",
+                                                "Access to\npublic funds", "Presettled", "Other", "Unknown\nstatus")),
+    layer = factor(layer, c("Nationality", "Immigration")))
+
+nat_imm_bar_chart <- ggplot() + 
+  geom_col(nat_imm_graph_data, mapping = aes(x = category, y = value, fill = layer)) +
+  scale_fill_manual(values = shades_of_blue) +
+  dluhctheme::dluhc_style() + 
+  ggplot2::theme(
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
+  ) 
+
+ggsave("images/nat_imm_bar_chart.png", nat_imm_bar_chart, width = 8, height = 6)
+ggsave("images/nat_imm_bar_chart.svg", nat_imm_bar_chart, width = 8, height = 6)
+
+knitr::include_graphics("images/nat_imm_bar_chart.svg")
 
 ```
 
@@ -2021,7 +1991,7 @@ The information about people sleeping rough over the course of the month, includ
 
 This research will be used to develop further guidance for local areas to improve the quality and comparability of the data underpinning the new indicators.
 
-**Figure 8: Quality Assurance Process flowchart**
+**Figure 11: Quality Assurance Process flowchart**
 
 An outline of the production process and quality assurance carried out prior to the publication of the Rough Sleeping Data Framework.
 
