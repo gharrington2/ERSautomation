@@ -1,0 +1,64 @@
+---
+title: "Grey boxes highlights"
+output: word_document
+---
+
+<br>
+<br>
+
+::: {custom-style="GreyBox"}
+
+#### Prevented (P1 & P2)
+
+
+
+**`r get("this_month_df_month_new", envir = env1)`** new people sleeping rough over the month in `r this_month` (`r round(abs(( get("this_month_df_month_new", envir = env1) / get("this_month_df_month", envir = env1))*100),digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
+
+
+**`r  get("this_month_df_snapshot_new", envir = env1)`** new people sleeping rough on a single night in `r this_month` (`r round(abs(( get("this_month_df_snapshot_new", envir = env1) / get("this_month_df_snapshot", envir = env1))*100),digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% since `r last_year`.
+
+
+**`r get("this_month_df_institutions", envir = env1)`** people sleeping rough over the month in `r this_month` who have left an institution (`r round(abs((get("this_month_df_institutions", envir = env1) / get("this_month_df_month", envir = env1))*100), digits = 0)`% of the total people sleeping rough over the month) - `r sign(get("annual_change_df_institutions", envir = env1))` `r round(abs((get("annual_change_df_institutions", envir = env1))/get("last_year_df_institutions", envir = env1))*100, digits = 0)`% since `r last_year`. 
+
+
+:::
+
+<br>
+
+::: {custom-style="GreyBox"}
+
+#### Rare (R1 & R2)
+
+**`r get("this_month_df_month", envir = env1)`** people sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month", envir = env1))` `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round(((get("quarterly_change_df_month", envir = env1))/get("last_quarter_df_month", envir = env1))*100, digits = 0)`% since `r last_quarter`. `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough over the month in `r this_month` - `r sign(get("annual_change_df_month_rate", envir = env1))` from `r round((get("last_year_df_month_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_month_rate", envir = env1))` from `r round((get("last_quarter_df_month_rate", envir = env1)), digits = 1)` `r last_quarter`.
+
+
+
+**`r get("this_month_df_snapshot", envir = env1)`** people sleeping rough on a single night in `r this_month` - `r sign(get("annual_change_df_snapshot", envir = env1))` `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% on `r last_year` and `r sign(get("quarterly_change_df_snapshot", envir = env1))` `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter`. `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 sleeping rough on a single night in `r this_month` - `r sign(get("annual_change_df_snapshot_rate", envir = env1))` from `r round((get("last_year_df_snapshot_rate", envir = env1)), digits = 1)` last year and `r sign(get("quarterly_change_df_snapshot_rate", envir = env1))` from `r round((get("last_quarter_df_snapshot_rate", envir = env1)), digits = 1)` `r last_quarter`.
+
+
+
+**`r get("this_month_df_accommodation", envir = env1)`** people (`r round((get("this_month_df_accommodation", envir = env1) / r1_month) * 100)`% of all those sleeping rough over the month) were accommodated by end of the month , `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)` % since `r last_quarter` AND `r sign(get("monthly_change_df_accommodation", envir = env1))` `r round(abs((get("monthly_change_df_accommodation", envir = env1))/get("last_month_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_month`.
+
+
+
+::: 
+
+<br>
+
+::: {custom-style="GreyBox"}
+
+#### Brief (B1)
+**`r get("this_month_df_long_term", envir = env1)`** people sleeping rough over the month in `r this_month` who are sleeping rough long term (`r round(((get("this_month_df_long_term", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
+
+
+
+::: 
+
+<br>
+
+::: {custom-style="GreyBox"}
+
+#### Non-recurring (NR1 & NR2)
+**`r get("this_month_df_returners", envir = env1)`** people sleeping rough over the month in `r this_month` who are returning to sleeping rough (`r round(((get("this_month_df_returners", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
+
+**`r get("this_month_df_prev_in_accomm", envir = env1)`** people returning to sleeping rough over the month in `r this_month` had previously moved into settled accommodation - `r sign(get("quarterly_change_df_prev_in_accomm", envir = env1))` `r round(abs((get("quarterly_change_df_prev_in_accomm", envir = env1))/get("last_quarter_df_prev_in_accomm", envir = env1))*100, digits = 0)`% since `r last_quarter`. AND `r sign(get("monthly_change_df_prev_in_accomm", envir = env1))` `r round(abs((get("monthly_change_df_prev_in_accomm", envir = env1))/get("last_month_df_prev_in_accomm", envir = env1))*100, digits = 0)`% since `r last_month`.
