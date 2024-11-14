@@ -18,7 +18,7 @@ library(pacman)
 p_load(tidyr, dplyr, xlsx, readxl, writexl, openxlsx, lubridate, stringr, ggplot2)
 
 # #Load the dataframes in from the latest tables
-input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241113.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241113_SN_nat_tots.xlsx"
 
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -193,13 +193,13 @@ direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > 
 <br>
 
 ## 1. Key statistics
-The latest Rough Sleeping Data Framework Management information for `r this_month` shows there were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month - `r sign(get("annual_change_df_month", envir = env1))` `r get("annual_change_df_month", envir = env1)` people or `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% since `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r get("quarterly_change_df_month", envir = env1)`% on the last quarter publication in `r last_quarter`. Of these
+The latest Rough Sleeping Data Framework Management information for `r this_month` shows there were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month - `r sign(get("annual_change_df_month", envir = env1))` `r get("annual_change_df_month", envir = env1)` people or `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% since `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round((get("quarterly_change_df_month", envir = env1)/get("last_quarter_df_month", envir = env1)) * 100)`% on the last quarter publication in `r last_quarter`. Of these
 
 * `r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% were new people sleeping rough
 * `r round(((get("this_month_df_1_night", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of people had been seen sleeping rough for 1 night only over last 6 months
 * `r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people returning to sleeping rough, `r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`% of these had previously been in settled accommodation in the last year
 * `r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people who had been sleeping rough long term
-* `r get("this_month_df_institutions", envir = env1)`% of people sleeping rough had recently left an institution – `r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of these people had recently left prison
+* `r round((get("this_month_df_institutions", envir = env1)/get("this_month_df_month", envir = env1))*100)`% of people sleeping rough had recently left an institution – `r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of these people had recently left prison
 
 `r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times more people sleep rough over the month compared to a single night. There were `r get("this_month_df_snapshot", envir = env1)` people were sleeping rough on a single night in `r this_month`, which is `r direction_2023_snapshot` the 2023 annual snapshot figure.
  
