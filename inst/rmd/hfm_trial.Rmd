@@ -186,13 +186,15 @@ direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > 
                                   ifelse(get("this_month_df_snapshot", envir = env1) < 3898, "lower than",
                                          "the same as"))
 
-# TODO: Make dynamic the drivers part of the Kay Statistics
+# TODO: Make the drivers part of the Main Findings dynamic 
 
 ```
 <br>
 <br>
 
-## 1. Key statistics
+## 1. Main Findings
+
+::: {custom-style = "GreyBox"}
 The latest Rough Sleeping Data Framework Management information for `r this_month` shows there were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month - `r sign(get("annual_change_df_month", envir = env1))` `r get("annual_change_df_month", envir = env1)` people or `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% since `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round((get("quarterly_change_df_month", envir = env1)/get("last_quarter_df_month", envir = env1)) * 100)`% on the last quarter publication in `r last_quarter`. Of these
 
 * `r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% were new people sleeping rough
@@ -201,7 +203,7 @@ The latest Rough Sleeping Data Framework Management information for `r this_mont
 * `r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people who had been sleeping rough long term
 * `r round((get("this_month_df_institutions", envir = env1)/get("this_month_df_month", envir = env1))*100)`% of people sleeping rough had recently left an institution – `r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of these people had recently left prison
 
-`r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times more people sleep rough over the month compared to a single night. There were `r get("this_month_df_snapshot", envir = env1)` people were sleeping rough on a single night in `r this_month`, which is `r direction_2023_snapshot` the 2023 annual snapshot figure.
+`r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times more people sleep rough over the month compared to a single night. There were `r get("this_month_df_snapshot", envir = env1)` people sleeping rough on a single night in `r this_month`, which is `r direction_2023_snapshot` the 2023 annual snapshot figure.
  
 The increases in rough sleeping have largely been driven by a small number of areas – over half the increase in rough sleeping over the month compared to last year has been driven by 12 areas but rough sleeping is increasing across majority of the country – 53% of areas have increased compared to last year.
  
@@ -262,7 +264,7 @@ The eight core indicators are:
 
 
 ```{r image 1, echo=FALSE,warning = FALSE, message = FALSE}
-knitr::include_graphics(paste0("images/indicator_breakdown_pub_graphic_all.png"))
+knitr::include_graphics("images/indicator_breakdown_pub_graphic_all.png")
 #knitr::include_graphics(system.file("rmd/images/Indicator_breakdown_pub_graphic_all.png", package = "ERSautomation"))
 
 ```
@@ -370,10 +372,8 @@ if (!dir.exists(output_folder)) {
 } else { print("folder already exists")} 
  
  # specify desired folder path 
- output_file <- file.path(output_folder, "figure_1.svg")
- output_file2 <- file.path(output_folder, "figure_1.png")
- ggplot2::ggsave(filename = output_file, plot = figure_1, device = "svg", width = 8, height = 6)
- ggplot2::ggsave(filename = output_file2, plot = figure_1, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave("images/figure_1.svg", plot = figure_1, width = 8, height = 6)
+ ggplot2::ggsave("images/figure_1.png", plot = figure_1, width = 8, height = 6, dpi = 300)
 
  
 ```
@@ -382,7 +382,7 @@ if (!dir.exists(output_folder)) {
 
 ```{r line new, echo=FALSE,warning = FALSE, message = FALSE}
 
-knitr::include_graphics(paste0(output_folder, "/figure_1.svg"))
+knitr::include_graphics("images/figure_1.svg")
 
 # knitr::include_graphics(system.file("rmd/images/figure_1.svg",  package = "ERSautomation"))
 
@@ -542,11 +542,9 @@ figure_2 <- ggplot2::ggplot(donut_data, ggplot2::aes(ymax = ymax, ymin = ymin, x
 # 
 # print(figure_2)
 # 
- output_file <- file.path(output_folder, "figure_2.svg")
- output_file2 <- file.path(output_folder, "figure_2.png")
 
-  ggplot2::ggsave(filename = output_file, plot = figure_2, device = "svg", width = 8, height = 6)
-  ggplot2::ggsave(filename = output_file2, plot = figure_2, width = 8, height = 6, dpi = 300)
+  ggplot2::ggsave("images/figure_2.svg", plot = figure_2, width = 8, height = 6)
+  ggplot2::ggsave("images/figure_2.png", plot = figure_2, width = 8, height = 6, dpi = 300)
 
 ```
 
@@ -556,7 +554,7 @@ figure_2 <- ggplot2::ggplot(donut_data, ggplot2::aes(ymax = ymax, ymin = ymin, x
 
 ```{r figure 2, echo=FALSE, warning = FALSE, message = FALSE}
 
-knitr::include_graphics(paste0(output_folder, "/figure_2.svg"))
+knitr::include_graphics("images/figure_2.svg")
 # knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_2.svg",  package = "ERSautomation"))
 
 ```
@@ -659,11 +657,9 @@ figure_3 <- ggplot2::ggplot(institutions_data, ggplot2::aes(x = Date)) +
     "Asylum Support" = "#E6E6E6", "Under 25 care leavers" = "#EFB5B9"
   ))
 
- output_file <- file.path(output_folder, "figure_3.svg")
- output_file2 <- file.path(output_folder, "figure_3.png")
 
- ggplot2::ggsave(filename = output_file, plot = figure_3, device = "svg", width = 8, height = 6)
- ggplot2::ggsave(filename = output_file2, plot = figure_3, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave("images/figure_3.svg", plot = figure_3, width = 8, height = 6)
+ ggplot2::ggsave("images/figure_3.png", plot = figure_3, width = 8, height = 6, dpi = 300)
 
  
 ```
@@ -679,7 +675,7 @@ figure_3 <- ggplot2::ggplot(institutions_data, ggplot2::aes(x = Date)) +
 
 ```{r figure 3, echo=FALSE, warning = FALSE, message = FALSE}
 
-knitr::include_graphics(paste0(output_folder, "/figure_3.svg"))
+knitr::include_graphics("images/figure_3.svg")
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_3.svg", package = "ERSautomation"))
 
 ```
@@ -699,9 +695,9 @@ This is `r round(get("this_month_df_month", envir = env1) / get("this_month_df_s
 The rate of people sleeping rough over the month of `r this_month` in England was  `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_month_rate", envir = env1), digits = 1)` people per 100,000 in the `r last_quarter` and `r round(get("last_year_df_month_rate", envir = env1), digits = 1)` people per 100,00 in the same period last year[^1].
 
 
-There were, `r get("this_month_df_snapshot", envir = env1)` people sleeping rough on a single night in `r this_month` - `r sign( get("quarterly_change_df_snapshot", envir = env1))` `r get("quarterly_change_df_snapshot", envir = env1)` people or  `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot", envir = env1))` `r get("annual_change_df_snapshot", envir = env1)` people or `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% since last year. 
+There were `r get("this_month_df_snapshot", envir = env1)` people sleeping rough on a single night in `r this_month` - `r sign( get("quarterly_change_df_snapshot", envir = env1))` `r get("quarterly_change_df_snapshot", envir = env1)` people or  `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot", envir = env1))` `r get("annual_change_df_snapshot", envir = env1)` people or `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% since last year. 
 
-The rate of people sleeping rough on a single night in `r this_month` in England was `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the previous quarter (`r last_quarter`) and `r round(get("last_year_df_snapshot_rate", envir = env1), digits = 1)` people per 100,00 in the same period last year.
+The rate of people sleeping rough on a single night in `r this_month` in England was `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the previous quarter (`r last_quarter`) and `r round(get("last_year_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the same period last year.
 
 
 **Figure 4: People sleeping rough, October 2020 to `r this_month` (R1)**
@@ -908,7 +904,7 @@ knitr::include_graphics("images/London_map.svg")
 **Source: MHCLG**
 <br>
 
-```{r figure_7,  include=FALSE}
+```{r figure_7, include = FALSE}
 
 latest_column <- which(names(df_month_rate) == this_month)
 
@@ -1005,16 +1001,16 @@ n_months_r2 <- ncol(df_accommodation) - 4
 
 r2_row <- df_accommodation[1, 5:ncol(df_accommodation)] %>% 
   mutate(across(everything(), as.numeric),
-         indicator = "People accommodated\nover the month")
+         indicator = "People accommodated over the month (R2)")
 
 r1_row <- df_month[1, (ncol(df_month) - n_months_r2 + 1):ncol(df_month)] %>%
   mutate(across(everything(), as.numeric),
-         indicator = "Total people sleeping rough\nover the month")
+         indicator = "Total people sleeping rough over the month (R1)")
 
 r2_graph_data <- bind_rows(r2_row, r1_row) %>%
   mutate(indicator = forcats::fct_relevel(indicator,
-                                          c("Total people sleeping rough\nover the month",
-                                            "People accommodated\nover the month"))) %>%
+                                          c("Total people sleeping rough over the month (R1)",
+                                            "People accommodated over the month (R2)"))) %>%
   pivot_longer(cols = -indicator, names_to = "month") %>%
   mutate(month = as.Date(paste0("01 ", month), "%d %B %Y")) %>%
   arrange(month)
@@ -1022,7 +1018,7 @@ r2_graph_data <- bind_rows(r2_row, r1_row) %>%
 label_range_r2 <- r2_graph_data %>%
   dplyr::mutate(Year = format(month, "%Y")) %>%
   dplyr::group_by(Year) %>%
-  dplyr::summarise(xmin = min(month), xmax = max(month), ymin = 0, ymax = max(r2_graph_data$value) * 1.1) %>%
+  dplyr::summarise(xmin = min(month), xmax = max(month), ymin = -10, ymax = max(r2_graph_data$value) * 1.1) %>%
   dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
 
 r2_graph <- ggplot() +
@@ -1041,7 +1037,8 @@ r2_graph <- ggplot() +
                  axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)) +
   ggplot2::theme(legend.position = "bottom", legend.direction = "horizontal", legend.key.size = grid::unit(0.3, "cm"),
                  legend.text = ggplot2::element_text(family = "Arial", color = "#7F7F7F", size = 10)) +
-  ggplot2::scale_fill_manual(values = c(publish_colours)) 
+  ggplot2::scale_fill_manual(values = c(shades_of_blue[c(2,4)])) +
+  ggplot2::scale_y_continuous(labels = scales::comma) # add commas to y axis values
 
 ggsave("images/r2_graph.svg", r2_graph, width = 8, height = 6)
 ggsave("images/r2_graph.png", r2_graph, width = 8, height = 6)
@@ -1196,7 +1193,7 @@ if (!dir.exists(output_folder)) {
 ```
 
 ```{r figure 12, include = FALSE, echo=FALSE, warning = FALSE, message = FALSE}
-
+# not including B2 stacked chart
 knitr::include_graphics(paste0(output_folder, "/figure_12.svg"))
 #knitr::include_graphics(system.file("rmd/rmd/images/figure_12.svg", package = "ERSautomation"))
 
@@ -1205,11 +1202,11 @@ knitr::include_graphics(paste0(output_folder, "/figure_12.svg"))
 ```{r b2_bar_chart, echo = FALSE, warning = FALSE, message = FALSE}
 
 b2_graph_data <- data.frame(
-  "nights_seen" = c("1 night",
-                    "2 nights",
-                    "3 - 5\nnights",
-                    "6 - 10\nnights",
-                    "More than\n10 nights",
+  "nights_seen" = c("1 night\n\n",
+                    "2 nights\n\n",
+                    "3 - 5\nnights\n",
+                    "6 - 10\nnights\n",
+                    "More than\n10 nights\n",
                     "Unknown\nnumber of\nnights"),
   "value" = c(as.numeric(df_1_night[[this_month]][1]),
               as.numeric(df_2_nights[[this_month]][1]),
@@ -1217,23 +1214,24 @@ b2_graph_data <- data.frame(
               as.numeric(df_6_10_nights[[this_month]][1]),
               as.numeric(df_10_more_nights[[this_month]][1]),
               as.numeric(df_unknown_nights[[this_month]][1]))) %>%
-  mutate(nights_seen = factor(nights_seen,levels = c("1 night",
-                    "2 nights",
-                    "3 - 5\nnights",
-                    "6 - 10\nnights",
-                    "More than\n10 nights",
-                    "Unknown\nnumber of\nnights")))
+  mutate(nights_seen = factor(nights_seen,levels = c("1 night\n\n",
+                                                     "2 nights\n\n",
+                                                     "3 - 5\nnights\n",
+                                                     "6 - 10\nnights\n",
+                                                     "More than\n10 nights\n",
+                                                     "Unknown\nnumber of\nnights")))
 
 b2_graph <- ggplot() +
   geom_col(b2_graph_data, mapping = aes(x = nights_seen, y = value), fill = shades_of_blue[2], width = 0.8) + 
   dluhctheme::dluhc_style(size = 1.5) +
   ggplot2::theme(
-    axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 0, family = "Arial", color = "#636363", size = 10),
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 5, family = "Arial", color = "#636363", size = 10),
     axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
     panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
     panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
     axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
-  ) 
+  ) +
+  ggplot2::scale_y_continuous(labels = scales::comma, limits = c(0, 3000)) # add commas to y axis values
 
 ggsave("images/b2_bar.svg", b2_graph, width = 8, height = 6)
 ggsave("images/b2_bar.png", b2_graph, width = 8, height = 6)
@@ -1317,9 +1315,9 @@ figure_7 <- ggplot2::ggplot(NR_data, ggplot2::aes(x = Date)) +
   ggplot2::geom_line(ggplot2::aes(y = NR2, color = "NR2"), linewidth = 1.4, group = 1) +
   ggplot2::geom_point(ggplot2::aes(y = NR2), color = "#012169", size = 3) +
   # Adding labels directly to the lines
- ggplot2::geom_rect(data = label_range_X, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
+  ggplot2::geom_rect(data = label_range_X, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
                      fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
-     ggplot2::geom_text(data = label_range_X, ggplot2::aes(x = xmid, y = ymin - 300, label = Year, group = Year),
+     ggplot2::geom_text(data = label_range_X, ggplot2::aes(x = xmid, y = ymin - 150, label = Year, group = Year),
                      color = "#636363", size = 3.5, angle = 0, hjust = 0.5, inherit.aes = FALSE) +
     ggplot2::geom_text(data = NR1_label, ggplot2::aes(x = Date, y = y, label = label),
                      color = "#012169", vjust = -0.5, 
@@ -1333,7 +1331,7 @@ figure_7 <- ggplot2::ggplot(NR_data, ggplot2::aes(x = Date)) +
   ggplot2::theme(legend.position = "none") +
   ggplot2::scale_color_manual(values = c("NR1" = "#95B3D7", "NR2" = "#012169"), guide ='none') +
   dluhctheme::dluhc_style(size = 1.5) +
-  ggplot2::scale_y_continuous(breaks = seq(0, 1500, by = 250), labels = scales::comma, limits = c(-300, 1500)) +
+  ggplot2::scale_y_continuous(breaks = seq(0, 1500, by = 250), labels = scales::comma, limits = c(-150, 1500)) +
   ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 10)) +
   ggplot2::theme(
     axis.text.x = ggplot2::element_text(angle = 0, hjust = 0, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
@@ -1344,18 +1342,17 @@ figure_7 <- ggplot2::ggplot(NR_data, ggplot2::aes(x = Date)) +
   )
 
 #print(figure_7)
-ggplot2::ggsave("images/figure_7.svg", plot = figure_7, width = 8, height = 6)
-ggplot2::ggsave("images/figure_7.png", plot = figure_7, width = 8, height = 6)
-
+ggplot2::ggsave("images/figure_7.svg", plot = figure_7, width = 9, height = 6)
+ggplot2::ggsave("images/figure_7.png", plot = figure_7, width = 9, height = 6)
 
 ```
 
-
-```{r figure 7, echo=FALSE,}
+```{r print_fig_7, echo = FALSE, message = FALSE, warning = FALSE}
 
 knitr::include_graphics("images/figure_7.svg")
 
 ```
+
 
 
 
@@ -1530,46 +1527,56 @@ new_combo_data <- new_combo_data %>%
     mutate(
     indicator = forcats::fct_recode(indicator,
                                     # renaming
-                                    "New to\nsleeping rough" = "Month new",
-                                    "Institutions" = "Institutions",
-                                    "Long term" = "Long term", 
-                                    "1 night" = "1 night", 
-                                    "Returners" = "Returners",
+                                    "New to\nsleeping rough\n" = "Month new",
+                                    "Left institutions\n\n" = "Institutions",
+                                    "Sleeping rough\nlong-term\n" = "Long term", 
+                                    "Seen on 1 night\n\n" = "1 night", 
+                                    "Returning to\nsleeping rough\n" = "Returners",
                                     "Returning after\nsettled\naccommodation" = "Prev in accomm"
                                      )) %>%
-  mutate(indicator = forcats::fct_relevel(indicator,
-        "New to\nsleeping rough",
-        "Institutions",
-        "Long term",
-        "1 night",
-        "Returners",
-        "Returning after\nsettled\naccommodation")) %>%
+  mutate(indicator = forcats::fct_inorder(indicator)) %>%
+  # mutate(indicator = forcats::fct_relevel(indicator,
+  #       "New to\nsleeping rough\n",
+  #       "Left institutions\n\n",
+  #       "Sleeping rough\nlong-term\n",
+  #       "Seen on 1 night\n\n",
+  #       "Returning to\nsleeping rough\n",
+  #       "Returning after\nsettled\naccommodation")) %>%
     filter(month == format(max(as.Date(paste("01", month), "%d %B %Y")), "%B %Y"))
 
 new_combo_graph <- ggplot() +
-  geom_col(new_combo_data, mapping = aes(x = indicator, y = value), fill = shades_of_blue[2], position = "dodge") +
+  geom_col(new_combo_data, mapping = aes(x = indicator, y = value, fill = indicator), position = "dodge") +
   dluhctheme::dluhc_style() + 
-  #scale_fill_manual(values = shades_of_blue) + 
+  scale_fill_manual(values = shades_of_blue) + 
   dluhctheme::dluhc_style(size = 1.5) +
   ggplot2::theme(
-    axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 5, family = "Arial", color = "#636363", size = 10),
     axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
     panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
     panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
-    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
-  ) 
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3),
+    legend.position = "none"
+  )  +
+  ggplot2::scale_y_continuous(labels = scales::comma) # add commas to y axis values
 
 ggsave("images/new_combo_graph.png", new_combo_graph, width = 8, height = 6)
 ggsave("images/new_combo_graph.svg", new_combo_graph, width = 8, height = 6)
 
+```
+
+**Figure People sleeping rough over the month who were new to sleeping rough (P1), had left institutions (P2), were sleeping rough long-term (B1), had slept rough on only 1 night in the last 6 months (B2), were returning to sleeping rough (NR1) and those returning to sleeping rough after moving into settled accommodation in the last 12 months, September 2024**
+
+```{r print_combo_chart, echo = FALSE, warning = FALSE, message = FALSE}
 knitr::include_graphics("images/new_combo_graph.svg")
 
 ```
+OFFICIAL
 
+<br>
 
+**Source: MHCLG**
 
-
-
+<br>
 <br>
 
 # 7. Nationality and Immigration
@@ -1642,7 +1649,7 @@ for (name in names(dfs)) {
 
 `r nat_UK[[this_month]][1]` people sleeping rough over the month of `r this_month` were UK nationals, `r round((nat_UK[[this_month]][1] / r1_month) * 100)`% of the total number of people sleeping rough. `r nat_EEA[[this_month]][1]` people (`r round((nat_EEA[[this_month]][1] / r1_month) * 100)`%) were EEA nationals, and `r nat_NonEEA[[this_month]][1]` (`r round((nat_NonEEA[[this_month]][1] / r1_month) * 100)`%) were non-EEA nationals, with the rest having an unknown nationality. 
 
-Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, `r imm_access[[this_month]][1]` (`r round((imm_access[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)` %) had a status that allowed for access to public funds and `r imm_restricted[[this_month]][1]` (`r round((imm_restricted[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)` %) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition.  
+Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, `r imm_access[[this_month]][1]` (`r round((imm_access[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had a status that allowed for access to public funds and `r imm_restricted[[this_month]][1]` (`r round((imm_restricted[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition.  
 
 
 ```{r nat_imm_pie, echo = FALSE, warning = FALSE, message = FALSE, include = FALSE}
@@ -1734,32 +1741,41 @@ knitr::include_graphics("images/nat_imm_pie_chart.svg")
 
 ```
 
-**Figure 10: Number of people sleeping rough over the month, by nationality and immigration status, `r this_month`**
+**Figure 11: Number of people sleeping rough over the month, by nationality and immigration status, `r this_month`**
 
 ```{r nat_imm_bar, echo = FALSE, warning = FALSE, message = FALSE}
 
 nat_imm_graph_data <- nat_imm_graph_data %>%
-  filter(!category %in% c("  ")) %>%
+  filter(!category %in% c("  ", " ")) %>%
   mutate(category = forcats::fct_recode(category, "Unknown" = "Unknown nationality",
                                         "Access to\npublic funds" = "Of those with access to public funds", 
                                         "Presettled" = "Restricted eligibility: presettled", 
                                         "Unknown\nstatus" = "Unknown immigration status"   
                                         ),
-    category = factor(category, levels = c("UK", "EEA", "NonEEA",  "Unknown", " ",
+    category = factor(category, levels = c("UK", "EEA", "NonEEA",  "Unknown",
                                                 "Access to\npublic funds", "Presettled", "Other", "Unknown\nstatus")),
     layer = factor(layer, c("Nationality", "Immigration")))
 
+label_range_nat_imm <- nat_imm_graph_data %>%
+  dplyr::group_by(layer) %>%
+  dplyr::summarise(ymin = 0, ymax = max(nat_imm_graph_data$value) * 1.1) %>%
+  dplyr::mutate(xmid = as.numeric(as.factor(layer))
+  )
+
+
 nat_imm_bar_chart <- ggplot() + 
   geom_col(nat_imm_graph_data, mapping = aes(x = category, y = value, fill = layer)) +
-  scale_fill_manual(values = shades_of_blue) +
+  scale_fill_manual(values = shades_of_blue[c(2,4)]) +
   dluhctheme::dluhc_style() + 
   ggplot2::theme(
     axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
     axis.text.y = ggplot2::element_text(family = "Arial", color = "#636363", size = 10),
     panel.grid.major = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
     panel.grid.major.y = ggplot2::element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
-    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3)
-  ) 
+    axis.ticks = ggplot2::element_line(color = "#F2F2F2", size = 0.3),
+    legend.position = "none") + 
+  ggplot2::scale_y_continuous(labels = scales::comma) # add commas to y axis values
+  # + geom_vline(x = mean(as.numeric(factor(nat_imm_graph_data$category))))
 
 ggsave("images/nat_imm_bar_chart.png", nat_imm_bar_chart, width = 8, height = 6)
 ggsave("images/nat_imm_bar_chart.svg", nat_imm_bar_chart, width = 8, height = 6)
