@@ -194,43 +194,39 @@ direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > 
 
 ## 1. Main Findings
 
-::: {custom-style = "GreyBox"}
-The latest Rough Sleeping Data Framework Management information for `r this_month` shows there were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month - `r sign(get("annual_change_df_month", envir = env1))` `r get("annual_change_df_month", envir = env1)` people or `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% since `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round((get("quarterly_change_df_month", envir = env1)/get("last_quarter_df_month", envir = env1)) * 100)`% on the last quarter publication in `r last_quarter`. Of these
+::: {custom-style="GreyBox"}
+In `r this_month` there were `r get("this_month_df_month", envir = env1)` people estimated to be sleeping rough over the month - `r sign(get("annual_change_df_month", envir = env1))` `r get("annual_change_df_month", envir = env1)` people or `r round(((get("annual_change_df_month", envir = env1))/get("last_year_df_month", envir = env1))*100, digits = 0)`% since `r last_year` and `r sign(get("quarterly_change_df_month", envir = env1))` `r round((get("quarterly_change_df_month", envir = env1)/get("last_quarter_df_month", envir = env1)) * 100)`% on the last quarter publication in `r last_quarter`. Of these
+
+<br>
 
 * `r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% were new people sleeping rough
 * `r round(((get("this_month_df_1_night", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of people had been seen sleeping rough for 1 night only over last 6 months
 * `r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people returning to sleeping rough, `r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`% of these had previously been in settled accommodation in the last year
 * `r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people who had been sleeping rough long term
 * `r round((get("this_month_df_institutions", envir = env1)/get("this_month_df_month", envir = env1))*100)`% of people sleeping rough had recently left an institution – `r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of these people had recently left prison
-
-`r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times more people sleep rough over the month compared to a single night. There were `r get("this_month_df_snapshot", envir = env1)` people sleeping rough on a single night in `r this_month`, which is `r direction_2023_snapshot` the 2023 annual snapshot figure.
- 
-The increases in rough sleeping have largely been driven by a small number of areas – over half the increase in rough sleeping over the month compared to last year has been driven by 12 areas but rough sleeping is increasing across majority of the country – 53% of areas have increased compared to last year.
- 
-Key drivers are an increase in people sleeping rough long term, and people returning to sleeping rough. These are up 16% and 18% respectively and account for 98% of the overall change in rough sleeping over the month compared to September last year.
-::: 
-
-<br>
-<br>
-
-In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to better understand how far rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the fourth quarterly publication of the framework and covers monthly information up to `r this_month`, for the first time including the final three core indicators: number of people sleeping rough who were accommodated over the month (R2), number of nights seen sleeping rough (B2) and number of people returning to sleeping rough after moving into settled accommodation (NR2). For the first time, this publication also contains information on nationality and immigration status of those sleeping rough, data on which has been collected every three months, starting in June 2024.
-
-The number of people sleeping rough tends to be higher in the summer months when it is warmer, and lower in the winter months, reflecting the seasonality of rough sleeping.
-
-<br>
-<br>
+:::
 
 ::: {custom-style="GreyBox"}
-**Date of next publication**: It is expected that the next quarterly publication of monthly data (up to December 2024) will be published in February 2025.
-::: 
+`r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times more people sleep rough over the month compared to a single night. There were `r get("this_month_df_snapshot", envir = env1)` people estimated to be sleeping rough on a single night in `r this_month`, which is `r direction_2023_snapshot` the 2023 annual snapshot figure.
+:::
+
+::: {custom-style="GreyBox"}
+The increases in rough sleeping have largely been driven by a small number of areas – over half the increase in rough sleeping over the month compared to last year has been driven by 12 areas but rough sleeping is increasing across majority of the country – rough sleeping has increased in 53% of areas compared to last year.
+:::
+
+::: {custom-style="GreyBox"}
+Key drivers are an increase in people sleeping rough long term, and people returning to sleeping rough. These are up 16% and 18% respectively and account for 98% of the overall change in rough sleeping over the month compared to September last year.
+:::
 
 <br>
+<br>
+
+
 
 ## 2. Introduction
 
 <br>
-
-Since March 2022, the Ministry of Housing, Communities and Local Government has been working with the Centre for Homelessness Impact and 5 pilot areas (London, Greater Manchester, Newcastle, West Midlands and Bournemouth, Christchurch, and Poole) to develop rough sleeping metrics. 
+In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to better understand how far rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. This is the fourth quarterly publication of the framework and covers monthly information up to `r this_month`, for the first time including the final three core indicators: number of people sleeping rough who were accommodated over the month (R2), number of nights seen sleeping rough (B2) and number of people returning to sleeping rough after moving into settled accommodation (NR2). For the first time, this publication also contains information on nationality and immigration status of those sleeping rough, data on which has been collected every three months, starting in June 2024.
 
 This data framework will be relevant to people working locally to reduce rough sleeping and is an important step towards driving better outcomes for vulnerable people.  
 
@@ -269,13 +265,23 @@ knitr::include_graphics("images/indicator_breakdown_pub_graphic_all.png")
 
 ```
 
+
+
+The number of people sleeping rough tends to be higher in the summer months when it is warmer, and lower in the winter months, reflecting the seasonality of rough sleeping.
+
+<br>
+
+::: {custom-style="GreyBox"}
+**Date of next publication**: It is expected that the next quarterly publication of monthly data (up to December 2024) will be published in February 2025.
+:::
+
 <br>
 
 ## 3. Preventing people sleeping rough
 
-There were `r get("this_month_df_month_new", envir = env1)` new people sleeping rough over the month in `r this_month` (`r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("quarterly_change_df_month_new", envir = env1))` `r round(((get("quarterly_change_df_month_new", envir = env1))/get("last_quarter_df_month_new", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
+There were `r get("this_month_df_month_new", envir = env1)` new people estimated to be sleeping rough over the month in `r this_month` (`r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough over the month) - `r sign(get("quarterly_change_df_month_new", envir = env1))` `r round(((get("quarterly_change_df_month_new", envir = env1))/get("last_quarter_df_month_new", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_month_new", envir = env1))` `r round(((get("annual_change_df_month_new", envir = env1))/get("last_year_df_month_new", envir = env1))*100, digits = 0)`% since `r last_year`.
 
-There were `r get("this_month_df_snapshot_new", envir = env1)` new people sleeping rough on a single night in `r this_month` (`r round(((get("this_month_df_snapshot_new", envir = env1))/get("this_month_df_snapshot", envir = env1))*100, digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("quarterly_change_df_snapshot_new", envir = env1))` `r round(((get("quarterly_change_df_snapshot_new", envir = env1))/get("last_quarter_df_snapshot_new", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% on the same period last year. 
+There were `r get("this_month_df_snapshot_new", envir = env1)` new people estimated to be sleeping rough on a single night in `r this_month` (`r round(((get("this_month_df_snapshot_new", envir = env1))/get("this_month_df_snapshot", envir = env1))*100, digits = 0)`% of total people sleeping rough on a single night) - `r sign(get("quarterly_change_df_snapshot_new", envir = env1))` `r round(((get("quarterly_change_df_snapshot_new", envir = env1))/get("last_quarter_df_snapshot_new", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot_new", envir = env1))` `r round(((get("annual_change_df_snapshot_new", envir = env1))/get("last_year_df_snapshot_new", envir = env1))*100, digits = 0)`% on the same period last year. 
 
 
 
@@ -378,7 +384,7 @@ if (!dir.exists(output_folder)) {
  
 ```
 
-**Figure 1: New people sleeping rough, October 2020 to `r this_month` (P1)**
+**Figure 1: Estimated number of new people sleeping rough, October 2020 to `r this_month` (P1)**
 
 ```{r line new, echo=FALSE,warning = FALSE, message = FALSE}
 
@@ -392,7 +398,7 @@ knitr::include_graphics("images/figure_1.svg")
 **Source: MHCLG**
 
 
-There were `r get("this_month_df_institutions", envir = env1)` people sleeping rough over the month in `r this_month` who had left an institution (`r round(((get("this_month_df_institutions", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total). Of these people
+There were `r get("this_month_df_institutions", envir = env1)` people estimated to be sleeping rough over the month in `r this_month` who had left an institution (`r round(((get("this_month_df_institutions", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total). Of these:
 
 *  `r get("this_month_df_prison", envir = env1)` people (`r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left prison in the last 85 days - `r sign(get("quarterly_change_df_prison", envir = env1))` `r round(((get("quarterly_change_df_prison", envir = env1))/get("last_quarter_df_prison", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
 
@@ -550,7 +556,7 @@ figure_2 <- ggplot2::ggplot(donut_data, ggplot2::aes(ymax = ymax, ymin = ymin, x
 
 
 
-**Figure 2: People sleeping rough over the course of the month who have left an institution, `r this_month` (P2)**
+**Figure 2: Estimated number of people sleeping rough over the course of the month who have left an institution, `r this_month` (P2)**
 
 ```{r figure 2, echo=FALSE, warning = FALSE, message = FALSE}
 
@@ -671,7 +677,7 @@ figure_3 <- ggplot2::ggplot(institutions_data, ggplot2::aes(x = Date)) +
 
 <br>
 
-**Figure 3: People sleeping rough over the course of the month who have left an institution, May 2023 to `r this_month` (P2)**
+**Figure 3: Estimated number of people sleeping rough over the course of the month who have left an institution, May 2023 to `r this_month` (P2)**
 
 ```{r figure 3, echo=FALSE, warning = FALSE, message = FALSE}
 
@@ -695,12 +701,12 @@ This is `r round(get("this_month_df_month", envir = env1) / get("this_month_df_s
 The rate of people sleeping rough over the month of `r this_month` in England was  `r round(get("this_month_df_month_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_month_rate", envir = env1), digits = 1)` people per 100,000 in the `r last_quarter` and `r round(get("last_year_df_month_rate", envir = env1), digits = 1)` people per 100,00 in the same period last year[^1].
 
 
-There were `r get("this_month_df_snapshot", envir = env1)` people sleeping rough on a single night in `r this_month` - `r sign( get("quarterly_change_df_snapshot", envir = env1))` `r get("quarterly_change_df_snapshot", envir = env1)` people or  `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot", envir = env1))` `r get("annual_change_df_snapshot", envir = env1)` people or `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% since last year. 
+There were `r get("this_month_df_snapshot", envir = env1)` people estimated to be sleeping rough on a single night in `r this_month` - `r sign( get("quarterly_change_df_snapshot", envir = env1))` `r get("quarterly_change_df_snapshot", envir = env1)` people or  `r round(((get("quarterly_change_df_snapshot", envir = env1))/get("last_quarter_df_snapshot", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_snapshot", envir = env1))` `r get("annual_change_df_snapshot", envir = env1)` people or `r round(((get("annual_change_df_snapshot", envir = env1))/get("last_year_df_snapshot", envir = env1))*100, digits = 0)`% since last year. 
 
-The rate of people sleeping rough on a single night in `r this_month` in England was `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the previous quarter (`r last_quarter`) and `r round(get("last_year_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the same period last year.
+The rate of people estimated to be sleeping rough on a single night in `r this_month` in England was `r round(get("this_month_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000, compared to `r round(get("last_quarter_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the previous quarter (`r last_quarter`) and `r round(get("last_year_df_snapshot_rate", envir = env1), digits = 1)` people per 100,000 in the same period last year.
 
 
-**Figure 4: People sleeping rough, October 2020 to `r this_month` (R1)**
+**Figure 4: Estimated number of people sleeping rough, October 2020 to `r this_month` (R1)**
 
 ```{r 4-Figure 4 R1, include=FALSE}
 
@@ -991,9 +997,9 @@ knitr::include_graphics("images/London_map_rate.svg")
 
 
 
-There were `r get("this_month_df_accommodation", envir = env1)` people sleeping rough over the month who were accommodated over the course of the month (`r round((get("this_month_df_accommodation", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough). This was `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r get("quarterly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_quarter`.
+There were `r get("this_month_df_accommodation", envir = env1)` people estimated to be sleeping rough over the month who were accommodated over the course of the month (`r round((get("this_month_df_accommodation", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total people sleeping rough). This was `r sign(get("quarterly_change_df_accommodation", envir = env1))` `r get("quarterly_change_df_accommodation", envir = env1)` people, or `r round(abs((get("quarterly_change_df_accommodation", envir = env1))/get("last_quarter_df_accommodation", envir = env1))*100, digits = 0)`% since `r last_quarter`.
 
-**Figure 7: People sleeping rough who have moved into accommodation, June 2024 to `r this_month` (R2)**
+**Figure 7: Estimated number of people sleeping rough who have moved into accommodation, June 2024 to `r this_month` (R2)**
 
 ```{r r2_graph, echo = FALSE, warning = FALSE, message = FALSE}
 
@@ -1052,25 +1058,25 @@ knitr::include_graphics("images/r2_graph.svg")
 
 ## 5. Making rough sleeping brief
 
-There were `r get("this_month_df_long_term", envir = env1)` people sleeping rough over the month in `r this_month` who had been sleeping rough long term (`r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_long_term", envir = env1))` `r round((get("quarterly_change_df_long_term", envir = env1) /  get("last_quarter_df_long_term", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
+There were `r get("this_month_df_long_term", envir = env1)` people estimated to be sleeping rough over the month in `r this_month` who had been sleeping rough long term (`r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_long_term", envir = env1))` `r round((get("quarterly_change_df_long_term", envir = env1) /  get("last_quarter_df_long_term", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_long_term", envir = env1))` `r round(((get("annual_change_df_long_term", envir = env1))/get("last_year_df_long_term", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
 
-There were `r get("this_month_df_month", envir = env1)` people sleeping rough over the month in `r this_month`. Of these people  
+There were `r get("this_month_df_month", envir = env1)` people estimated to be sleeping rough over the month in `r this_month`. Of these:  
 
-* `r get("this_month_df_1_night", envir = env1)` people (`r round(((get("this_month_df_1_night", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough 1 night over the previous 6 months 
+* `r get("this_month_df_1_night", envir = env1)` people (`r round(((get("this_month_df_1_night", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough for 1 night over the previous 6 months 
 
-* `r get("this_month_df_2_nights", envir = env1)` people (`r round(((get("this_month_df_2_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough 2 nights over the previous 6 months  
+* `r get("this_month_df_2_nights", envir = env1)` people (`r round(((get("this_month_df_2_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough for 2 nights over the previous 6 months  
 
-* `r get("this_month_df_3_5_nights", envir = env1)` people (`r round(((get("this_month_df_3_5_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough 3 to 5 nights over the previous 6 months 
+* `r get("this_month_df_3_5_nights", envir = env1)` people (`r round(((get("this_month_df_3_5_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough for 3 to 5 nights over the previous 6 months 
 
-* `r get("this_month_df_6_10_nights", envir = env1)` people (`r round(((get("this_month_df_6_10_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough 6 to 10 nights over the previous 6 months 
+* `r get("this_month_df_6_10_nights", envir = env1)` people (`r round(((get("this_month_df_6_10_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough for 6 to 10 nights over the previous 6 months 
 
-* `r get("this_month_df_10_more_nights", envir = env1)` people (`r round(((get("this_month_df_10_more_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough more than 10 nights over the previous 6 months 
+* `r get("this_month_df_10_more_nights", envir = env1)` people (`r round(((get("this_month_df_10_more_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough for more than 10 nights over the previous 6 months 
 
-* `r get("this_month_df_unknown_nights", envir = env1)` people (`r round(((get("this_month_df_unknown_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough an unknown number of nights over the previous 6 months 
+* `r get("this_month_df_unknown_nights", envir = env1)` people (`r round(((get("this_month_df_unknown_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) had been seen sleeping rough for an unknown number of nights over the previous 6 months 
 
 
-**Figure 8: Number of nights people seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
+**Figure 8: Number of nights people estimated to be seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
 
 
 ```{r 12-Figure 12 B2, include=FALSE}
@@ -1249,12 +1255,12 @@ knitr::include_graphics("images/b2_bar.svg")
 
 ## 6. Making rough sleeping a non-recurring experience
 
-There were `r get("this_month_df_returners", envir = env1)` people returning to sleeping rough over the month in `r this_month` (`r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_returners", envir = env1))` `r round((get("quarterly_change_df_returners", envir = env1) /  get("last_quarter_df_returners", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
+There were `r get("this_month_df_returners", envir = env1)` people estimated to be returning to sleeping rough over the month in `r this_month` (`r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% of total) - `r sign(get("quarterly_change_df_returners", envir = env1))` `r round((get("quarterly_change_df_returners", envir = env1) /  get("last_quarter_df_returners", envir = env1))*100, digits = 0)`% since `r last_quarter` and `r sign(get("annual_change_df_returners", envir = env1))` `r round(((get("annual_change_df_returners", envir = env1))/get("last_year_df_returners", envir = env1))*100, digits = 0)`%  since `r last_year`.
 
 * Of these, `r get("this_month_df_prev_in_accomm", envir = env1)` (`r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`%) were returning to sleeping rough after moving into settled accommodation in the preceding 12 months. This is `r sign(get("quarterly_change_df_prev_in_accomm", envir = env1))`  `r get("quarterly_change_df_returners", envir = env1)` people (or `r round((get("quarterly_change_df_prev_in_accomm", envir = env1) /  get("last_quarter_df_prev_in_accomm", envir = env1))*100, digits = 0)`%) on `r last_quarter`.
 
 
-**Figure 9: People returning to sleeping rough (NR1) including those returning to sleeping rough after moving into settled accommodation (NR2), May 2023 to `r this_month`**
+**Figure 9: Estimated number of people returning to sleeping rough (NR1) including those returning to sleeping rough after moving into settled accommodation (NR2), May 2023 to `r this_month`**
 
 ``` {r 7-Figure 7 NR1_NR22, include=FALSE}
 
@@ -1458,7 +1464,7 @@ knitr::include_graphics("images/figure_5.svg")
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_5.svg",  package = "ERSautomation"))
 
 ```
-OFFICIAL
+
 
 <br>
 
@@ -1503,11 +1509,11 @@ prep_cols_for_combo <- function(df, first_month = "June 2024") {
   
 new_combo_data <- bind_rows(
   #prep_cols_for_combo(df_month),
-  prep_cols_for_combo(df_month_new),
-  prep_cols_for_combo(df_institutions),
   prep_cols_for_combo(df_long_term),
+  prep_cols_for_combo(df_month_new),
   prep_cols_for_combo(df_1_night),
   prep_cols_for_combo(df_returners),
+  prep_cols_for_combo(df_institutions),
   prep_cols_for_combo(df_prev_in_accomm)#,
  # prep_cols_for_combo(df_accommodation),
 ) 
@@ -1527,11 +1533,11 @@ new_combo_data <- new_combo_data %>%
     mutate(
     indicator = forcats::fct_recode(indicator,
                                     # renaming
-                                    "New to\nsleeping rough\n" = "Month new",
-                                    "Left institutions\n\n" = "Institutions",
                                     "Sleeping rough\nlong-term\n" = "Long term", 
+                                    "New to\nsleeping rough\n" = "Month new",
                                     "Seen on 1 night\n\n" = "1 night", 
                                     "Returning to\nsleeping rough\n" = "Returners",
+                                    "Left institutions\n\n" = "Institutions",
                                     "Returning after\nsettled\naccommodation" = "Prev in accomm"
                                      )) %>%
   mutate(indicator = forcats::fct_inorder(indicator)) %>%
@@ -1564,13 +1570,13 @@ ggsave("images/new_combo_graph.svg", new_combo_graph, width = 8, height = 6)
 
 ```
 
-**Figure People sleeping rough over the month who were new to sleeping rough (P1), had left institutions (P2), were sleeping rough long-term (B1), had slept rough on only 1 night in the last 6 months (B2), were returning to sleeping rough (NR1) and those returning to sleeping rough after moving into settled accommodation in the last 12 months, September 2024**
+**Figure 10: Estimated number of people sleeping rough over the month who were new to sleeping rough (P1), had left institutions (P2), were sleeping rough long-term (B1), had slept rough on only 1 night in the last 6 months (B2), were returning to sleeping rough (NR1) and those returning to sleeping rough after moving into settled accommodation in the last 12 months, `r this_month`**
 
 ```{r print_combo_chart, echo = FALSE, warning = FALSE, message = FALSE}
 knitr::include_graphics("images/new_combo_graph.svg")
 
 ```
-OFFICIAL
+
 
 <br>
 
@@ -1647,9 +1653,20 @@ for (name in names(dfs)) {
 
 ```
 
-`r nat_UK[[this_month]][1]` people sleeping rough over the month of `r this_month` were UK nationals, `r round((nat_UK[[this_month]][1] / r1_month) * 100)`% of the total number of people sleeping rough. `r nat_EEA[[this_month]][1]` people (`r round((nat_EEA[[this_month]][1] / r1_month) * 100)`%) were EEA nationals, and `r nat_NonEEA[[this_month]][1]` (`r round((nat_NonEEA[[this_month]][1] / r1_month) * 100)`%) were non-EEA nationals, with the rest having an unknown nationality. 
+There were `r nat_UK[[this_month]][1]` people estimated to be sleeping rough over the month of `r this_month` who were UK nationals, `r round((nat_UK[[this_month]][1] / r1_month) * 100)`% of the total number of people sleeping rough. `r nat_EEA[[this_month]][1]` people (`r round((nat_EEA[[this_month]][1] / r1_month) * 100)`%) were EEA nationals, and `r nat_NonEEA[[this_month]][1]` (`r round((nat_NonEEA[[this_month]][1] / r1_month) * 100)`%) were non-EEA nationals. The nationality of `r nat_unknown[[this_month]][1]` people (`r round((nat_unknown[[this_month]][1] / r1_month) * 100)`%) was not known. 
 
-Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, `r imm_access[[this_month]][1]` (`r round((imm_access[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had a status that allowed for access to public funds and `r imm_restricted[[this_month]][1]` (`r round((imm_restricted[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition.  
+Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, `r imm_access[[this_month]][1]` (`r round((imm_access[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had a status that allowed for access to public funds and `r imm_restricted[[this_month]][1]` (`r round((imm_restricted[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition. Of these:
+
+* `r imm_presettled[[this_month]][1]` people (`r round((imm_presettled[[this_month]][1] / imm_restricted[[this_month]][1]) * 100)`%) have pre-settled status
+
+* `r imm_nrpf[[this_month]][1]` people (`r round((imm_nrpf[[this_month]][1] / imm_restricted[[this_month]][1]) * 100)`%) have no recourse to public funds (NRPF)
+
+
+`r imm_other[[this_month]][1]` people (`r round((imm_other[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) of non-UK nationals have eligibility that falls outside of those who have access to public funds or restricted eligibility and `r imm_unknown[[this_month]][1]` people (`r round((imm_unknown[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) have an unknown immigration status.   
+
+ 
+
+If a person refused to give, or did not want to share, their personal information, they would still be recorded as sleeping rough and nationality and immigration information would be recorded as ‘Not known’, if unknown. 
 
 
 ```{r nat_imm_pie, echo = FALSE, warning = FALSE, message = FALSE, include = FALSE}
@@ -1741,7 +1758,7 @@ knitr::include_graphics("images/nat_imm_pie_chart.svg")
 
 ```
 
-**Figure 11: Number of people sleeping rough over the month, by nationality and immigration status, `r this_month`**
+**Figure 11: Estimated number of people sleeping rough over the month, by nationality and immigration status, `r this_month`**
 
 ```{r nat_imm_bar, echo = FALSE, warning = FALSE, message = FALSE}
 
@@ -1783,7 +1800,7 @@ ggsave("images/nat_imm_bar_chart.svg", nat_imm_bar_chart, width = 8, height = 6)
 knitr::include_graphics("images/nat_imm_bar_chart.svg")
 
 ```
-
+Source: MHCLG
 
 # 8. Definitions
 ::: {custom-style="GreyBox"}
@@ -2114,7 +2131,7 @@ MHCLG, has developed the new framework over the last two years in conjunction wi
 
 MHCLG also holds quarterly rough sleeping data forums with local areas to consult on any changes regarding the monthly management information and keep areas up to date about new data requirements or improvements related to rough sleeping.  
 
-MHCLG is also part of the cross-government housing and homelessness group, which enables analysts across the devolved nations working on homelessness to collaborate and learn from each other. The Government Analysis Function provides the [latest homelessness statistics work programme](https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/user-facing-pages/housing-and-planning-statistics/cross-government-housing-and-planning-statistics-work-programmes/2022-to-2023-work-programme/#improving-user-engagement) summarising the MHCLG initiatives, as well as those happening in the rest of the UK. 
+MHCLG is also part of the cross-government housing and homelessness group, which enables analysts across the devolved nations working on homelessness to collaborate and learn from each other. The Government Analysis Function provides the [latest homelessness statistics work programme](https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/user-facing-pages/housing-and-planning-statistics/cross-government-housing-and-planning-statistics-work-programmes/housing-and-planning-statistics-2024-to-2025-work-programme/#improve-available-data-on-trends-over-time-on-private-rental-affordability-statistics) summarising the MHCLG initiatives, as well as those happening in the rest of the UK. 
 
 Users are encouraged to provide feedback on how these statistics are used and how well they meet user needs.  
 
