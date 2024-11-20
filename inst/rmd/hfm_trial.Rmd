@@ -737,12 +737,9 @@ The rate of people estimated to be sleeping rough on a single night in `r this_m
 month_tot <- as.vector(df_month[1, c(5:ncol(df_month))])
 
 snapshot_tot <- as.vector(df_snapshot[1, c(5:ncol(df_snapshot))])
-# there might be a mismatch between number of cols in month and snapshot, so remove older months to make them start at the same date
+# there might be a mismatch between number of cols in month and snapshot, so add NAs for older months for monthly
 
 excess_months <- dplyr::setdiff(names(snapshot_tot), names(month_tot))
-
-snapshot_tot <- snapshot_tot %>%
-  select(-all_of(excess_months)) # now should have the same cols as month
 
 # Apply the function to dfs
 # these two should be identical
@@ -819,11 +816,10 @@ figure_4 <- ggplot2::ggplot(df, ggplot2::aes(x = Date)) +
   ) +
   ggplot2::theme(legend.position = "none") +
   ggplot2::geom_text(data = df[1, ], ggplot2::aes(x = Date, y = `Snapshot`, label = " Number of people \n sleeping rough on \n a single night (R1)"),
-    color = "#012169", vjust = -0.8, hjust = -4.1, size = 3.5
+    color = "#012169", vjust = -0.8, hjust = -3.7, size = 3.5
   ) +
   ggplot2::geom_text(data = df[1, ], ggplot2::aes(x = Date, y = `Month`, label = "   Number of people \n sleeping rough over \n       the month (R1)"),
-    color = "#012169", vjust = -2.3, hjust = -2.55, size = 3.5
-  )
+    color = "#012169", vjust = -2.7, hjust = -1.85, size = 3.5)
 
 ggplot2::ggsave("images/figure_4.svg", plot = figure_4, width = 8, height = 6)
 ggplot2::ggsave("images/figure_4.png", plot = figure_4, width = 8, height = 6, dpi = 300)
