@@ -18,7 +18,7 @@ library(pacman)
 p_load(tidyr, dplyr, xlsx, readxl, writexl, openxlsx, lubridate, stringr, ggplot2)
 
 # #Load the dataframes in from the latest tables
-input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241113_SN_nat_tots.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241119.xlsx"
 
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
@@ -186,7 +186,31 @@ direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > 
                                   ifelse(get("this_month_df_snapshot", envir = env1) < 3898, "lower than",
                                          "the same as"))
 
-# TODO: Make the drivers part of the Main Findings dynamic 
+
+r1_month_annual_change <- df_month %>%
+  filter(LAD21CD != "---" & !is.na(LAD21CD),
+         !is.na(RGN21NM),
+         !is.na(RGN21CD)) %>%
+  select(LAD21CD, all_of(last_year), all_of(this_month)) 
+
+names(r1_month_annual_change)[2:3] <- c("last_year", "this_year")
+
+r1_month_annual_change <- r1_month_annual_change %>%
+  mutate(change = this_year - last_year,
+         perc_of_tot_change = (change / get("annual_change_df_month", envir = env1)) * 100) %>%
+  arrange(desc(perc_of_tot_change)) %>%
+  mutate(cumulative_perc = cumsum(perc_of_tot_change)) 
+
+n_50perc_r1_month <- nrow(r1_month_annual_change %>% filter(cumulative_perc <= 50)) + 1
+
+# TODO: check n_50perc_r1_month and add into main findings text
+
+# increases in how many areas?
+n_increases_r1_month <- nrow(r1_month_annual_change %>% filter(change > 0))
+perc_LAS_increases_r1_month <- (n_increases_r1_month / 296) * 100
+
+# TODO: RMD the key drivers percentages
+
 
 ```
 <br>
@@ -203,7 +227,7 @@ In `r this_month` there were `r get("this_month_df_month", envir = env1)` people
 * `r round(((get("this_month_df_1_night", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of people had been seen sleeping rough for 1 night only over last 6 months
 * `r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people returning to sleeping rough, `r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`% of these had previously been in settled accommodation in the last year
 * `r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people who had been sleeping rough long term
-* `r round((get("this_month_df_institutions", envir = env1)/get("this_month_df_month", envir = env1))*100)`% of people sleeping rough had recently left an institution – `r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of these people had recently left prison
+* `r round((get("this_month_df_institutions", envir = env1)/get("this_month_df_month", envir = env1))*100)`% of people sleeping rough had recently left an institution – `r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of these people had recently left prison, and `r round(((get("this_month_df_asylum", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% had recently left asylum support services.
 :::
 
 ::: {custom-style="GreyBox"}
@@ -710,24 +734,33 @@ The rate of people estimated to be sleeping rough on a single night in `r this_m
 
 ```{r 4-Figure 4 R1, include=FALSE}
 
-month_tot <- as.vector(df_month[1, c(5:length(df_month))])
-snapshot_tot <- as.vector(df_snapshot[1, c(5:length(df_month))])
+month_tot <- as.vector(df_month[1, c(5:ncol(df_month))])
+
+snapshot_tot <- as.vector(df_snapshot[1, c(5:ncol(df_snapshot))])
+# there might be a mismatch between number of cols in month and snapshot, so remove older months to make them start at the same date
+
+excess_months <- dplyr::setdiff(names(snapshot_tot), names(month_tot))
+
+snapshot_tot <- snapshot_tot %>%
+  select(-all_of(excess_months)) # now should have the same cols as month
 
 # Apply the function to dfs
-new_colnames <- sapply(colnames(month_tot), convert_to_date)
-#new_colnames <- sapply(colnames(df_month)[5:length(df_month)], convert_to_date)
-
+# these two should be identical
+month_date_colnames <- sapply(colnames(month_tot), convert_to_date)
+snapshot_date_colnames <- sapply(colnames(snapshot_tot), convert_to_date)
 
 # Update the column names of the data frame
-colnames(month_tot) <- new_colnames
-colnames(snapshot_tot) <- new_colnames
+colnames(month_tot) <- month_date_colnames
+colnames(snapshot_tot) <- snapshot_date_colnames
 
 month_tot <- as.data.frame(month_tot) %>%
   dplyr::mutate(across(everything(), as.numeric))
+
 snapshot_tot <- as.data.frame(snapshot_tot) %>%
   dplyr::mutate(across(everything(), as.numeric))
 
-comb <- dplyr::bind_rows(month_tot, snapshot_tot)
+comb <- dplyr::bind_rows(month_tot, 
+                         snapshot_tot)
 
 transposed <- data.frame(t(comb))
 transposed <- dplyr::mutate(transposed, "Date" = rownames(transposed))
@@ -786,19 +819,14 @@ figure_4 <- ggplot2::ggplot(df, ggplot2::aes(x = Date)) +
   ) +
   ggplot2::theme(legend.position = "none") +
   ggplot2::geom_text(data = df[1, ], ggplot2::aes(x = Date, y = `Snapshot`, label = " Number of people \n sleeping rough on \n a single night (R1)"),
-    color = "#012169", vjust = -0.8, hjust = -3.6, size = 3.5
+    color = "#012169", vjust = -0.8, hjust = -4.1, size = 3.5
   ) +
   ggplot2::geom_text(data = df[1, ], ggplot2::aes(x = Date, y = `Month`, label = "   Number of people \n sleeping rough over \n       the month (R1)"),
-    color = "#012169", vjust = -3.3, hjust = -2.25, size = 3.5
+    color = "#012169", vjust = -2.3, hjust = -2.55, size = 3.5
   )
 
- tryCatch({
- ggplot2::ggsave("images/figure_4.svg", plot = figure_4, width = 8, height = 6)
- ggplot2::ggsave("images/figure_4.png", plot = figure_4, width = 8, height = 6, dpi = 300)
- message("Files saved successfully")
-}, error = function(e) {
-  message("Error saving file: ", e$message)
-})
+ggplot2::ggsave("images/figure_4.svg", plot = figure_4, width = 8, height = 6)
+ggplot2::ggsave("images/figure_4.png", plot = figure_4, width = 8, height = 6, dpi = 300)
  
 ```
 
@@ -1533,21 +1561,14 @@ new_combo_data <- new_combo_data %>%
     mutate(
     indicator = forcats::fct_recode(indicator,
                                     # renaming
-                                    "Sleeping rough\nlong-term\n" = "Long term", 
-                                    "New to\nsleeping rough\n" = "Month new",
-                                    "Seen on 1 night\n\n" = "1 night", 
-                                    "Returning to\nsleeping rough\n" = "Returners",
-                                    "Left institutions\n\n" = "Institutions",
-                                    "Returning after\nsettled\naccommodation" = "Prev in accomm"
+                                    "Sleeping rough\nlong-term\n(B1)" = "Long term", 
+                                    "New to\nsleeping rough\n(P1)" = "Month new",
+                                    "Seen on 1 night\n(B2)\n" = "1 night", 
+                                    "Returning to\nsleeping rough\n(NR1)" = "Returners",
+                                    "Left institutions\n(P2)\n" = "Institutions",
+                                    "Returning after\nsettled\naccommodation (NR2)" = "Prev in accomm"
                                      )) %>%
   mutate(indicator = forcats::fct_inorder(indicator)) %>%
-  # mutate(indicator = forcats::fct_relevel(indicator,
-  #       "New to\nsleeping rough\n",
-  #       "Left institutions\n\n",
-  #       "Sleeping rough\nlong-term\n",
-  #       "Seen on 1 night\n\n",
-  #       "Returning to\nsleeping rough\n",
-  #       "Returning after\nsettled\naccommodation")) %>%
     filter(month == format(max(as.Date(paste("01", month), "%d %B %Y")), "%B %Y"))
 
 new_combo_graph <- ggplot() +
@@ -1760,7 +1781,44 @@ knitr::include_graphics("images/nat_imm_pie_chart.svg")
 
 **Figure 11: Estimated number of people sleeping rough over the month, by nationality and immigration status, `r this_month`**
 
-```{r nat_imm_bar, echo = FALSE, warning = FALSE, message = FALSE}
+```{r nat_imm_bar, echo = FALSE, warning = FALSE, message = FALSE, include = FALSE}
+
+nat_graph_data <- data.frame(
+  category = c("EEA", "NonEEA", "UK", "Unknown nationality", " "),# empty category to split legend
+  value = as.numeric(c(nat_EEA[[this_month]][1], 
+                       nat_NonEEA[[this_month]][1], 
+                       nat_UK[[this_month]][1], 
+                       nat_unknown[[this_month]][1], 0)),
+  layer = "Nationality"
+)
+
+imm_graph_data <- data.frame(
+  category = c("Of those with access to public funds", 
+               "Restricted eligibility: presettled", 
+               "Other", 
+               "Unknown immigration status",
+                "  "), # final empty category to complete the circle
+  value = as.numeric(c(imm_access[[this_month]][1], 
+                       imm_restricted[[this_month]][1], 
+                       imm_other[[this_month]][1], 
+                       imm_unknown[[this_month]][1],
+                       (nat_graph_data$value[nat_graph_data$category == "UK"] + 
+                          nat_graph_data$value[nat_graph_data$category == "Unknown nationality"]))),
+  layer = "Immigration"
+)
+
+nat_imm_graph_data <- bind_rows(nat_graph_data, imm_graph_data) %>%
+  mutate(category = factor(category, levels = c(
+    "EEA", "NonEEA", "UK", "Unknown nationality", 
+    " ",
+    "Of those with access to public funds", 
+    "Restricted eligibility: presettled", 
+    "Other", 
+    "Unknown immigration status",
+    "  ")),
+  labels = case_when(category %in% c(" ", "  ") ~ "",
+                     TRUE ~ as.character(value)))
+
 
 nat_imm_graph_data <- nat_imm_graph_data %>%
   filter(!category %in% c("  ", " ")) %>%
@@ -1800,6 +1858,64 @@ ggsave("images/nat_imm_bar_chart.svg", nat_imm_bar_chart, width = 8, height = 6)
 knitr::include_graphics("images/nat_imm_bar_chart.svg")
 
 ```
+
+```{r nat_imm_combo_chart, messages = FALSE, warning = FALSE, echo = FALSE}
+
+nat_imm_combo_data <- data.frame(
+  "nat_category" = c("UK", "EEA / Non-EEA", "EEA / Non-EEA", "EEA / Non-EEA", "EEA / Non-EEA", "Unknown nationality"),
+  "imm_category" = c(" ", "Access to\npublic funds", "Restricted eligibility\nto public funds\n(pre-settled or NRPF)", "Other\nrestricted eligibility", "Unknown", "  "),
+  value = c(nat_UK[[this_month]][1], imm_access[[this_month]][1], imm_restricted[[this_month]][1], imm_other[[this_month]][1], imm_unknown[[this_month]][1], nat_unknown[[this_month]][1])
+) %>%
+  mutate(nat_category = forcats::fct_relevel(nat_category, 
+                                             c("UK", "EEA / Non-EEA", "Unknown nationality")),
+         imm_category = forcats::fct_relevel(imm_category,
+                                             c(" ", "Access to\npublic funds", "Restricted eligibility\nto public funds\n(pre-settled or NRPF)", "Other\nrestricted eligibility", "Unknown", "  ")))
+  
+# label_range_nat_imm_combo <- nat_imm_combo_data %>%
+#   dplyr::group_by(layer) %>%
+#   dplyr::summarise(ymin = 0, ymax = max(nat_imm_combo_data$value) * 1.1) %>%
+#   dplyr::mutate(xmid = as.numeric(as.factor(layer))
+#   )
+
+nat_imm_combo_chart <- ggplot(data = nat_imm_combo_data) +
+  geom_col(aes(x = nat_category, y = value, fill = imm_category)) +
+  scale_fill_manual(
+    values = c(
+      " " = shades_of_blue[1],
+      "Access to\npublic funds" = shades_of_blue[2],
+      "Restricted eligibility\nto public funds\n(pre-settled or NRPF)" = shades_of_blue[3],
+      "Other\nrestricted eligibility" = shades_of_blue[4], 
+      "Unknown" = shades_of_blue[6],
+      "  " = shades_of_blue[5]
+    )) +
+  dluhctheme::dluhc_style() +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, family = "Arial", color = "#636363", size = 10),
+    axis.text.y = element_text(family = "Arial", color = "#636363", size = 10),
+    panel.grid.major = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    panel.grid.major.y = element_line(color = "#F2F2F2", size = 0.3, linetype = "solid"),
+    axis.ticks = element_line(color = "#F2F2F2", size = 0.3),
+    legend.position = "bottom",
+    legend.box = "horizontal", 
+    legend.direction = "horizontal",
+    legend.text = element_text(family = "Arial", color = "#7F7F7F", size = 10),
+    legend.key.width = unit(0.6, "cm"),  
+    legend.key.height = unit(0.6, "cm"),
+    legend.box.spacing = unit(0.2, "cm")) +
+  guides(fill = guide_legend(nrow = 1,
+                             override.aes = list(fill = c("white", 
+                                                          shades_of_blue[c(2:4, 6)],
+                                                          "white")))) +
+  scale_y_continuous(labels = scales::comma, limits = c(0, max(nat_imm_combo_data$value, na.rm = TRUE) * 1.1))
+
+ggsave("images/nat_imm_combo_chart.png", nat_imm_combo_chart, width = 8, height = 6)
+ggsave("images/nat_imm_combo_chart.svg", nat_imm_combo_chart, width = 8, height = 6)
+
+knitr::include_graphics("images/nat_imm_combo_chart.svg")
+
+
+```
+
 Source: MHCLG
 
 # 8. Definitions
@@ -1916,7 +2032,48 @@ For a person to be counted under this indicator, they should be returning to sle
 * Returned to home country 
 
 
+**Nationality and Immigration** 
+
+All people seen sleeping rough over the month were recorded under the following nationality groupings:
+
+* UK nationals
+
+* EEA nationals
+
+* Non-EEA Nationals
+
+* Unknown
+
+Non-UK nationals sleeping rough over the course of the month were recorded under the following immigration status groupings:
+
+* People with status that allows for access to public funds: This category refers to non-UK national individuals who have been granted status in the UK which allows for access to public funds. Types of status these individuals may have, but are not limited to, include Indefinite Leave to Remain (including Settled Status under the EU Settlement Scheme) and Refugee Status.  
+For further information on what constitutes public funds, please see Home Office guidance below: https://www.gov.uk/government/publications/public-funds 
+
+* People with leave to enter/remain with restricted eligibility to public funds: This category refers to non-UK national individuals who have been granted the following types of status which restricts their eligibility to public funds: 
+
+    * People with pre-settled status (arrivals pre-December 31, 2020) if they are not exercising a qualifying right to reside (includes those with a pending EUSS application). This individual has pre-settled status granted under the EUSS but has limited access to public funds as they are not exercising a qualifying right to reside. This also includes individuals who have a pending EUSS application.
+    For example, an individual has a qualifying right to reside if they meet any of the following criteria:
+    
+        * are a worker 
+        
+        * are self-employed 
+        
+        * are self-sufficient 
+        
+        * are a jobseeker 
+        
+        * are a student 
+        
+        Please note, this is not an exhaustive list.
+        
+    * People with limited leave to remain subject to a no recourse to public funds (NRPF) condition: This individual has been granted limited leave to remain subject to an NRPF condition.
+    
+* People with restricted eligibility that falls outside the categories above: This category refers to those non-UK national individuals who have restricted eligibility for public funds however, this restriction falls outside of the sub-categories set out above.
+
+* Unknown: This category refers to those non-UK national individuals whose status is unknown to the local authority.
+
 :::
+
 <br>
 <br>
 
