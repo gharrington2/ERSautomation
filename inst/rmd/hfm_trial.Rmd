@@ -186,7 +186,8 @@ direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > 
                                   ifelse(get("this_month_df_snapshot", envir = env1) < 3898, "lower than",
                                          "the same as"))
 
-
+# areas driving annual change
+# this doesn't line up with what jon had so need some QAing before the calculations are used
 r1_month_annual_change <- df_month %>%
   filter(LAD21CD != "---" & !is.na(LAD21CD),
          !is.na(RGN21NM),
@@ -207,7 +208,7 @@ n_50perc_r1_month <- nrow(r1_month_annual_change %>% filter(cumulative_perc <= 5
 
 # increases in how many areas?
 n_increases_r1_month <- nrow(r1_month_annual_change %>% filter(change > 0))
-perc_LAS_increases_r1_month <- (n_increases_r1_month / 296) * 100
+perc_LAS_increases_r1_month <- round((n_increases_r1_month / 296) * 100)
 
 # TODO: RMD the key drivers percentages
 
@@ -224,9 +225,8 @@ In `r this_month` there were `r get("this_month_df_month", envir = env1)` people
 <br>
 
 * `r round(((get("this_month_df_month_new", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% were new people sleeping rough
-* `r round(((get("this_month_df_1_night", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of people had been seen sleeping rough for 1 night only over last 6 months
-* `r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people returning to sleeping rough, `r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`% of these had previously been in settled accommodation in the last year
 * `r round((get("this_month_df_long_term", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people who had been sleeping rough long term
+* `r round((get("this_month_df_returners", envir = env1) /  get("this_month_df_month", envir = env1))*100, digits = 0)`% were people returning to sleeping rough and of these, `r round((get("this_month_df_prev_in_accomm", envir = env1) /  get("this_month_df_returners", envir = env1))*100, digits = 0)`% of people had moved into settled accommodation in the previous year
 * `r round((get("this_month_df_institutions", envir = env1)/get("this_month_df_month", envir = env1))*100)`% of people sleeping rough had recently left an institution – `r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of these people had recently left prison, and `r round(((get("this_month_df_asylum", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% had recently left asylum support services.
 :::
 
@@ -235,11 +235,12 @@ In `r this_month` there were `r get("this_month_df_month", envir = env1)` people
 :::
 
 ::: {custom-style="GreyBox"}
-Over half of the increase in rough sleeping over the month compared to last year has been driven by 12 areas but rough sleeping is increasing across majority of the country – rough sleeping has increased in 53% of areas compared to last year.
+Over half of the increase in rough sleeping over the month compared to last year has been driven by 12 areas but rough sleeping is increasing across majority of the country – rough sleeping has increased in `r perc_LAS_increases_r1_month`% of areas compared to last year.
 :::
 
 ::: {custom-style="GreyBox"}
-Key drivers are an increase in people sleeping rough long term, and people returning to sleeping rough. These are up 16% and 18% respectively and account for 98% of the overall change in rough sleeping over the month compared to September last year.
+Key drivers are an increase in people sleeping rough long term, and people returning to sleeping rough. 
+
 :::
 
 <br>
@@ -1859,13 +1860,13 @@ knitr::include_graphics("images/nat_imm_bar_chart.svg")
 
 nat_imm_combo_data <- data.frame(
   "nat_category" = c("UK", "EEA / Non-EEA", "EEA / Non-EEA", "EEA / Non-EEA", "EEA / Non-EEA", "Unknown nationality"),
-  "imm_category" = c(" ", "Access to\npublic funds", "Restricted eligibility\nto public funds\n(pre-settled or NRPF)", "Other\nrestricted eligibility", "Unknown", "  "),
+  "imm_category" = c(" ", "Access to\npublic funds", "Restricted eligibility to public funds\n(pre-settled or NRPF)", "Other\nrestricted eligibility", "Unknown", "  "),
   value = c(nat_UK[[this_month]][1], imm_access[[this_month]][1], imm_restricted[[this_month]][1], imm_other[[this_month]][1], imm_unknown[[this_month]][1], nat_unknown[[this_month]][1])
 ) %>%
   mutate(nat_category = forcats::fct_relevel(nat_category, 
                                              c("UK", "EEA / Non-EEA", "Unknown nationality")),
          imm_category = forcats::fct_relevel(imm_category,
-                                             c(" ", "Access to\npublic funds", "Restricted eligibility\nto public funds\n(pre-settled or NRPF)", "Other\nrestricted eligibility", "Unknown", "  ")))
+                                             c(" ", "Access to\npublic funds", "Restricted eligibility to public funds\n(pre-settled or NRPF)", "Other\nrestricted eligibility", "Unknown", "  ")))
   
 # label_range_nat_imm_combo <- nat_imm_combo_data %>%
 #   dplyr::group_by(layer) %>%
@@ -1879,7 +1880,7 @@ nat_imm_combo_chart <- ggplot(data = nat_imm_combo_data) +
     values = c(
       " " = shades_of_blue[1],
       "Access to\npublic funds" = shades_of_blue[2],
-      "Restricted eligibility\nto public funds\n(pre-settled or NRPF)" = shades_of_blue[3],
+      "Restricted eligibility to public funds\n(pre-settled or NRPF)" = shades_of_blue[3],
       "Other\nrestricted eligibility" = shades_of_blue[4], 
       "Unknown" = shades_of_blue[6],
       "  " = shades_of_blue[5]
@@ -1894,9 +1895,9 @@ nat_imm_combo_chart <- ggplot(data = nat_imm_combo_data) +
     legend.position = "bottom",
     legend.box = "horizontal", 
     legend.direction = "horizontal",
-    legend.text = element_text(family = "Arial", color = "#7F7F7F", size = 10),
-    legend.key.width = unit(0.6, "cm"),  
-    legend.key.height = unit(0.6, "cm"),
+    legend.text = ggplot2::element_text(family = "Arial", color = "#7F7F7F", size = 10),
+    legend.key.width = unit(0.7, "cm"),  
+    legend.key.height = unit(0.7, "cm"),
     legend.box.spacing = unit(0.2, "cm")) +
   guides(fill = guide_legend(nrow = 1,
                              override.aes = list(fill = c("white", 
@@ -2113,11 +2114,11 @@ As well as the inbuilt validations via DELTA, MHCLG analysts also carry out a se
 
 The data is not independently verified. It has been provided by local authorities, each of which will have their own internal processes. 
 
-The [Office for Statistics Regulation (OSR)](https://osr.statisticsauthority.gov.uk/) which is the regulatory arm of the [UK Statistics Authority](https://www.statisticsauthority.gov.uk/) completed a review of the very first [Support for people sleeping rough](https://osr.statisticsauthority.gov.uk/correspondence/edhumphersontosandratudorsupportforpeopleroughsleepingmanagementinformation/) publication against the [Code of Practice for Statistics](https://code.statisticsauthority.gov.uk/). This review considered the value, quality and trustworthiness of these statistics in relation to the Code. The review recommendations are being taken forward.
+The [Office for Statistics Regulation (OSR)](https://osr.statisticsauthority.gov.uk/) which is the regulatory arm of the [UK Statistics Authority](https://www.statisticsauthority.gov.uk/) completed a review of the very first [Support for people sleeping rough](https://osr.statisticsauthority.gov.uk/correspondence/ed-humpherson-to-sandra-tudor-support-for-people-rough-sleeping-management-information/) publication against the [Code of Practice for Statistics](https://code.statisticsauthority.gov.uk/). This review considered the value, quality and trustworthiness of these statistics in relation to the Code. The review recommendations are being taken forward.
 
 **Voluntary compliance with the Code of Practice for Statistics**
 
-The [Code of Practice for Statistics](https://code.statisticsauthority.gov.uk/thecode/) was published in February 2018 to set standards for organisations in producing and publishing official statistics and ensure that statistics serve the public good.
+The [Code of Practice for Statistics](https://code.statisticsauthority.gov.uk/) was published in February 2018 to set standards for organisations in producing and publishing official statistics and ensure that statistics serve the public good.
 
 MHCLG's Rough Sleeping Data Framework release does not include official or official accredited statistics, as it is designated as management information, but the framework is used to monitor rough sleeping trends in England. This compliance statement outlines how we are voluntarily applying the Code of Practice for Statistics to ensure that the analytical outputs are trustworthy, of high quality and have public value.
 
@@ -2131,7 +2132,7 @@ Trusted people, processes and analysis
 | **T1 Honesty and integrity**                      | Data is analysed by professionally qualified and experienced data analysts  - professional members of the GSS, GORS or GSR professions. Data is provided by local authorities and scrutinised by government rough sleeping advisers to monitor local approaches to rough sleeping.|                                                                                                     
 | **T2 Independent decision making and leadership** | The work is governed by the Analysis and Data Directorate in MHCLG, accountable to MHCLG's Chief Analyst and the Head of Profession for Statistics.|
 | **T3 Orderly release**                            | MHCLG pre-announces the publication date for this data. This is usually done on the release page of previous publications, which is updated once precise release dates are known.|
-| **T4 Transparent processes and management**       | MHCLG has robust, transparent data-management processes which are applied for data analysis. Data is provided by local authorities. MHCLG works closely to ensure data collection processes are well understood. [External research](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkqualityassurancereview) was commissioned to understand data collection and quality assurance processes across different local authorities, demonstrating MHCLG's willingness to maintain transparency. An outline of the production process and quality assurance carried out prior to the publication of the Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#qualityassurance).|
+| **T4 Transparent processes and management**       | MHCLG has robust, transparent data-management processes which are applied for data analysis. Data is provided by local authorities. MHCLG works closely to ensure data collection processes are well understood. [External research](https://www.gov.uk/government/publications/ending-rough-sleeping-data-framework-quality-assurance-review) was commissioned to understand data collection and quality assurance processes across different local authorities, demonstrating MHCLG's willingness to maintain transparency. An outline of the production process and quality assurance carried out prior to the publication of the Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#qualityassurance).|
 | **T5 Professional capability**                    | All responsible MHCLG analysts are members of government analytical professions, where all staff have met a minimum standard of analytical capability and all of whom have Personal Development Plans focused on their long term professional development.|
 | **T6 Data governance**                            | Data is collected at an aggregate level and is not personally identifiable. Responsibility for data lies with the data controllers (i.e. local authorities). MHCLG has assessed the risk of identification from data as very low and therefore does not apply suppression to small numbers. MHCLG is consulting local authorities about the use of their data to ensure agreement and transparency.|
 
@@ -2165,13 +2166,17 @@ Supporting society's need for information and accessible to all
 
 <br>
 
-To assess the quality of new management information, we compared the monthly rough sleeping management information estimates with the 2023 Rough sleeping snapshot data. These two different sources were correlated which provides confidence that local authorities are consistent when estimating the number of people sleeping rough on a single night. For the monthly rough sleeping snapshot estimate, local authorities are advised to use a snapshot approach which will provide the most robust figure. This should be 1 of the 3 approaches that are used for the official rough sleeping snapshot, which may include a count-based estimate, an evidence-based estimate meeting or an evidence-based estimate meeting including a spotlight count. If no snapshot has been conducted within the month, local authorities should gather their intelligence, data sources and records to establish what a single night figure would be and submit this as their estimate. MHCLG recently commissioned Homeless Link to undertake research to investigate how local areas in England have implemented the new rough sleeping data framework and to appraise data collection methods and validation processes being used to provide this information. [Research by Homeless Link](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkqualityassurancereview) shows there is some disparity in data management and technical capacity between different local authorities and there is some variation in the interpretations of the definitions for the new indicators which is as expected given the infancy of this new framework. The information that underpins the new indicators is largely gathered by outreach workers as part of their regular outreach activity. Information may also be gathered from referrals from partner agencies to help identify people that may not engage with services. This means the quality of the information is linked to the coverage and frequency of outreach activity as well as the local data systems in place to accurately track and record this information.
+To assess the quality of new management information, we compared the monthly rough sleeping management information estimates with the 2023 Rough sleeping snapshot data. These two different sources were correlated which provides confidence that local authorities are consistent when estimating the number of people sleeping rough on a single night. For the monthly rough sleeping snapshot estimate, local authorities are advised to use a snapshot approach which will provide the most robust figure. This should be 1 of the 3 approaches that are used for the official rough sleeping snapshot, which may include a count-based estimate, an evidence-based estimate meeting or an evidence-based estimate meeting including a spotlight count. If no snapshot has been conducted within the month, local authorities should gather their intelligence, data sources and records to establish what a single night figure would be and submit this as their estimate. MHCLG recently commissioned Homeless Link to undertake research to investigate how local areas in England have implemented the new rough sleeping data framework and to appraise data collection methods and validation processes being used to provide this information. [Research by Homeless Link](https://www.gov.uk/government/publications/ending-rough-sleeping-data-framework-quality-assurance-review) shows there is some disparity in data management and technical capacity between different local authorities and there is some variation in the interpretations of the definitions for the new indicators which is as expected given the infancy of this new framework. The information that underpins the new indicators is largely gathered by outreach workers as part of their regular outreach activity. Information may also be gathered from referrals from partner agencies to help identify people that may not engage with services. This means the quality of the information is linked to the coverage and frequency of outreach activity as well as the local data systems in place to accurately track and record this information.
 
 The information about institution discharge is gathered via self-disclosure by people sleeping rough and/or information sharing from institutions, so the quality is also linked to the reliability of self-disclosure and data sharing from partners. Identification of people sleeping rough who are new, returning or long term relies on the local systems in place to identify unique individuals, avoid double counting and accurately track individuals over time using historical records, which will take time to develop.
+
+Similarly, the information on nationality and immigration status is gathered by outreach workers and relies on self-disclosure by people sleeping rough, so the quality is also linked to the reliability of self-disclosure.
 
 There are some comparability issues between local authorities in London and the rest of England, as the definition of new, returner and long term rough sleeping applies to the whole of London, compared to each local authority across the rest of England. There is also some overlap between the new and returner indicators if a person returns to sleeping rough after not being seen for more than five years.
 
 There are also some challenges around the consistency and comparability of the approach being used for the single night snapshot month on month and between areas, as there is more local discretion for the monthly snapshot compared to annual snapshot around the approach used, the date for the single night snapshot, the coverage etc. The single night snapshot can also be impacted by the weather, where people choose to sleep, the date and time chosen, and the availability of alternatives such as available night shelters.
+
+The indicator on "number of nights seen" (B2) is particularly reflective of outreach activity, making this indicator less comparable nationally than other indicators. A 6-month period was chosen to mitigate for this, but outreach frequency varies greatly across the country, with some areas conducted outreach once a month, and other areas conducted outreach multiple times a day.
 
 The information about people sleeping rough over the course of the month, includes known people and people identified by outreach activity, so may not include all hidden homeless groups.
 
@@ -2205,6 +2210,10 @@ Accessible version of flowchart
 5.  MHCLG conducts further validation, sense checks and quality assurance prior to publication  Discuss discrepancies with rough sleeping advisers and LAs if needed prior to publication.
 
 **End**: MHCLG publishes management information (approximately 12 weeks after collection).
+
+We have taken a pragmatic approach to our statistical disclosure control policy which balances the need to protect individuals being identified alongside the aim to make the data as useful as possible. 
+
+There is a low risk of people being identified from data given the time that has passed since, the size of the local area and no discernible means of being able to link a person being seen on the streets today and a person recorded in the figures.
 
 
 ### 10.3 Related statistics 
@@ -2284,7 +2293,7 @@ MHCLG, has developed the new framework over the last two years in conjunction wi
 
 MHCLG also holds quarterly rough sleeping data forums with local areas to consult on any changes regarding the monthly management information and keep areas up to date about new data requirements or improvements related to rough sleeping.  
 
-MHCLG is also part of the cross-government housing and homelessness group, which enables analysts across the devolved nations working on homelessness to collaborate and learn from each other. The Government Analysis Function provides the [latest homelessness statistics work programme](https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/user-facing-pages/housing-and-planning-statistics/cross-government-housing-and-planning-statistics-work-programmes/housing-and-planning-statistics-2024-to-2025-work-programme/#improve-available-data-on-trends-over-time-on-private-rental-affordability-statistics) summarising the MHCLG initiatives, as well as those happening in the rest of the UK. 
+MHCLG is also part of the cross-government housing and homelessness group, which enables analysts across the devolved nations working on homelessness to collaborate and learn from each other. The Government Analysis Function provides the [latest homelessness statistics work programme](https://analysisfunction.civilservice.gov.uk/government-statistical-service-and-statistician-group/user-facing-pages/housing-and-planning-statistics/cross-government-housing-and-planning-statistics-work-programmes/housing-and-planning-statistics-2024-to-2025-work-programme/) summarising the MHCLG initiatives, as well as those happening in the rest of the UK. 
 
 Users are encouraged to provide feedback on how these statistics are used and how well they meet user needs.  
 
@@ -2333,7 +2342,7 @@ Jon White, Grace Harrington, Saarah Nakhuda
 
 Information on Official Statistics is available via the [UK Statistics Authority website.](https://www.statisticsauthority.gov.uk/) 
 
-Information about statistics at MHCLG is available via the [department’s website.](https://www.gov.uk/government/organisations/department-for-levelling-up-housing-and-communities/about/statistics)
+Information about statistics at MHCLG is available via the [department’s website.](https://www.gov.uk/government/organisations/ministry-of-housing-communities-local-government/about/statistics)
 
 [^1]:ONS mid-2023 population estimates.
 [^2]:There is the potential for some overlap between new people sleeping rough over the month (P1) and people returning to sleeping rough (NR1) if a person found sleeping rough returns to sleeping rough after not being seen for more than five years. Not all people seen sleeping rough over the month, are included in new people sleeping rough over the month (P1), people sleeping rough long term (B1) or people returning to sleeping rough (NR1).
