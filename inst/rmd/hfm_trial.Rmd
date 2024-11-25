@@ -18,7 +18,7 @@ library(pacman)
 p_load(tidyr, dplyr, xlsx, readxl, writexl, openxlsx, lubridate, stringr, ggplot2)
 
 # #Load the dataframes in from the latest tables
-input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241119.xlsx"
+input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241125.xlsx"
 
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
