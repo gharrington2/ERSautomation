@@ -182,9 +182,13 @@ sign <- function(num){
 # for use in percentage calculations
 r1_month <- df_month[[this_month]][1]
 
-direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > 3898, "higher than",
-                                  ifelse(get("this_month_df_snapshot", envir = env1) < 3898, "lower than",
+snapshot_2023 <- 3898
+
+direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > snapshot_2023, "higher than",
+                                  ifelse(get("this_month_df_snapshot", envir = env1) < snapshot_2023, "lower than",
                                          "the same as"))
+
+percentage_change_2023_snapshot <- abs(round(((get("this_month_df_snapshot", envir = env1) - snapshot_2023) / snapshot_2023) * 100))
 
 # areas driving annual change
 # this doesn't line up with what jon had so need some QAing before the calculations are used
@@ -232,7 +236,7 @@ In `r this_month` there were `r get("this_month_df_month", envir = env1)` people
 :::
 
 ::: {custom-style="GreyBox"}
-`r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times more people sleep rough over the month compared to a single night. There were `r get("this_month_df_snapshot", envir = env1)` people estimated to be sleeping rough on a single night in `r this_month`, which is `r direction_2023_snapshot` the 2023 annual snapshot figure.
+`r round(get("this_month_df_month", envir = env1) / get("this_month_df_snapshot", envir = env1), digits = 1)` times more people sleep rough over the month compared to a single night. There were `r get("this_month_df_snapshot", envir = env1)` people estimated to be sleeping rough on a single night in `r this_month`, which is `r percentage_change_2023_snapshot`% `r direction_2023_snapshot` the 2023 annual snapshot figure.
 :::
 
 ::: {custom-style="GreyBox"}
@@ -1628,15 +1632,15 @@ months_for_names <- format(as.Date(dplyr::setdiff(months_for_names, nat_imm_off_
 
 nat_imm_month_names <- function(df) {
   names(df) <- months_for_names
-  return(df)  # return the modified df
+  return(df) 
 }
 
 dfs <- list( # all the [-1]s are for removing the subheading rows
-  nat_total = df_nat[grepl("Total", df_nat)][-1, ],
-  nat_UK = df_nat[grepl("UK", df_nat)][-1, ],
-  nat_EEA = df_nat[, grepl("EEA", df_nat) & !grepl("NonEEA", df_nat)][-1, ],
-  nat_NonEEA = df_nat[, grepl("NonEEA", df_nat)][-1, ],
-  nat_unknown = df_nat[, grepl("Unknown", df_nat)][-1, ],
+  nat_total = df_nat[grepl("Total", df_nat[1, ])][-1, ],
+  nat_UK = df_nat[grepl("UK", df_nat[1,])][-1, ],
+  nat_EEA = df_nat[, grepl("EEA", df_nat[1, ]) & !grepl("NonEEA", df_nat[1, ])][-1, ],
+  nat_NonEEA = df_nat[, grepl("NonEEA", df_nat[1, ])][-1, ],
+  nat_unknown = df_nat[, grepl("Unknown", df_nat[1, ])][-1, ],
   
   #NUKN	
   # Of those with access to public funds
@@ -1646,13 +1650,13 @@ dfs <- list( # all the [-1]s are for removing the subheading rows
   # Of those, where eligibility falls outside	
   # Unknown
 
-  imm_nukn = df_imm[, grepl("NUKN", df_imm)][-1, ],
-  imm_access = df_imm[, grepl("access to public funds", df_imm)][-1, ],
-  imm_restricted = df_imm[, grepl("restricted", df_imm)][-1, ],
-  imm_presettled = df_imm[, grepl("presettled", df_imm)][-1, ],
-  imm_nrpf = df_imm[, grepl("NRPF", df_imm)][-1, ],
-  imm_other = df_imm[, grepl("eligibility falls outside", df_imm)][-1, ],
-  imm_unknown = df_imm[, grepl("Unknown", df_imm)][-1, ]
+  imm_nukn = df_imm[, grepl("NUKN", df_imm[1, ])][-1, ],
+  imm_access = df_imm[, grepl("access to public funds", df_imm[1, ])][-1, ],
+  imm_restricted = df_imm[, grepl("restricted", df_imm[1, ])][-1, ],
+  imm_presettled = df_imm[, grepl("presettled", df_imm[1, ])][-1, ],
+  imm_nrpf = df_imm[, grepl("NRPF", df_imm[1, ])][-1, ],
+  imm_other = df_imm[, grepl("eligibility falls outside", df_imm[1, ])][-1, ],
+  imm_unknown = df_imm[, grepl("Unknown", df_imm[1, ])][-1, ]
 )
 
 # set all to numeric for calculations
@@ -1667,7 +1671,28 @@ for (name in names(dfs)) {
   dfs[[name]] <- nat_imm_month_names(dfs[[name]])  #set month names as column names
   assign(name, dfs[[name]])
 }
-
+# 
+# total_nat_not_imputed <- df_nat
+# 
+# col <- 6 # first col to check for "---"s
+# most_recent_tot_col <- 5
+# 
+# while (col <= ncol(total_nat_not_imputed)) {
+#   # please tidy up when you have the time
+#   for(row in 13:308){
+#      #print(paste("r", row, "c", col, "mrt", most_recent_tot_col))
+#     if (total_nat_not_imputed[row, col] == "---") {
+#       total_nat_not_imputed[row, most_recent_tot_col] <- NA
+#     }
+#   }
+#   col <- col + 5 # only checks the UK columns for "---"s
+#   most_recent_tot_col <- most_recent_tot_col + 5 # moves to the next month's total column
+# }
+# 
+# total_nat_not_imputed <- data.frame(t(colSums(total_nat_not_imputed[13:308, grepl("Total", total_nat_not_imputed[1, ])] %>% # should only keep 1 col per month
+#   mutate(across(everything(), as.numeric)), na.rm = T)))
+# 
+# total_nat_not_imputed <- nat_imm_month_names(total_nat_not_imputed)
 
 
 # here the changes function will need to be updated to only do quarterly change
