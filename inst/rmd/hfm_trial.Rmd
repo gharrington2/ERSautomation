@@ -1059,12 +1059,16 @@ label_range_r2 <- r2_graph_data %>%
   dplyr::summarise(xmin = min(month), xmax = max(month), ymin = -10, ymax = max(r2_graph_data$value) * 1.1) %>%
   dplyr::mutate(xmid = as.Date((as.numeric(xmin) + as.numeric(xmax)) / 2, origin = "1970-01-01"))
 
-r2_graph <- ggplot() +
+r2_graph <- ggplot(r2_graph_data) +
   geom_col(r2_graph_data, mapping = aes(x = month, y = value, fill = indicator), position = "dodge") +
+  geom_text(aes(x = month, y = value, label = format(value, big.mark = ",")), 
+            position = position_dodge(width = 0.9), 
+            vjust = -0.5, color = "black", family = "Arial", size = 3.5) +
   ggplot2::geom_rect(data = label_range_r2, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
-                     fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
+                      fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
   ggplot2::geom_text(data = label_range_r2, mapping = aes(x = xmid, y = ymin - 20, label = Year, group = Year),
                      color = "#636363", size = 3.5, angle = 0, hjust = 0.5, vjust = 1.7, inherit.aes = FALSE) +
+  
   ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
   dluhctheme::dluhc_style(size = 1.5) +
   ggplot2::scale_x_date(labels = scales::date_format("%b"), date_breaks = "1 month", expand = c(0, 0)) +
@@ -1108,7 +1112,7 @@ There were `r get("this_month_df_month", envir = env1)` people estimated to be s
 * `r get("this_month_df_unknown_nights", envir = env1)` people (`r round(((get("this_month_df_unknown_nights", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of the total) had been seen sleeping rough for an unknown number of nights over the previous 6 months 
 
 
-**Figure 8: Number of nights people estimated to have been seen sleeping rough over the last 6 months June 2024 to `r this_month` (B2)**
+**Figure 8: Number of nights people estimated to have been seen sleeping rough over the last 6 months, `r this_month` (B2)**
 
 
 ```{r 12-Figure 12 B2, include=FALSE}
@@ -1259,8 +1263,12 @@ b2_graph_data <- data.frame(
                                                      "More than\n10 nights\n",
                                                      "Unknown\nnumber of\nnights")))
 
-b2_graph <- ggplot() +
+b2_graph <- ggplot(b2_graph_data) +
   geom_col(b2_graph_data, mapping = aes(x = nights_seen, y = value), fill = shades_of_blue[2], width = 0.8) + 
+    geom_text(aes(x = nights_seen, y = value, label = format(value, big.mark = ",")), 
+            position = position_dodge(width = 0.9), 
+            vjust = -0.5, color = "black", family = "Arial", size = 3.5) +
+  
   dluhctheme::dluhc_style(size = 1.5) +
   ggplot2::theme(
     axis.text.x = ggplot2::element_text(angle = 0, hjust = 0.5, vjust = 5, family = "Arial", color = "#636363", size = 10),
@@ -1575,8 +1583,11 @@ new_combo_data <- new_combo_data %>%
   mutate(indicator = forcats::fct_inorder(indicator)) %>%
     filter(month == format(max(as.Date(paste("01", month), "%d %B %Y")), "%B %Y"))
 
-new_combo_graph <- ggplot() +
+new_combo_graph <- ggplot(new_combo_data) +
   geom_col(new_combo_data, mapping = aes(x = indicator, y = value, fill = indicator), position = "dodge") +
+  geom_text(aes(x = indicator, y = value, label = format(value, big.mark = ",")), 
+            position = position_dodge(width = 0.9), 
+            vjust = -0.5, color = "black", family = "Arial", size = 3.5) +
   dluhctheme::dluhc_style() + 
   scale_fill_manual(values = shades_of_blue) + 
   dluhctheme::dluhc_style(size = 1.5) +
@@ -1595,7 +1606,7 @@ ggsave("images/new_combo_graph.svg", new_combo_graph, width = 8, height = 6)
 
 ```
 
-**Figure 10: Estimated number of people sleeping rough over the month who were new to sleeping rough (P1), had left institutions (P2), were sleeping rough long-term (B1), were returning to sleeping rough (NR1) and those returning to sleeping rough after moving into settled accommodation in the previous 12 months, `r this_month`**
+**Figure 10: Estimated number of people sleeping rough over the month who were sleeping rough long-term (B1), new to sleeping rough (P1), were returning to sleeping rough (NR1), had left institutions (P2) and those returning to sleeping rough after moving into settled accommodation in the previous 12 months (NR2), `r this_month`**
 
 ```{r print_combo_chart, echo = FALSE, warning = FALSE, message = FALSE}
 knitr::include_graphics("images/new_combo_graph.svg")
@@ -1699,7 +1710,7 @@ for (name in names(dfs)) {
 
 ```
 
-There were `r nat_UK[[this_month]][1]` people estimated to be sleeping rough over the month of `r this_month` who were UK nationals, `r round((nat_UK[[this_month]][1] / r1_month) * 100)`% of the total number of people sleeping rough. `r nat_EEA[[this_month]][1]` people (`r round((nat_EEA[[this_month]][1] / r1_month) * 100)`%) were EEA nationals, and `r nat_NonEEA[[this_month]][1]` (`r round((nat_NonEEA[[this_month]][1] / r1_month) * 100)`%) were non-EEA nationals. The nationality of `r nat_unknown[[this_month]][1]` people (`r round((nat_unknown[[this_month]][1] / r1_month) * 100)`%) was not known. 
+There were `r nat_UK[[this_month]][1]` people estimated to be sleeping rough over the month of `r this_month` who were UK nationals, `r round((nat_UK[[this_month]][1] / r1_month) * 100)`% of the total number of people sleeping rough. `r nat_EEA[[this_month]][1]` people (`r round((nat_EEA[[this_month]][1] / r1_month) * 100)`%) were European Economic Area (EEA) nationals, and `r nat_NonEEA[[this_month]][1]` (`r round((nat_NonEEA[[this_month]][1] / r1_month) * 100)`%) were non-EEA nationals. The nationality of `r nat_unknown[[this_month]][1]` people (`r round((nat_unknown[[this_month]][1] / r1_month) * 100)`%) was not known. 
 
 Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, `r imm_access[[this_month]][1]` (`r round((imm_access[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had a status that allowed for access to public funds and `r imm_restricted[[this_month]][1]` (`r round((imm_restricted[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition. Of these:
 
@@ -1865,6 +1876,10 @@ label_range_nat_imm <- nat_imm_graph_data %>%
 
 nat_imm_bar_chart <- ggplot() + 
   geom_col(nat_imm_graph_data, mapping = aes(x = category, y = value, fill = layer)) +
+  #geom_text(aes(x = category, y = value, label = scales::comma(value)), 
+   #         position = position_dodge(width = 0.9), 
+    #        vjust = -0.5, color = "black", family = "Arial", size = 3.5) +
+  
   scale_fill_manual(values = shades_of_blue[c(2,4)]) +
   dluhctheme::dluhc_style() + 
   ggplot2::theme(
