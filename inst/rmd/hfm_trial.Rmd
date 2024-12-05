@@ -182,6 +182,7 @@ sign <- function(num){
 # for use in percentage calculations
 r1_month <- df_month[[this_month]][1]
 
+#Update snapshot value if required
 snapshot_2023 <- 3898
 
 direction_2023_snapshot <- ifelse(get("this_month_df_snapshot", envir = env1) > snapshot_2023, "higher than",
@@ -240,13 +241,14 @@ In `r this_month` there were `r get("this_month_df_month", envir = env1)` people
 :::
 
 ::: {custom-style="GreyBox"}
-Over half of the increase in rough sleeping over the month compared to last year has been driven by 12 areas but rough sleeping is increasing across majority of the country – rough sleeping has increased in `r perc_LAS_increases_r1_month`% of areas compared to last year.
+Rough sleeping is increasing across the majority of local authorities in England (`r perc_LAS_increases_r1_month`%).
 :::
+
 
 ::: {custom-style="GreyBox"}
-Key drivers are an increase in people sleeping rough long term, and people returning to sleeping rough. 
-
+**Date of next publication**: It is expected that the next quarterly publication of monthly data (up to December 2024) will be published in February 2025.
 :::
+
 
 <br>
 <br>
@@ -258,7 +260,7 @@ Key drivers are an increase in people sleeping rough long term, and people retur
 <br>
 In May 2023, the Ministry of Housing, Communities and Local Government launched a new framework with a new set of metrics to better understand how far rough sleeping is **prevented** wherever possible, and where it does occur it is **rare**, **brief**, and **non-recurring**. 
 
-This is the fourth quarterly publication of the framework and covers monthly information up to `r this_month`, for the first time including the final three core indicators: number of people sleeping rough who were accommodated over the month (R2), number of nights seen sleeping rough (B2) and number of people returning to sleeping rough after moving into settled accommodation (NR2). For the first time, this publication also contains information on nationality and immigration status of those sleeping rough, data on which has been collected every three months, starting in June 2024.
+This is the fourth quarterly publication of the framework and covers monthly information up to `r this_month`, for the first time including the final three core indicators: number of people sleeping rough who were accommodated over the month (R2), number of nights seen sleeping rough (B2) and number of people returning to sleeping rough after moving into settled accommodation (NR2). 
 
 This data framework will be relevant to people working locally to reduce rough sleeping and is an important step towards driving better outcomes for vulnerable people.  
 
@@ -292,7 +294,7 @@ The eight core indicators are:
 
 
 ```{r image 1, echo=FALSE,warning = FALSE, message = FALSE}
-knitr::include_graphics("images/indicator_breakdown_pub_graphic_all.png")
+knitr::include_graphics("images/Indicators.png")
 #knitr::include_graphics(system.file("rmd/images/Indicator_breakdown_pub_graphic_all.png", package = "ERSautomation"))
 
 ```
@@ -302,10 +304,6 @@ knitr::include_graphics("images/indicator_breakdown_pub_graphic_all.png")
 The number of people sleeping rough tends to be higher in the summer months when it is warmer, and lower in the winter months, reflecting the seasonality of rough sleeping.
 
 <br>
-
-::: {custom-style="GreyBox"}
-**Date of next publication**: It is expected that the next quarterly publication of monthly data (up to December 2024) will be published in February 2025.
-:::
 
 <br>
 
@@ -430,19 +428,20 @@ knitr::include_graphics("images/figure_1.svg")
 **Source: MHCLG**
 
 
-There were `r get("this_month_df_institutions", envir = env1)` people estimated to be sleeping rough over the month in `r this_month` who had left an institution (`r round(((get("this_month_df_institutions", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of the total number of people sleeping rough over the month). Of these:
+There were `r get("this_month_df_institutions", envir = env1)` people estimated to be sleeping rough over the month in `r this_month` who had left an institution (`r round(((get("this_month_df_institutions", envir = env1))/get("this_month_df_month", envir = env1))*100, digits = 0)`% of the total number of people sleeping rough over the month). Of these people who had left an institution:
 
-*  `r get("this_month_df_prison", envir = env1)` people (`r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left prison in the last 85 days - `r sign(get("quarterly_change_df_prison", envir = env1))` `r round(((get("quarterly_change_df_prison", envir = env1))/get("last_quarter_df_prison", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
+*  `r get("this_month_df_prison", envir = env1)` (`r round(((get("this_month_df_prison", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`%) had left prison in the last 85 days - `r sign(get("quarterly_change_df_prison", envir = env1))` `r round(((get("quarterly_change_df_prison", envir = env1))/get("last_quarter_df_prison", envir = env1))*100, digits = 0)`% since `r last_quarter`.
 
-*  `r get("this_month_df_asylum", envir = env1)` people (`r round(((get("this_month_df_asylum", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left asylum support (previously 'National Asylum Support Services') in the last 85 days - `r sign(get("quarterly_change_df_asylum", envir = env1))` `r round(abs(((get("quarterly_change_df_asylum", envir = env1))/get("last_quarter_df_asylum", envir = env1)))*100, digits = 0)`% since `r last_quarter`. 
+*  `r get("this_month_df_asylum", envir = env1)` (`r round(((get("this_month_df_asylum", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`%) had left asylum support (previously 'National Asylum Support Services') in the last 85 days - `r sign(get("quarterly_change_df_asylum", envir = env1))` `r round(abs(((get("quarterly_change_df_asylum", envir = env1))/get("last_quarter_df_asylum", envir = env1)))*100, digits = 0)`% since `r last_quarter` and down 71% since its peak in December 2023.  
 
-*  `r get("this_month_df_hospital", envir = env1)` people (`r round(((get("this_month_df_hospital", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left General & Psychiatric hospitals in the last 85 days - `r sign(get("quarterly_change_df_hospital", envir = env1))` `r round(abs(((get("quarterly_change_df_hospital", envir = env1))/get("last_quarter_df_hospital", envir = env1)))*100, digits = 0)`% since `r last_quarter`. 
 
-*  `r get("this_month_df_u25care", envir = env1)` people (`r round(((get("this_month_df_u25care", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) were care leavers aged under 25 - `r sign(get("quarterly_change_df_u25care", envir = env1))` `r round(((get("quarterly_change_df_u25care", envir = env1))/get("last_quarter_df_u25care", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
+*  `r get("this_month_df_hospital", envir = env1)`  (`r round(((get("this_month_df_hospital", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`%) had left general and psychiatric hospitals in the last 85 days - `r sign(get("quarterly_change_df_hospital", envir = env1))` `r round(abs(((get("quarterly_change_df_hospital", envir = env1))/get("last_quarter_df_hospital", envir = env1)))*100, digits = 0)`% since `r last_quarter`. 
 
-*  `r get("this_month_df_oja", envir = env1)` people (`r round(((get("this_month_df_oja", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`% of people who had left an institution) had left other justice accommodation within the last 85 days - `r sign(get("quarterly_change_df_oja", envir = env1))` `r round(((get("quarterly_change_df_oja", envir = env1))/get("last_quarter_df_oja", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
+*  `r get("this_month_df_u25care", envir = env1)` (`r round(((get("this_month_df_u25care", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`%) were care leavers aged under 25 - `r sign(get("quarterly_change_df_u25care", envir = env1))` `r round(((get("quarterly_change_df_u25care", envir = env1))/get("last_quarter_df_u25care", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
 
-*  `r get("this_month_df_ukaf", envir = env1)` people (`r round(((get("this_month_df_ukaf", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 1)`% of people who had left an institution) had left the UK armed forces within the last 85 days. 
+*  `r get("this_month_df_oja", envir = env1)` (`r round(((get("this_month_df_oja", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 0)`%) had left other justice accommodation within the last 85 days - `r sign(get("quarterly_change_df_oja", envir = env1))` `r round(((get("quarterly_change_df_oja", envir = env1))/get("last_quarter_df_oja", envir = env1))*100, digits = 0)`% since `r last_quarter`. 
+
+*  `r get("this_month_df_ukaf", envir = env1)` (`r round(((get("this_month_df_ukaf", envir = env1))/get("this_month_df_institutions", envir = env1))*100, digits = 1)`%) had left the UK armed forces within the last 85 days. 
 
 <br>
 
@@ -849,12 +848,12 @@ knitr::include_graphics("images/figure_4.svg")
 ```{r figure 6,  include=FALSE}
 
 # Script to create maps for the info graphic
-latest_column <- which(names(df_snapshot) == this_month)
+latest_column <- which(names(df_snapshot_rate) == this_month)
   
 #This is for rate 
 # I assume this is recreating rates from the snapshot df rather than using the rates that are in the original df_snapshot_rate column?
 # bit confused because the df used in the next chunk starts with the monthly rate
-df_snapshot_rate <- df_snapshot %>%
+df_snapshot_rate <- df_snapshot_rate %>%
   dplyr::select(c(1, 2, 3, all_of(latest_column)))
 
 colnames(df_snapshot_rate) <- c("LAD23NM", "LAD23CD", "Region", "snapshot")
@@ -896,8 +895,8 @@ tmap::tm_layout(
 
 
 #Use England shape files, this will need updating if there's boundary changes
-tmap::tmap_save(England_map, "images/England_map.png", width=1000, height=1000, asp=0)
-tmap::tmap_save(England_map, "images/England_map.svg", width=2000, height=2000, asp=0)
+tmap::tmap_save(England_map, "images/England_map_snapshot.png", width=1000, height=1000, asp=0)
+tmap::tmap_save(England_map, "images/England_map_snapshot.svg", width=2000, height=2000, asp=0)
 
 
 #Adjust for London
@@ -923,8 +922,8 @@ London_map <- London_join %>%
   tmap::tm_style("col_blind")+
   tmap::tm_layout(frame = FALSE, frame.lwd = NA, panel.label.bg.color = NA)
 
-tmap::tmap_save(London_map, "images/London_map.png", width=2000, height=2000, asp=0)
-tmap::tmap_save(London_map, "images/london_map.svg", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map, "images/London_map_snapshot.png", width=2000, height=2000, asp=0)
+tmap::tmap_save(London_map, "images/london_map_snapshot.svg", width=2000, height=2000, asp=0)
 
 ```
 <br>
@@ -932,9 +931,9 @@ tmap::tmap_save(London_map, "images/london_map.svg", width=2000, height=2000, as
 **Figure 5: Map of rate of people sleeping rough on a single night per 100,000 people (R1), `r this_month`** 
 
 ```{r figure 6 - map, echo=FALSE,}
-knitr::include_graphics("images/England_map.svg")
+knitr::include_graphics("images/England_map_snapshot.svg")
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/.svg",  package = "ERSautomation"))
-knitr::include_graphics("images/London_map.svg")
+knitr::include_graphics("images/London_map_snapshot.svg")
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/London_map.svg",  package = "ERSautomation"))
 
 ```
@@ -1061,9 +1060,9 @@ label_range_r2 <- r2_graph_data %>%
 
 r2_graph <- ggplot(r2_graph_data) +
   geom_col(r2_graph_data, mapping = aes(x = month, y = value, fill = indicator), position = "dodge") +
-  geom_text(aes(x = month, y = value, label = format(value, big.mark = ",")), 
-            position = position_dodge(width = 0.9), 
-            vjust = -0.5, color = "black", family = "Arial", size = 3.5) +
+  #geom_text(aes(x = month, y = value, label = format(value, big.mark = ","), group = indicator), 
+           # position = position_dodge(width = 0.9), 
+            #vjust = -0.5, color = "black", family = "Arial", size = 3.5) +
   ggplot2::geom_rect(data = label_range_r2, ggplot2::aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, group = Year),
                       fill = "white", color = NA, alpha = 0, inherit.aes = FALSE) +
   ggplot2::geom_text(data = label_range_r2, mapping = aes(x = xmid, y = ymin - 20, label = Year, group = Year),
@@ -1621,7 +1620,11 @@ knitr::include_graphics("images/new_combo_graph.svg")
 <br>
 <br>
 
-# 7. Nationality and Immigration
+<!-- # 7. Nationality and Immigration --> 
+
+<!-- Commented out currently -->
+
+
 
 ```{r nat_imm, echo = FALSE, warning = FALSE, message = FALSE}
 
@@ -1710,20 +1713,20 @@ for (name in names(dfs)) {
 
 ```
 
-There were `r nat_UK[[this_month]][1]` people estimated to be sleeping rough over the month of `r this_month` who were UK nationals, `r round((nat_UK[[this_month]][1] / r1_month) * 100)`% of the total number of people sleeping rough. `r nat_EEA[[this_month]][1]` people (`r round((nat_EEA[[this_month]][1] / r1_month) * 100)`%) were European Economic Area (EEA) nationals, and `r nat_NonEEA[[this_month]][1]` (`r round((nat_NonEEA[[this_month]][1] / r1_month) * 100)`%) were non-EEA nationals. The nationality of `r nat_unknown[[this_month]][1]` people (`r round((nat_unknown[[this_month]][1] / r1_month) * 100)`%) was not known. 
+<!-- There were `r nat_UK[[this_month]][1]` people estimated to be sleeping rough over the month of `r this_month` who were UK nationals, `r round((nat_UK[[this_month]][1] / r1_month) * 100)`% of the total number of people sleeping rough. `r nat_EEA[[this_month]][1]` people (`r round((nat_EEA[[this_month]][1] / r1_month) * 100)`%) were European Economic Area (EEA) nationals, and `r nat_NonEEA[[this_month]][1]` (`r round((nat_NonEEA[[this_month]][1] / r1_month) * 100)`%) were non-EEA nationals. The nationality of `r nat_unknown[[this_month]][1]` people (`r round((nat_unknown[[this_month]][1] / r1_month) * 100)`%) was not known.  -->
 
-Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, `r imm_access[[this_month]][1]` (`r round((imm_access[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had a status that allowed for access to public funds and `r imm_restricted[[this_month]][1]` (`r round((imm_restricted[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition. Of these:
+<!-- Of those non-UK EEA or non-EEA nationals sleeping rough over the course of this month, `r imm_access[[this_month]][1]` (`r round((imm_access[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had a status that allowed for access to public funds and `r imm_restricted[[this_month]][1]` (`r round((imm_restricted[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) had leave to enter/remain with restricted eligibility to public funds. i.e., either had pre-settled status or limited leave to remain subject to a no recourse to public funds condition. Of these: -->
 
-* `r imm_presettled[[this_month]][1]` people (`r round((imm_presettled[[this_month]][1] / imm_restricted[[this_month]][1]) * 100)`%) have pre-settled status
+<!-- * `r imm_presettled[[this_month]][1]` people (`r round((imm_presettled[[this_month]][1] / imm_restricted[[this_month]][1]) * 100)`%) have pre-settled status -->
 
-* `r imm_nrpf[[this_month]][1]` people (`r round((imm_nrpf[[this_month]][1] / imm_restricted[[this_month]][1]) * 100)`%) have no recourse to public funds (NRPF)
+<!-- * `r imm_nrpf[[this_month]][1]` people (`r round((imm_nrpf[[this_month]][1] / imm_restricted[[this_month]][1]) * 100)`%) have no recourse to public funds (NRPF) -->
 
 
-`r imm_other[[this_month]][1]` people (`r round((imm_other[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) of non-UK nationals have eligibility that falls outside of those who have access to public funds or restricted eligibility and `r imm_unknown[[this_month]][1]` people (`r round((imm_unknown[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) have an unknown immigration status.   
+<!-- `r imm_other[[this_month]][1]` people (`r round((imm_other[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) of non-UK nationals have eligibility that falls outside of those who have access to public funds or restricted eligibility and `r imm_unknown[[this_month]][1]` people (`r round((imm_unknown[[this_month]][1] / imm_nukn[[this_month]][1]) * 100)`%) have an unknown immigration status.    -->
 
- 
 
-If a person refused to give, or did not want to share, their personal information, they would still be recorded as sleeping rough and nationality and immigration information would be recorded as ‘Not known’, if unknown. 
+
+<!-- If a person refused to give, or did not want to share, their personal information, they would still be recorded as sleeping rough and nationality and immigration information would be recorded as ‘Not known’, if unknown.  -->
 
 
 ```{r nat_imm_pie, echo = FALSE, warning = FALSE, message = FALSE, include = FALSE}
@@ -1815,7 +1818,7 @@ knitr::include_graphics("images/nat_imm_pie_chart.svg")
 
 ```
 
-**Figure 11: Estimated number of people sleeping rough over the month, by nationality and immigration status, `r this_month`**
+<!-- **Figure 11: Estimated number of people sleeping rough over the month, by nationality and immigration status, `r this_month`** -->
 
 ```{r nat_imm_bar, echo = FALSE, warning = FALSE, message = FALSE, include = FALSE}
 
@@ -1899,7 +1902,7 @@ knitr::include_graphics("images/nat_imm_bar_chart.svg")
 
 ```
 
-```{r nat_imm_combo_chart, messages = FALSE, warning = FALSE, echo = FALSE}
+```{r nat_imm_combo_chart, messages = FALSE, warning = FALSE, echo = FALSE, include = FALSE}
 
 nat_imm_combo_data <- data.frame(
   "nat_category" = c("UK", "EEA / Non-EEA", "EEA / Non-EEA", "EEA / Non-EEA", "EEA / Non-EEA", "Unknown nationality"),
@@ -2071,48 +2074,8 @@ For a person to be counted under this indicator, they should be returning to sle
 
 * Returned to home country 
 
-
-**Nationality and Immigration** 
-
-All people seen sleeping rough over the month were recorded under the following nationality groupings:
-
-* UK nationals
-
-* EEA nationals
-
-* Non-EEA Nationals
-
-* Unknown
-
-Non-UK nationals sleeping rough over the course of the month were recorded under the following immigration status groupings:
-
-* People with status that allows for access to public funds: This category refers to non-UK national individuals who have been granted status in the UK which allows for access to public funds. Types of status these individuals may have, but are not limited to, include Indefinite Leave to Remain (including Settled Status under the EU Settlement Scheme) and Refugee Status.  
-For further information on what constitutes public funds, please see Home Office guidance below: https://www.gov.uk/government/publications/public-funds 
-
-* People with leave to enter/remain with restricted eligibility to public funds: This category refers to non-UK national individuals who have been granted the following types of status which restricts their eligibility to public funds: 
-
-    * People with pre-settled status (arrivals pre-December 31, 2020) if they are not exercising a qualifying right to reside (includes those with a pending EUSS application). This individual has pre-settled status granted under the EUSS but has limited access to public funds as they are not exercising a qualifying right to reside. This also includes individuals who have a pending EUSS application.
-    For example, an individual has a qualifying right to reside if they meet any of the following criteria:
-    
-        * are a worker 
-        
-        * are self-employed 
-        
-        * are self-sufficient 
-        
-        * are a jobseeker 
-        
-        * are a student 
-        
-        Please note, this is not an exhaustive list.
-        
-    * People with limited leave to remain subject to a no recourse to public funds (NRPF) condition: This individual has been granted limited leave to remain subject to an NRPF condition.
-    
-* People with restricted eligibility that falls outside the categories above: This category refers to those non-UK national individuals who have restricted eligibility for public funds however, this restriction falls outside of the sub-categories set out above.
-
-* Unknown: This category refers to those non-UK national individuals whose status is unknown to the local authority.
-
 :::
+
 
 <br>
 <br>
@@ -2139,9 +2102,9 @@ For further information on what constitutes public funds, please see Home Office
 
 ### 10.1 Data tables and interactive dashboard
 
-Twenty-seven [accompanying tables](https://www.gov.uk/government/publications/supportforpeoplesleepingroughinenglandmarch2023/supportforpeoplesleepingroughinenglandmarch2023) are available alongside this release. These include information on the eight core framework indicators, as well as information about nationality and immigration status, which are also collected as part of the monthly rough sleeping management information.
+Twenty-five [accompanying tables](https://www.gov.uk/government/statistical-data-sets/tables-on-rough-sleeping) are available alongside this release. These include information on the eight core framework indicators.
 
-An [interactive dashboard](https://app.powerbi.com/view?r=eyJrIjoiMDFiNWYyYjItMGI5Yi00ZmNhLThmYmQtMWU1NGM5NzRkMmI5IiwidCI6ImJmMzQ2ODEwLTljN2QtNDNkZS1hODcyLTI0YTJlZjM5OTVhOCJ9) enables users to explore the new framework indicators in more detail.
+An [interactive dashboard](https://www.gov.uk/government/publications/dashboards-on-rough-sleeping) enables users to explore the new framework indicators in more detail.
 
 <br>
 
@@ -2175,7 +2138,7 @@ Trusted people, processes and analysis
 | **T1 Honesty and integrity**                      | Data is analysed by professionally qualified and experienced data analysts  - professional members of the GSS, GORS or GSR professions. Data is provided by local authorities and scrutinised by government rough sleeping advisers to monitor local approaches to rough sleeping.|                                                                                                     
 | **T2 Independent decision making and leadership** | The work is governed by the Analysis and Data Directorate in MHCLG, accountable to MHCLG's Chief Analyst and the Head of Profession for Statistics.|
 | **T3 Orderly release**                            | MHCLG pre-announces the publication date for this data. This is usually done on the release page of previous publications, which is updated once precise release dates are known.|
-| **T4 Transparent processes and management**       | MHCLG has robust, transparent data-management processes which are applied for data analysis. Data is provided by local authorities. MHCLG works closely to ensure data collection processes are well understood. [External research](https://www.gov.uk/government/publications/ending-rough-sleeping-data-framework-quality-assurance-review) was commissioned to understand data collection and quality assurance processes across different local authorities, demonstrating MHCLG's willingness to maintain transparency. An outline of the production process and quality assurance carried out prior to the publication of the Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#qualityassurance).|
+| **T4 Transparent processes and management**       | MHCLG has robust, transparent data-management processes which are applied for data analysis. Data is provided by local authorities. MHCLG works closely to ensure data collection processes are well understood. [External research](https://www.gov.uk/government/publications/ending-rough-sleeping-data-framework-quality-assurance-review) was commissioned to understand data collection and quality assurance processes across different local authorities, demonstrating MHCLG's willingness to maintain transparency. An outline of the production process and quality assurance carried out prior to the publication of the Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/collections/homelessness-statistics#rough-sleeping).|
 | **T5 Professional capability**                    | All responsible MHCLG analysts are members of government analytical professions, where all staff have met a minimum standard of analytical capability and all of whom have Personal Development Plans focused on their long term professional development.|
 | **T6 Data governance**                            | Data is collected at an aggregate level and is not personally identifiable. Responsibility for data lies with the data controllers (i.e. local authorities). MHCLG has assessed the risk of identification from data as very low and therefore does not apply suppression to small numbers. MHCLG is consulting local authorities about the use of their data to ensure agreement and transparency.|
 
@@ -2189,7 +2152,7 @@ Robust data, methods and processes
 |------ |-------|
 | **Q1 Suitable data sources** | Data is collected by local authorities, primarily through outreach activities. Data relies on self-disclosure or referrals from relevant agencies (e.g. the other government departments, Adult Social Care, or local refugee charities). In London, data is provided directly from CHAIN, which is a multiagency database recording information about people seen rough sleeping by outreach teams. One aim of the framework is to encourage local authorities to link up with key partners to share data to better understand their rough sleeping populations. The commissioned research mentioned in "T4 Transparent processes and management" highlights how best to improve consistency in data and will feed into further guidance on improving data. |
 | **Q2 Sound methods**         | Data collection tools and processes are robustly designed and tested prior to use, learning lessons from previous Rough Sleeping Management Information data collections and best practice from across the government analytical community. An outline of the data process is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#dataprocess).|                                                     
-| **Q3 Assured quality**       | An outline of the production process and quality assurance carried out prior to the publication of the Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/publications/endingroughsleepingdataframeworkdecember2023/endingroughsleepingdataframeworkdecember2023#qualityassurance). MHCLG is developing further data verification processes with local authorities to raise data standards and ensure consistency. Reproducible Analytical Pipelines are used to minimise human error and all outputs are quality assured prior to publication. A revisions policy is in place to ensure that any revisions are addressed quickly and systematically.|                      
+| **Q3 Assured quality**       | An outline of the production process and quality assurance carried out prior to the publication of the Rough Sleeping Data Framework is available in the [latest release](https://www.gov.uk/government/collections/homelessness-statistics#rough-sleeping). MHCLG is developing further data verification processes with local authorities to raise data standards and ensure consistency. Reproducible Analytical Pipelines are used to minimise human error and all outputs are quality assured prior to publication. A revisions policy is in place to ensure that any revisions are addressed quickly and systematically.|                      
 
 <br>
 
@@ -2213,7 +2176,6 @@ To assess the quality of new management information, we compared the monthly rou
 
 The information about institution discharge is gathered via self-disclosure by people sleeping rough and/or information sharing from institutions, so the quality is also linked to the reliability of self-disclosure and data sharing from partners. Identification of people sleeping rough who are new, returning or long term relies on the local systems in place to identify unique individuals, avoid double counting and accurately track individuals over time using historical records, which will take time to develop.
 
-Similarly, the information on nationality and immigration status is gathered by outreach workers and relies on self-disclosure by people sleeping rough, so the quality is also linked to the reliability of self-disclosure.
 
 There are some comparability issues between local authorities in London and the rest of England, as the definition of new, returner and long term rough sleeping applies to the whole of London, compared to each local authority across the rest of England. There is also some overlap between the new and returner indicators if a person returns to sleeping rough after not being seen for more than five years.
 
