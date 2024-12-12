@@ -1,6 +1,6 @@
 # Rough Sleeping Data Framework
 
-This project creates a word document of the Rough Sleeping Data Framework publication that is used to review before publication.
+This project creates a word document of the Rough Sleeping Data Framework publication that is used to create a word document to review before publication.
 
 ## Getting Started
 
