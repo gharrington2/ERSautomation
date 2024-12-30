@@ -20,6 +20,8 @@ p_load(tidyr, dplyr, xlsx, readxl, writexl, openxlsx, lubridate, stringr, ggplot
 # #Load the dataframes in from the latest tables
 input_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_tables/Publication_tables241125.xlsx"
 
+images_output_path <- "Q:/ASCT/P005 Homelessness/008 Rough Sleeping/RS MI R/New monthly tables script/Git_Version/Publication_images/"
+
 df_month_new <- readxl::read_excel(input_path, sheet = "Table_P1(b)_-_RS_month_new", skip = 3)
 df_month <- readxl::read_excel(input_path, sheet = "Table_R1(b)_-_RS_month", skip = 3)
 df_snapshot_new <- readxl::read_excel(input_path, sheet = "Table_P1(a)_-_RS_snapshot_new", skip = 3)
@@ -401,15 +403,15 @@ figure_1 <- ggplot2::ggplot(new_df, ggplot2::aes(x = Date)) +
  # print(figure_1)
  
  
- output_folder <- "images" # this should just look for the folder inside the folder you currently are in i.e. repo/inst/rmd
-if (!dir.exists(output_folder)) { 
-  dir.create(output_folder, recursive = TRUE)
-  print("created folder")
-} else { print("folder already exists")} 
+#  output_folder <- "images" # this should just look for the folder inside the folder you currently are in i.e. repo/inst/rmd
+# if (!dir.exists(output_folder)) { 
+#   dir.create(output_folder, recursive = TRUE)
+#   print("created folder")
+# } else { print("folder already exists")} 
  
  # specify desired folder path 
- ggplot2::ggsave("images/figure_1.svg", plot = figure_1, width = 8, height = 6)
- ggplot2::ggsave("images/figure_1.png", plot = figure_1, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave(paste0(images_output_path,"figure_1.svg"), plot = figure_1, width = 8, height = 6)
+ ggplot2::ggsave(paste0(images_output_path,"figure_1.png"), plot = figure_1, width = 8, height = 6, dpi = 300)
 
  
 ```
@@ -418,7 +420,7 @@ if (!dir.exists(output_folder)) {
 
 ```{r line new, echo=FALSE,warning = FALSE, message = FALSE}
 
-knitr::include_graphics("images/figure_1.svg")
+knitr::include_graphics(paste0(images_output_path,"figure_1.svg"))
 
 # knitr::include_graphics(system.file("rmd/images/figure_1.svg",  package = "ERSautomation"))
 
@@ -580,8 +582,8 @@ figure_2 <- ggplot2::ggplot(donut_data, ggplot2::aes(ymax = ymax, ymin = ymin, x
 # print(figure_2)
 # 
 
-  ggplot2::ggsave("images/figure_2.svg", plot = figure_2, width = 8, height = 6)
-  ggplot2::ggsave("images/figure_2.png", plot = figure_2, width = 8, height = 6, dpi = 300)
+  ggplot2::ggsave(paste0(images_output_path,"figure_2.svg"), plot = figure_2, width = 8, height = 6)
+  ggplot2::ggsave(paste0(images_output_path, "figure_2.png"), plot = figure_2, width = 8, height = 6, dpi = 300)
 
 ```
 
@@ -591,7 +593,7 @@ figure_2 <- ggplot2::ggplot(donut_data, ggplot2::aes(ymax = ymax, ymin = ymin, x
 
 ```{r figure 2, echo=FALSE, warning = FALSE, message = FALSE}
 
-knitr::include_graphics("images/figure_2.svg")
+knitr::include_graphics(ggsave(paste0(images_output_path, "figure_2.svg")))
 # knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_2.svg",  package = "ERSautomation"))
 
 ```
@@ -695,8 +697,8 @@ figure_3 <- ggplot2::ggplot(institutions_data, ggplot2::aes(x = Date)) +
   ))
 
 
- ggplot2::ggsave("images/figure_3.svg", plot = figure_3, width = 8, height = 6)
- ggplot2::ggsave("images/figure_3.png", plot = figure_3, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave(paste0(images_output_path, "figure_3.svg"), plot = figure_3, width = 8, height = 6)
+ ggplot2::ggsave(paste0(images_output_path, "figure_3.png"), plot = figure_3, width = 8, height = 6, dpi = 300)
 
  
 ```
@@ -712,7 +714,7 @@ figure_3 <- ggplot2::ggplot(institutions_data, ggplot2::aes(x = Date)) +
 
 ```{r figure 3, echo=FALSE, warning = FALSE, message = FALSE}
 
-knitr::include_graphics("images/figure_3.svg")
+knitr::include_graphics(ggsave(paste0(images_output_path,"figure_3.svg")))
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_3.svg", package = "ERSautomation"))
 
 ```
@@ -828,14 +830,14 @@ figure_4 <- ggplot2::ggplot(df, ggplot2::aes(x = Date)) +
   ggplot2::geom_text(data = df[1, ], ggplot2::aes(x = Date, y = `Month`, label = "   Number of people \n sleeping rough over \n       the month (R1)"),
     color = "#012169", vjust = -2.7, hjust = -1.85, size = 3.5)
 
-ggplot2::ggsave("images/figure_4.svg", plot = figure_4, width = 8, height = 6)
-ggplot2::ggsave("images/figure_4.png", plot = figure_4, width = 8, height = 6, dpi = 300)
+ggplot2::ggsave(paste0(images_output_path, "figure_4.svg"), plot = figure_4, width = 8, height = 6)
+ggplot2::ggsave(paste0(images_output_path, "figure_4.png"), plot = figure_4, width = 8, height = 6, dpi = 300)
  
 ```
 
 ```{r figure 4, echo=FALSE, warning = FALSE, message = FALSE}
 
-knitr::include_graphics("images/figure_4.svg")
+knitr::include_graphics(ggsave(paste0(images_output_path, "figure_4.svg")))
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_4.svg", package = "ERSautomation"))
 
 ```
@@ -1081,10 +1083,10 @@ r2_graph <- ggplot(r2_graph_data) +
   ggplot2::scale_fill_manual(values = c(shades_of_blue[c(2,4)])) +
   ggplot2::scale_y_continuous(labels = scales::comma) # add commas to y axis values
 
-ggsave("images/r2_graph.svg", r2_graph, width = 8, height = 6)
-ggsave("images/r2_graph.png", r2_graph, width = 8, height = 6)
+ggsave(paste0(images_output_path, "r2_graph.svg"), r2_graph, width = 8, height = 6)
+ggsave(paste0(images_output_path, "r2_graph.png"), r2_graph, width = 8, height = 6)
 
-knitr::include_graphics("images/r2_graph.svg")
+knitr::include_graphics(ggsave(paste0(images_output_path, "r2_graph.svg")))
 
 ```
 
@@ -1278,10 +1280,10 @@ b2_graph <- ggplot(b2_graph_data) +
   ) +
   ggplot2::scale_y_continuous(labels = scales::comma, limits = c(0, 3000)) # add commas to y axis values
 
-ggsave("images/b2_bar.svg", b2_graph, width = 8, height = 6)
-ggsave("images/b2_bar.png", b2_graph, width = 8, height = 6)
+ggsave(paste0(images_output_path, "b2_bar.svg"), b2_graph, width = 8, height = 6)
+ggsave(paste0(images_output_path, "b2_bar.png"), b2_graph, width = 8, height = 6)
 
-knitr::include_graphics("images/b2_bar.svg")
+knitr::include_graphics(ggsave(paste0(images_output_path, "b2_bar.svg")))
 
 ```
 
@@ -1387,14 +1389,14 @@ figure_7 <- ggplot2::ggplot(NR_data, ggplot2::aes(x = Date)) +
   )
 
 #print(figure_7)
-ggplot2::ggsave("images/figure_7.svg", plot = figure_7, width = 9, height = 6)
-ggplot2::ggsave("images/figure_7.png", plot = figure_7, width = 9, height = 6)
+ggplot2::ggsave(paste0(images_output_path, "figure_7.svg"), plot = figure_7, width = 9, height = 6)
+ggplot2::ggsave(paste0(images_output_path, "figure_7.png"), plot = figure_7, width = 9, height = 6)
 
 ```
 
 ```{r print_fig_7, echo = FALSE, message = FALSE, warning = FALSE}
 
-knitr::include_graphics("images/figure_7.svg")
+knitr::include_graphics(ggsave(paste0(images_output_path, "figure_7.svg")))
 
 ```
 
@@ -1492,14 +1494,14 @@ figure_5 <- ggplot2::ggplot(comb_last_year_long, ggplot2::aes(x = Date, y = Valu
   ))
 
    
- ggplot2::ggsave("images/figure_5.svg", plot = figure_5, width = 8, height = 6)
- ggplot2::ggsave("images/figure_5.png",  plot = figure_5, width = 8, height = 6, dpi = 300)
+ ggplot2::ggsave(paste0(images_output_path, "figure_5.svg"), plot = figure_5, width = 8, height = 6)
+ ggplot2::ggsave(paste0(images_output_path, "figure_5.png"),  plot = figure_5, width = 8, height = 6, dpi = 300)
 
 ```
 
 ```{r figure 5, include = FALSE, echo=FALSE, warning = FALSE, message = FALSE}
 # this is the old stacked bar, not included
-knitr::include_graphics("images/figure_5.svg")
+knitr::include_graphics(ggsave(paste0(images_output_path, "figure_5.svg")))
 #knitr::include_graphics(system.file("rmd/inst/rmd/images/figure_5.svg",  package = "ERSautomation"))
 
 ```
@@ -1600,15 +1602,15 @@ new_combo_graph <- ggplot(new_combo_data) +
   )  +
   ggplot2::scale_y_continuous(labels = scales::comma) # add commas to y axis values
 
-ggsave("images/new_combo_graph.png", new_combo_graph, width = 8, height = 6)
-ggsave("images/new_combo_graph.svg", new_combo_graph, width = 8, height = 6)
+ggsave(paste0(images_output_path, "new_combo_graph.png"), new_combo_graph, width = 8, height = 6)
+ggsave(paste0(images_output_path, "new_combo_graph.svg"), new_combo_graph, width = 8, height = 6)
 
 ```
 
 **Figure 10: Estimated number of people sleeping rough over the month who were sleeping rough long-term (B1), new to sleeping rough (P1), were returning to sleeping rough (NR1), had left institutions (P2) and those returning to sleeping rough after moving into settled accommodation in the previous 12 months (NR2), `r this_month`**
 
 ```{r print_combo_chart, echo = FALSE, warning = FALSE, message = FALSE}
-knitr::include_graphics("images/new_combo_graph.svg")
+knitr::include_graphics(ggsave(paste0(images_output_path, "new_combo_graph.svg")))
 
 ```
 
